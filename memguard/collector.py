@@ -5,8 +5,9 @@ using psutil. Read-only — no process modification allowed.
 """
 
 import logging
+import time
 from datetime import datetime
-from typing import TypedDict
+from typing import NotRequired, TypedDict
 
 import psutil
 
@@ -25,6 +26,13 @@ class ProcessRecord(TypedDict):
     cpu_percent: float
     cmdline: str
     start_time: str
+    sha256: NotRequired[str]
+    vt_malicious: NotRequired[int]
+    vt_suspicious: NotRequired[int]
+    vt_harmless: NotRequired[int]
+    threat_score: NotRequired[int]
+    threat_level: NotRequired[str]
+    triggered_rules: NotRequired[list[str]]
 
 
 class SystemOverview(TypedDict):
@@ -60,12 +68,22 @@ def collect_processes() -> list[ProcessRecord]:
     """
     attrs = [
         "pid", "ppid", "name", "exe", "username",
-        "memory_info", "cpu_percent", "cmdline", "create_time",
+        "memory_info", "cmdline", "create_time",
     ]
 
     processes: list[ProcessRecord] = []
 
-    for proc in psutil.process_iter(attrs=attrs):
+    process_objects = list(psutil.process_iter(attrs=attrs))
+
+    for proc in process_objects:
+        try:
+            proc.cpu_percent(interval=None)
+        except (psutil.AccessDenied, psutil.NoSuchProcess, psutil.ZombieProcess):
+            continue
+
+    time.sleep(0.2)
+
+    for proc in process_objects:
         try:
             info = proc.info  # type: ignore[attr-defined]
 
@@ -85,7 +103,7 @@ def collect_processes() -> list[ProcessRecord]:
             rss_mb: float = round(mem.rss / (1024 * 1024), 2) if mem else 0.0
 
             # CPU usage
-            cpu_percent: float = info.get("cpu_percent") or 0.0
+            cpu_percent: float = round(proc.cpu_percent(interval=None), 1)
 
             # Command line
             cmdline_list = info.get("cmdline")
