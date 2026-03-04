@@ -5,6 +5,7 @@ using psutil. Read-only — no process modification allowed.
 """
 
 import logging
+import re
 import time
 from datetime import datetime
 from typing import NotRequired, TypedDict
@@ -12,6 +13,16 @@ from typing import NotRequired, TypedDict
 import psutil
 
 logger = logging.getLogger(__name__)
+
+_SENSITIVE_ARG_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(
+        r"(?i)(--(?:access-?token|api[-_]?key|auth[-_]?token|password|passwd|secret|client-secret|token)\s*=\s*)([^\s]+)"
+    ),
+    re.compile(
+        r"(?i)(--(?:access-?token|api[-_]?key|auth[-_]?token|password|passwd|secret|client-secret|token)\s+)([^\s]+)"
+    ),
+    re.compile(r"(?i)(--vscode-window-config=)([^\s]+)"),
+)
 
 
 class ProcessRecord(TypedDict):
@@ -52,7 +63,11 @@ class SystemOverview(TypedDict):
 
 def _sanitize_text(value: str) -> str:
     """Remove newlines/tabs from text fields to keep exports parse-safe."""
-    return " ".join(value.replace("\r", " ").replace("\n", " ").replace("\t", " ").split())
+    normalized = " ".join(value.replace("\r", " ").replace("\n", " ").replace("\t", " ").split())
+    redacted = normalized
+    for pattern in _SENSITIVE_ARG_PATTERNS:
+        redacted = pattern.sub(r"\1[REDACTED]", redacted)
+    return redacted
 
 
 def collect_system_overview() -> SystemOverview:
