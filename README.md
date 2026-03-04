@@ -17,6 +17,18 @@ Optional VirusTotal enrichment:
 py -3.13 -m memguard --vt
 ```
 
+Experimental memory metadata inspection:
+
+```powershell
+py -3.13 -m memguard --memory
+```
+
+Tune memory inspection threshold:
+
+```powershell
+py -3.13 -m memguard --memory --memory-min-score 30
+```
+
 ## Local Blocklist Usage
 
 Blocklist file path:
@@ -85,3 +97,31 @@ Rate-limit notes:
 - Hashing is skipped when executable path is unavailable.
 - File read/hash errors are skipped silently for process hashing.
 - Blocklist is loaded once at startup.
+
+## Experimental Memory Inspection
+
+Memory inspection is **experimental** and strictly read-only.
+
+When `--memory` is enabled, MemGuard inspects up to 10 processes with `threat_score >= --memory-min-score` (default `30`) and adds:
+
+- `vms_mb`
+- `num_memory_maps`
+- `private_writable_regions`
+- `executable_writable_regions`
+- `memory_anomaly_score`
+- `memory_flag` (`NORMAL` or `ANOMALOUS`)
+
+Memory anomaly scoring:
+
+- `+20` if `executable_writable_regions > 0`
+- `+15` if `private_writable_regions > 100`
+- `+15` if `vms_mb > 2000` and RSS `< 200 MB`
+
+If `memory_anomaly_score >= 20`, MemGuard flags the process as `ANOMALOUS` and adds triggered rule `Memory anomaly detected` during scoring.
+
+Safety behavior:
+
+- Does not read raw memory bytes
+- Does not dump memory to disk
+- Handles `AccessDenied` safely
+- Continues if memory maps are unavailable on the platform/process

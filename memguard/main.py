@@ -12,6 +12,7 @@ import sys
 from .collector import collect_processes, collect_system_overview
 from .exporter import export_csv, export_json
 from .hasher import attach_sha256, load_blocklist
+from .memory_inspector import inspect_memory
 from .scorer import score_processes
 from .threat_intel import enrich_with_virustotal
 from .ui import (
@@ -34,6 +35,18 @@ logger = logging.getLogger(__name__)
 def _build_parser() -> argparse.ArgumentParser:
     """Build CLI parser for MemGuard options."""
     parser = argparse.ArgumentParser(description="MemGuard — Read-Only Forensic Mode")
+    parser.add_argument(
+        "--memory",
+        action="store_true",
+        default=False,
+        help="Enable experimental memory metadata inspection for high-risk processes.",
+    )
+    parser.add_argument(
+        "--memory-min-score",
+        type=int,
+        default=30,
+        help="Only inspect memory metadata for processes with threat_score >= this value.",
+    )
     parser.add_argument(
         "--vt",
         action="store_true",
@@ -73,6 +86,14 @@ def main(argv: list[str] | None = None) -> None:
     processes = collect_processes()
     processes = attach_sha256(processes)
     processes = score_processes(processes, blocklist_hashes=blocklist_hashes)
+
+    if args.memory:
+        processes = inspect_memory(
+            processes,
+            min_threat_score=args.memory_min_score,
+            max_processes=10,
+        )
+
     vt_min_score = 21 if args.vt_suspicious_only else args.vt_min_score
     processes = enrich_with_virustotal(
         processes,
@@ -88,7 +109,7 @@ def main(argv: list[str] | None = None) -> None:
 
     # ── Display ──────────────────────────────────────────────
     show_system_overview(overview)
-    show_process_table(processes, limit=25)
+    show_process_table(processes, limit=25, memory_enabled=args.memory)
     show_threat_alerts(processes)
     show_virustotal_findings(processes)
 

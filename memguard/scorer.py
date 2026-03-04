@@ -142,6 +142,8 @@ def score_process(process: ProcessRecord, blocklist_hashes: set[str] | None = No
     user = process.get("user") or ""
     sha256_hash = (process.get("sha256") or "").lower()
     vt_malicious = int(process.get("vt_malicious", 0) or 0)
+    memory_anomaly_score = int(process.get("memory_anomaly_score", 0) or 0)
+    memory_flag = str(process.get("memory_flag", "") or "").upper()
 
     if exe and exe != "n/a" and any(pattern in exe for pattern in _TEMP_PATH_PATTERNS):
         score += 30
@@ -173,6 +175,12 @@ def score_process(process: ProcessRecord, blocklist_hashes: set[str] | None = No
     if vt_malicious >= 5:
         score += 50
         triggered_rules.append("VirusTotal malicious detections >= 5")
+
+    if memory_anomaly_score > 0:
+        score += memory_anomaly_score
+
+    if memory_flag == "ANOMALOUS":
+        triggered_rules.append("Memory anomaly detected")
 
     enriched = dict(process)
     enriched["threat_score"] = score

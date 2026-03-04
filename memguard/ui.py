@@ -40,6 +40,13 @@ def _threat_level_style(threat_level: str) -> str:
     return "green"
 
 
+def _memory_flag_style(memory_flag: str) -> str:
+    """Return color style for memory anomaly labels."""
+    if memory_flag == "ANOMALOUS":
+        return "bold magenta"
+    return "white"
+
+
 def show_banner() -> None:
     """Display the MemGuard startup banner."""
     banner = Text("MemGuard — Read-Only Forensic Mode", style="bold cyan")
@@ -62,7 +69,7 @@ def show_system_overview(overview: SystemOverview) -> None:
     console.print()
 
 
-def show_process_table(processes: list[ProcessRecord], limit: int = 25) -> None:
+def show_process_table(processes: list[ProcessRecord], limit: int = 25, memory_enabled: bool = False) -> None:
     """Render a rich table of the top N processes sorted by memory.
 
     Args:
@@ -85,6 +92,9 @@ def show_process_table(processes: list[ProcessRecord], limit: int = 25) -> None:
     table.add_column("CPU %", justify="right", style="blue")
     table.add_column("Threat Score", justify="right", style="bright_cyan")
     table.add_column("Threat Level", justify="center")
+    if memory_enabled:
+        table.add_column("Mem Flag", justify="center")
+        table.add_column("Mem Score", justify="right", style="bright_magenta")
     table.add_column("Executable Path", max_width=50, overflow="ellipsis")
     table.add_column("Start Time", style="dim")
 
@@ -93,7 +103,7 @@ def show_process_table(processes: list[ProcessRecord], limit: int = 25) -> None:
         threat_score = int(proc.get("threat_score", 0))
         threat_level = str(proc.get("threat_level", "SAFE"))
         threat_style = _threat_level_style(threat_level)
-        table.add_row(
+        row = [
             str(proc["pid"]),
             str(proc["ppid"]),
             proc["name"],
@@ -102,9 +112,21 @@ def show_process_table(processes: list[ProcessRecord], limit: int = 25) -> None:
             f"{proc['cpu_percent']:.1f}",
             str(threat_score),
             f"[{threat_style}]{threat_level}[/{threat_style}]",
+        ]
+
+        if memory_enabled:
+            memory_flag = str(proc.get("memory_flag", "-"))
+            memory_score = proc.get("memory_anomaly_score", "-")
+            memory_style = _memory_flag_style(memory_flag)
+            row.append(f"[{memory_style}]{memory_flag}[/{memory_style}]")
+            row.append(str(memory_score))
+
+        row.extend([
             proc["exe"],
             proc["start_time"],
-        )
+        ])
+
+        table.add_row(*row)
 
     console.print(table)
     console.print(
