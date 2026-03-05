@@ -17,6 +17,7 @@ from typing import Final
 import psutil
 
 from .collector import ProcessRecord
+from memguard.system_whitelist import is_system_process
 
 logger = logging.getLogger(__name__)
 
@@ -47,9 +48,9 @@ _USER_SPACE_PATTERNS: Final[tuple[str, ...]] = (
 
 def _classify_score(score: int) -> str:
     """Map numeric score to threat level."""
-    if score >= 50:
-        return "MALICIOUS"
-    if score >= 21:
+    if score >= 40:
+        return "HIGH"
+    if score >= 15:
         return "SUSPICIOUS"
     return "SAFE"
 
@@ -112,24 +113,33 @@ def _is_process_elevated(pid: int, user: str) -> bool:
     return _is_windows_token_elevated(pid)
 
 
-def _has_ephemeral_listening_port(pid: int) -> bool:
-    """Check if a process has any listening inet connection on port > 49152.
+def _get_ephemeral_listening_addresses(pid: int) -> set[str]:
+    """Return inet listening addresses where local port is > 49152.
 
-    Returns False on permission/process errors to keep scoring resilient.
+    Returns an empty set on permission/process errors to keep scoring resilient.
     """
     try:
         proc = psutil.Process(pid)
         connections = proc.connections(kind="inet")
+        addresses: set[str] = set()
         for conn in connections:
             if conn.status == psutil.CONN_LISTEN and conn.laddr and conn.laddr.port > 49152:
-                return True
+                ip = getattr(conn.laddr, "ip", None)
+                if ip:
+                    addresses.add(str(ip))
+                elif isinstance(conn.laddr, tuple) and conn.laddr:
+                    addresses.add(str(conn.laddr[0]))
+        return addresses
     except (psutil.AccessDenied, psutil.NoSuchProcess, psutil.ZombieProcess):
-        return False
+        return set()
     except Exception as exc:
         logger.debug("Network inspection failed for PID %s: %s", pid, exc)
-        return False
+        return set()
 
-    return False
+
+def _has_ephemeral_listening_port(pid: int) -> bool:
+    """Check if a process has any listening inet connection on port > 49152."""
+    return bool(_get_ephemeral_listening_addresses(pid))
 
 
 def score_process(process: ProcessRecord, blocklist_hashes: set[str] | None = None) -> ProcessRecord:
@@ -164,9 +174,24 @@ def score_process(process: ProcessRecord, blocklist_hashes: set[str] | None = No
         score += 15
         triggered_rules.append("elevated_user_running_from_user_space")
 
-    if pid and _has_ephemeral_listening_port(pid):
-        score += 25
-        triggered_rules.append("listening_ephemeral_port")
+    if pid:
+        ephemeral_addresses = _get_ephemeral_listening_addresses(pid)
+        if ephemeral_addresses:
+            rule_score = 25
+            rule_label = "listening_ephemeral_port"
+
+            if is_system_process(process.get("name") or "", process.get("exe")):
+                rule_score = 5
+                rule_label = "listening_ephemeral_port (system_adjusted)"
+                logger.debug("Adjusted score for PID %s due to system whitelist", pid)
+
+            if all(address == "127.0.0.1" for address in ephemeral_addresses):
+                rule_score = max(0, rule_score - 10)
+                rule_label = "listening_ephemeral_port (loopback_only)"
+                logger.debug("Reduced score for PID %s due to loopback port", pid)
+
+            score += max(0, rule_score)
+            triggered_rules.append(rule_label)
 
     if blocklist_hashes and sha256_hash and sha256_hash in blocklist_hashes:
         score += 70
