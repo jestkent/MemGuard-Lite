@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+
+# Runtime scan exports (contain machine-specific process data)
+processes.csv
+processes.json
+memguard_results_*.csv
+memguard_results_*.json
+
+# Build artifacts
+build/
+dist/
+release/
+*.spec
+
+# Local env files
+.env
+.env.*

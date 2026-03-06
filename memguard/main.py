@@ -15,6 +15,7 @@ from .hasher import attach_sha256, load_blocklist
 from .memory_inspector import inspect_memory
 from .scorer import score_processes
 from .threat_intel import enrich_with_virustotal
+from .gui import launch_gui
 from .ui import (
     show_banner,
     show_process_table,
@@ -35,6 +36,12 @@ logger = logging.getLogger(__name__)
 def _build_parser() -> argparse.ArgumentParser:
     """Build CLI parser for MemGuard options."""
     parser = argparse.ArgumentParser(description="MemGuard — Read-Only Forensic Mode")
+    parser.add_argument(
+        "--gui",
+        action="store_true",
+        default=False,
+        help="Launch desktop GUI instead of terminal output.",
+    )
     parser.add_argument(
         "--memory",
         action="store_true",
@@ -77,6 +84,11 @@ def _build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> None:
     """Entry point for MemGuard CLI."""
     args = _build_parser().parse_args(argv)
+
+    if args.gui:
+        launch_gui()
+        return
+
     show_banner()
     blocklist_hashes = load_blocklist()
 

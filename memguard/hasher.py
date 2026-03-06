@@ -8,15 +8,26 @@ from __future__ import annotations
 import hashlib
 import logging
 from pathlib import Path
+import sys
 
 from .collector import ProcessRecord
 
 logger = logging.getLogger(__name__)
 
 
+def _resolve_resource_path(relative_path: str) -> Path:
+    """Resolve data file paths for source runs and frozen executable runs."""
+    if getattr(sys, "frozen", False):
+        base_dir = Path(getattr(sys, "_MEIPASS", Path.cwd()))
+    else:
+        base_dir = Path(__file__).resolve().parent.parent
+
+    return base_dir / relative_path
+
+
 def load_blocklist(path: str = "data/blocklist.txt") -> set[str]:
     """Load local SHA256 blocklist once and return hashes as a lowercase set."""
-    blocklist_path = Path(path)
+    blocklist_path = _resolve_resource_path(path)
     try:
         lines = blocklist_path.read_text(encoding="utf-8").splitlines()
     except OSError as exc:
