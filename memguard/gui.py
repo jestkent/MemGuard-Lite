@@ -14,7 +14,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
 from .collector import ProcessRecord, collect_processes, collect_system_overview
-from .exporter import export_csv, export_json
+from .exporter import export_csv, export_full_report, export_json
 from .hasher import attach_sha256, load_blocklist
 from .memory_inspector import inspect_memory
 from .scorer import score_processes
@@ -109,13 +109,14 @@ class MemGuardGUI(tk.Tk):
         ttk.Button(controls, text="Run Scan", command=self.run_scan).grid(row=1, column=5, padx=6, pady=(0, 8))
         ttk.Button(controls, text="Save CSV", command=self.save_csv).grid(row=1, column=6, padx=6, pady=(0, 8))
         ttk.Button(controls, text="Save JSON", command=self.save_json).grid(row=1, column=7, padx=6, pady=(0, 8))
-        ttk.Button(controls, text="Validate Selected", command=self.validate_selected).grid(row=1, column=8, padx=6, pady=(0, 8))
+        ttk.Button(controls, text="Save Full Report", command=self.save_full_report).grid(row=1, column=8, padx=6, pady=(0, 8))
+        ttk.Button(controls, text="Validate Selected", command=self.validate_selected).grid(row=1, column=9, padx=6, pady=(0, 8))
 
         self.progress = ttk.Progressbar(controls, mode="indeterminate", length=220)
-        self.progress.grid(row=1, column=9, padx=(8, 4), pady=(0, 8), sticky="e")
+        self.progress.grid(row=1, column=10, padx=(8, 4), pady=(0, 8), sticky="e")
 
         status_label = ttk.Label(controls, textvariable=self.status_var)
-        status_label.grid(row=1, column=10, sticky="w", padx=(4, 8), pady=(0, 8))
+        status_label.grid(row=1, column=11, sticky="w", padx=(4, 8), pady=(0, 8))
 
     def _build_summary(self) -> None:
         summary = ttk.LabelFrame(self, text="Scan Summary")
@@ -370,9 +371,9 @@ class MemGuardGUI(tk.Tk):
 
     def _refresh_summary(self) -> None:
         total = len(self.filtered_processes)
-        suspicious = sum(1 for process in self.filtered_processes if process.get("threat_level") == "SUSPICIOUS")
-        high = sum(1 for process in self.filtered_processes if process.get("threat_level") == "HIGH")
-        vt_enriched = sum(1 for process in self.filtered_processes if isinstance(process.get("vt_malicious"), int))
+        suspicious = sum(process.get("threat_level") == "SUSPICIOUS" for process in self.filtered_processes)
+        high = sum(process.get("threat_level") == "HIGH" for process in self.filtered_processes)
+        vt_enriched = sum(isinstance(process.get("vt_malicious"), int) for process in self.filtered_processes)
 
         self.summary_total_var.set(str(total))
         self.summary_suspicious_var.set(str(suspicious))
@@ -394,8 +395,7 @@ class MemGuardGUI(tk.Tk):
             self._set_details_text("Select a process row to inspect command line and triggered rules.")
 
     def _on_select(self, _event: object) -> None:
-        process = self._get_selected_process()
-        if not process:
+        if not (process := self._get_selected_process()):
             return
 
         self._set_details_text(self._build_process_details(process))
@@ -431,8 +431,7 @@ class MemGuardGUI(tk.Tk):
         )
 
     def validate_selected(self) -> None:
-        process = self._get_selected_process()
-        if not process:
+        if not (process := self._get_selected_process()):
             messagebox.showinfo("MemGuard Validation", "Select a process row first.")
             return
 
@@ -457,6 +456,24 @@ class MemGuardGUI(tk.Tk):
         self.details_text.insert(tk.END, text)
         self.details_text.configure(state="disabled")
 
+    def _current_scan_options(self) -> dict[str, object]:
+        return {
+            "memory_enabled": self.memory_enabled_var.get(),
+            "memory_min_score": self._parse_int(self.memory_min_score_var.get(), fallback=30, minimum=0),
+            "virustotal_enabled": self.vt_enabled_var.get(),
+            "virustotal_max_requests": self._parse_int(self.vt_max_requests_var.get(), fallback=8, minimum=1),
+            "virustotal_min_score": self._parse_int(self.vt_min_score_var.get(), fallback=20, minimum=0),
+            "virustotal_suspicious_only": self.vt_suspicious_only_var.get(),
+        }
+
+    def _current_filter_state(self) -> dict[str, object]:
+        return {
+            "search": self.search_var.get().strip() or "<none>",
+            "threat_filter": self.threat_filter_var.get().strip().upper() or "ALL",
+            "filtered_result_count": len(self.filtered_processes),
+            "full_result_count": len(self.processes),
+        }
+
     def _export_to_path(self, destination: Path, format_name: str) -> None:
         if not self.filtered_processes:
             messagebox.showinfo("MemGuard Export", "No filtered results available to export.")
@@ -472,25 +489,54 @@ class MemGuardGUI(tk.Tk):
 
     def save_csv(self) -> None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        path = filedialog.asksaveasfilename(
+        if path := filedialog.asksaveasfilename(
             title="Save MemGuard CSV",
             defaultextension=".csv",
             initialfile=f"memguard_results_{timestamp}.csv",
             filetypes=[("CSV Files", "*.csv"), ("All Files", "*.*")],
-        )
-        if path:
+        ):
             self._export_to_path(Path(path), "csv")
 
     def save_json(self) -> None:
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        path = filedialog.asksaveasfilename(
+        if path := filedialog.asksaveasfilename(
             title="Save MemGuard JSON",
             defaultextension=".json",
             initialfile=f"memguard_results_{timestamp}.json",
             filetypes=[("JSON Files", "*.json"), ("All Files", "*.*")],
-        )
-        if path:
+        ):
             self._export_to_path(Path(path), "json")
+
+    def save_full_report(self) -> None:
+        if not self.processes:
+            messagebox.showinfo("MemGuard Report", "Run a scan first to generate a full report.")
+            return
+
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        path = filedialog.asksaveasfilename(
+            title="Save MemGuard Full Report",
+            defaultextension=".md",
+            initialfile=f"memguard_full_report_{timestamp}.md",
+            filetypes=[("Markdown Files", "*.md"), ("Text Files", "*.txt"), ("All Files", "*.*")],
+        )
+        if not path:
+            return
+
+        destination = export_full_report(
+            self.processes,
+            overview=self.overview,
+            path=path,
+            scan_options=self._current_scan_options(),
+            generated_at=self.last_scan_time,
+            active_filters=self._current_filter_state(),
+        )
+
+        self.status_var.set(f"Saved full report to {destination}")
+        messagebox.showinfo(
+            "MemGuard Report",
+            "Saved AI-friendly full report:\n"
+            f"{destination}",
+        )
 
 
 def launch_gui() -> None:

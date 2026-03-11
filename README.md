@@ -141,6 +141,7 @@ GUI capabilities:
 - Sort columns for quick prioritization.
 - Inspect detailed record and triggered rules.
 - Validate selected suspicious process.
+- Save a full AI-friendly Markdown report containing scan metadata, summary findings, and the full JSON dataset.
 - Export filtered subset to timestamped CSV/JSON.
 
 ## CLI Usage
