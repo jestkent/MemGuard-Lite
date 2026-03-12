@@ -124,6 +124,44 @@ Validation checks are still read-only and include:
 
 This helps bridge the gap between static scan output and immediate triage confidence.
 
+## Network Port Monitoring (New)
+
+MemGuard now monitors listening ports and active network connections to identify security risks.
+
+### Port Risk Scoring
+
+Ports are scored based on:
+
+- **Insecure protocols** (+30): FTP (port 21), Telnet (23), unencrypted HTTP (80), IMAP (143), POP3 (110), SMTP (25)
+- **Exposed services** (+20): MySQL (3306), PostgreSQL (5432), Redis (6379), MongoDB (27017), Elasticsearch (9200)
+- **Common backdoor ports** (+15): 4444, 5555, 6666, 7777, 8888, 9999
+- **Listening state** (+5): Port actively listening for incoming connections
+- **Localhost only** (-10): Risk reduction for 127.0.0.1 (loopback only)
+
+### Risk Levels
+
+- `HIGH` (score ≥ 35): Insecure protocol or exposed high-risk service
+- `MEDIUM` (score ≥ 20): Potentially exposed database or development service
+- `LOW` (score ≥ 10): Lower-risk listening port
+- `SAFE` (score < 10): Likely safe or standard system port
+
+### GUI PORT VIEWER
+
+Click **Show Ports** in the GUI (after running a scan) to view:
+
+- All listening ports with protocol and state
+- Associated process name and PID
+- Local and remote addresses
+- Risk assessment with triggered rules
+- Summary of high-risk and medium-risk ports
+- Localhost-only vs. externally exposed breakdown
+
+This helps you quickly identify:
+
+- Services accidentally exposed to the network
+- Unencrypted protocols that should be replaced with TLS alternatives
+- Suspicious processes binding to unexpected ports
+
 ## Desktop GUI
 
 Launch:
@@ -141,6 +179,8 @@ GUI capabilities:
 - Sort columns for quick prioritization.
 - Inspect detailed record and triggered rules.
 - Validate selected suspicious process.
+- Monitor **listening ports and network connections** with security risk scoring.
+- Identify insecure protocols (FTP, Telnet, unencrypted email) and exposed services.
 - Save a full AI-friendly Markdown report containing scan metadata, summary findings, and the full JSON dataset.
 - Export filtered subset to timestamped CSV/JSON.
 

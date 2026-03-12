@@ -17,6 +17,7 @@ from .collector import ProcessRecord, collect_processes, collect_system_overview
 from .exporter import export_csv, export_full_report, export_json
 from .hasher import attach_sha256, load_blocklist
 from .memory_inspector import inspect_memory
+from .port_inspector import PortRecord, collect_listening_ports
 from .scorer import score_processes
 from .threat_intel import enrich_with_virustotal
 from .validator import format_validation_report, validate_process_record
@@ -38,6 +39,8 @@ class MemGuardGUI(tk.Tk):
         self.overview: dict[str, float] = {}
         self.processes: list[ProcessRecord] = []
         self.filtered_processes: list[ProcessRecord] = []
+        self.ports: list[PortRecord] = []
+        self.filtered_ports: list[PortRecord] = []
 
         self.memory_enabled_var = tk.BooleanVar(value=False)
         self.memory_min_score_var = tk.StringVar(value="30")
@@ -107,16 +110,17 @@ class MemGuardGUI(tk.Tk):
         threat_combo.bind("<<ComboboxSelected>>", lambda _event: self._refresh_filtered_results())
 
         ttk.Button(controls, text="Run Scan", command=self.run_scan).grid(row=1, column=5, padx=6, pady=(0, 8))
-        ttk.Button(controls, text="Save CSV", command=self.save_csv).grid(row=1, column=6, padx=6, pady=(0, 8))
-        ttk.Button(controls, text="Save JSON", command=self.save_json).grid(row=1, column=7, padx=6, pady=(0, 8))
-        ttk.Button(controls, text="Save Full Report", command=self.save_full_report).grid(row=1, column=8, padx=6, pady=(0, 8))
-        ttk.Button(controls, text="Validate Selected", command=self.validate_selected).grid(row=1, column=9, padx=6, pady=(0, 8))
+        ttk.Button(controls, text="Show Ports", command=self.show_ports_window).grid(row=1, column=6, padx=6, pady=(0, 8))
+        ttk.Button(controls, text="Save CSV", command=self.save_csv).grid(row=1, column=7, padx=6, pady=(0, 8))
+        ttk.Button(controls, text="Save JSON", command=self.save_json).grid(row=1, column=8, padx=6, pady=(0, 8))
+        ttk.Button(controls, text="Save Full Report", command=self.save_full_report).grid(row=1, column=9, padx=6, pady=(0, 8))
+        ttk.Button(controls, text="Validate Selected", command=self.validate_selected).grid(row=1, column=10, padx=6, pady=(0, 8))
 
         self.progress = ttk.Progressbar(controls, mode="indeterminate", length=220)
-        self.progress.grid(row=1, column=10, padx=(8, 4), pady=(0, 8), sticky="e")
+        self.progress.grid(row=1, column=11, padx=(8, 4), pady=(0, 8), sticky="e")
 
         status_label = ttk.Label(controls, textvariable=self.status_var)
-        status_label.grid(row=1, column=11, sticky="w", padx=(4, 8), pady=(0, 8))
+        status_label.grid(row=1, column=12, sticky="w", padx=(4, 8), pady=(0, 8))
 
     def _build_summary(self) -> None:
         summary = ttk.LabelFrame(self, text="Scan Summary")
@@ -219,7 +223,7 @@ class MemGuardGUI(tk.Tk):
         vt_max_requests: int,
         vt_min_score: int,
         vt_suspicious_only: bool,
-    ) -> tuple[dict[str, float], list[ProcessRecord]]:
+    ) -> tuple[dict[str, float], list[ProcessRecord], list[PortRecord]]:
         overview = collect_system_overview()
         processes = collect_processes()
         processes = attach_sha256(processes)
@@ -241,7 +245,8 @@ class MemGuardGUI(tk.Tk):
         )
 
         processes = score_processes(processes, blocklist_hashes=self.blocklist_hashes)
-        return overview, processes
+        ports = collect_listening_ports()
+        return overview, processes, ports
 
     def run_scan(self) -> None:
         self.status_var.set("Scanning processes...")
@@ -256,7 +261,7 @@ class MemGuardGUI(tk.Tk):
 
         def _worker() -> None:
             try:
-                overview, processes = self._scan_pipeline(
+                overview, processes, ports = self._scan_pipeline(
                     memory_enabled=memory_enabled,
                     memory_min_score=memory_min_score,
                     vt_enabled=vt_enabled,
@@ -264,24 +269,26 @@ class MemGuardGUI(tk.Tk):
                     vt_min_score=vt_min_score,
                     vt_suspicious_only=vt_suspicious_only,
                 )
-                self.after(0, lambda: self._on_scan_success(overview, processes))
+                self.after(0, lambda: self._on_scan_success(overview, processes, ports))
             except Exception as exc:  # pragma: no cover - GUI runtime safety
                 logger.exception("Scan failed")
                 self.after(0, lambda: self._on_scan_error(exc))
 
         threading.Thread(target=_worker, daemon=True).start()
 
-    def _on_scan_success(self, overview: dict[str, float], processes: list[ProcessRecord]) -> None:
+    def _on_scan_success(self, overview: dict[str, float], processes: list[ProcessRecord], ports: list[PortRecord]) -> None:
         self.progress.stop()
         self.overview = overview
         self.processes = processes
+        self.ports = ports
+        self.filtered_ports = ports
         self.last_scan_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.summary_scan_time_var.set(self.last_scan_time)
 
         self._refresh_filtered_results()
         self._refresh_summary()
 
-        self.status_var.set(f"Scan complete - {len(processes)} processes")
+        self.status_var.set(f"Scan complete - {len(processes)} processes, {len(ports)} ports")
 
     def _on_scan_error(self, exc: Exception) -> None:
         self.progress.stop()
@@ -537,6 +544,122 @@ class MemGuardGUI(tk.Tk):
             "Saved AI-friendly full report:\n"
             f"{destination}",
         )
+
+    def show_ports_window(self) -> None:
+        if not self.ports:
+            messagebox.showinfo("MemGuard Ports", "Run a scan first to view listening ports.")
+            return
+
+        ports_window = tk.Toplevel(self)
+        ports_window.title("MemGuard - Listening Ports")
+        ports_window.geometry("1200x600")
+        ports_window.minsize(900, 400)
+
+        # Create frame for ports table
+        table_frame = ttk.LabelFrame(ports_window, text="Listening Ports & Connections")
+        table_frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        columns = ("Port", "Protocol", "State", "Process", "PID", "Risk", "Local Addr", "Remote Addr")
+        tree = ttk.Treeview(table_frame, columns=columns, show="headings", height=20)
+
+        headings = {
+            "Port": ("Port", 60),
+            "Protocol": ("Protocol", 70),
+            "State": ("State", 100),
+            "Process": ("Process", 150),
+            "PID": ("PID", 60),
+            "Risk": ("Risk", 80),
+            "Local Addr": ("Local Addr", 180),
+            "Remote Addr": ("Remote Addr", 180),
+        }
+
+        for column, (title, width) in headings.items():
+            tree.heading(column, text=title)
+            anchor = "e" if column in {"Port", "PID"} else "w"
+            tree.column(column, width=width, anchor=anchor)
+
+        # Sort by risk score descending
+        sorted_ports = sorted(self.ports, key=lambda p: p["risk_score"], reverse=True)
+
+        for port in sorted_ports:
+            risk_color = "red" if port["risk_level"] == "HIGH" else "orange" if port["risk_level"] == "MEDIUM" else "blue" if port["risk_level"] == "LOW" else ""
+            tree.insert(
+                "",
+                "end",
+                values=(
+                    port["port"],
+                    port["protocol"],
+                    port["state"],
+                    port["process_name"],
+                    port["pid"] or "-",
+                    f"{port['risk_level']} ({port['risk_score']})",
+                    port["local_addr"],
+                    port["remote_addr"],
+                ),
+            )
+
+        vbar = ttk.Scrollbar(table_frame, orient="vertical", command=tree.yview)
+        hbar = ttk.Scrollbar(table_frame, orient="horizontal", command=tree.xview)
+        tree.configure(yscroll=vbar.set, xscroll=hbar.set)
+
+        tree.grid(row=0, column=0, sticky="nsew")
+        vbar.grid(row=0, column=1, sticky="ns")
+        hbar.grid(row=1, column=0, sticky="ew")
+
+        table_frame.rowconfigure(0, weight=1)
+        table_frame.columnconfigure(0, weight=1)
+
+        # Details panel
+        details_frame = ttk.LabelFrame(ports_window, text="Port Details", height=150)
+        details_frame.pack(fill="x", padx=10, pady=(0, 10))
+
+        details_text = tk.Text(details_frame, height=6, wrap="word", font=("Consolas", 9))
+        details_text.pack(fill="both", expand=True, padx=8, pady=8)
+        details_text.configure(state="disabled")
+
+        def on_port_select(_event: object) -> None:
+            selected = tree.selection()
+            if not selected:
+                return
+
+            row_index = tree.index(selected[0])
+            if row_index < 0 or row_index >= len(sorted_ports):
+                return
+
+            port_rec = sorted_ports[row_index]
+            rules_text = ", ".join(port_rec["triggered_rules"]) if port_rec["triggered_rules"] else "-"
+            details = (
+                f"Port: {port_rec['port']}\n"
+                f"Protocol: {port_rec['protocol']}\n"
+                f"State: {port_rec['state']}\n"
+                f"Process: {port_rec['process_name']} (PID {port_rec['pid']})\n"
+                f"Risk Level: {port_rec['risk_level']} (Score: {port_rec['risk_score']})\n"
+                f"Local Address: {port_rec['local_addr']}\n"
+                f"Remote Address: {port_rec['remote_addr']}\n"
+                f"Triggered Rules: {rules_text}"
+            )
+            details_text.configure(state="normal")
+            details_text.delete("1.0", tk.END)
+            details_text.insert(tk.END, details)
+            details_text.configure(state="disabled")
+
+        tree.bind("<<TreeviewSelect>>", on_port_select)
+
+        # Summary at bottom
+        summary_frame = ttk.LabelFrame(ports_window, text="Summary")
+        summary_frame.pack(fill="x", padx=10, pady=(0, 10))
+
+        high_risk = sum(p["risk_level"] == "HIGH" for p in self.ports)
+        medium_risk = sum(p["risk_level"] == "MEDIUM" for p in self.ports)
+        is_localhost_only = sum("127.0.0.1" in p["local_addr"] for p in self.ports)
+
+        summary_text = (
+            f"Total Ports: {len(self.ports)} | "
+            f"High Risk: {high_risk} | "
+            f"Medium Risk: {medium_risk} | "
+            f"Localhost Only: {is_localhost_only}"
+        )
+        ttk.Label(summary_frame, text=summary_text).pack(padx=10, pady=8)
 
 
 def launch_gui() -> None:
