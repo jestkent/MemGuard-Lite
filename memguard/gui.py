@@ -116,7 +116,7 @@ class MemGuardGUI(tk.Tk):
         ttk.Button(controls, text="Save Full Report", command=self.save_full_report).grid(row=1, column=9, padx=6, pady=(0, 8))
         ttk.Button(controls, text="Validate Selected", command=self.validate_selected).grid(row=1, column=10, padx=6, pady=(0, 8))
 
-        self.progress = ttk.Progressbar(controls, mode="indeterminate", length=220)
+        self.progress = ttk.Progressbar(controls, mode="determinate", length=220, maximum=100)
         self.progress.grid(row=1, column=11, padx=(8, 4), pady=(0, 8), sticky="e")
 
         status_label = ttk.Label(controls, textvariable=self.status_var)
@@ -223,13 +223,26 @@ class MemGuardGUI(tk.Tk):
         vt_max_requests: int,
         vt_min_score: int,
         vt_suspicious_only: bool,
+        progress_cb=None,
     ) -> tuple[dict[str, float], list[ProcessRecord], list[PortRecord]]:
+        def _report(value: int, message: str) -> None:
+            if progress_cb:
+                progress_cb(value, message)
+
+        _report(5, "Collecting system overview...")
         overview = collect_system_overview()
+
+        _report(15, "Collecting processes...")
         processes = collect_processes()
+
+        _report(25, f"Hashing {len(processes)} executables (slow step)...")
         processes = attach_sha256(processes)
+
+        _report(70, "Scoring processes...")
         processes = score_processes(processes, blocklist_hashes=self.blocklist_hashes)
 
         if memory_enabled:
+            _report(78, "Inspecting memory regions...")
             processes = inspect_memory(
                 processes,
                 min_threat_score=memory_min_score,
@@ -237,6 +250,8 @@ class MemGuardGUI(tk.Tk):
             )
 
         effective_vt_min_score = 21 if vt_suspicious_only else vt_min_score
+        if vt_enabled:
+            _report(83, "Querying VirusTotal (may take a while)...")
         processes = enrich_with_virustotal(
             processes,
             enabled=vt_enabled,
@@ -244,13 +259,25 @@ class MemGuardGUI(tk.Tk):
             min_threat_score=effective_vt_min_score,
         )
 
+        _report(92, "Re-scoring with all evidence...")
         processes = score_processes(processes, blocklist_hashes=self.blocklist_hashes)
+
+        _report(97, "Collecting listening ports...")
         ports = collect_listening_ports()
+
         return overview, processes, ports
 
+    def _post_progress(self, value: int, message: str) -> None:
+        """Thread-safe progress update — callable from the worker thread."""
+        self.after(0, lambda: self._apply_progress(value, message))
+
+    def _apply_progress(self, value: int, message: str) -> None:
+        self.progress["value"] = value
+        self.status_var.set(message)
+
     def run_scan(self) -> None:
-        self.status_var.set("Scanning processes...")
-        self.progress.start(8)
+        self.progress["value"] = 0
+        self.status_var.set("Starting scan...")
 
         memory_enabled = self.memory_enabled_var.get()
         memory_min_score = self._parse_int(self.memory_min_score_var.get(), fallback=30, minimum=0)
@@ -268,6 +295,7 @@ class MemGuardGUI(tk.Tk):
                     vt_max_requests=vt_max_requests,
                     vt_min_score=vt_min_score,
                     vt_suspicious_only=vt_suspicious_only,
+                    progress_cb=self._post_progress,
                 )
                 self.after(0, lambda: self._on_scan_success(overview, processes, ports))
             except Exception as exc:  # pragma: no cover - GUI runtime safety
@@ -277,7 +305,7 @@ class MemGuardGUI(tk.Tk):
         threading.Thread(target=_worker, daemon=True).start()
 
     def _on_scan_success(self, overview: dict[str, float], processes: list[ProcessRecord], ports: list[PortRecord]) -> None:
-        self.progress.stop()
+        self.progress["value"] = 100
         self.overview = overview
         self.processes = processes
         self.ports = ports
@@ -291,7 +319,7 @@ class MemGuardGUI(tk.Tk):
         self.status_var.set(f"Scan complete - {len(processes)} processes, {len(ports)} ports")
 
     def _on_scan_error(self, exc: Exception) -> None:
-        self.progress.stop()
+        self.progress["value"] = 0
         self.status_var.set("Scan failed")
         messagebox.showerror("MemGuard Scan Error", f"Scan failed:\n{exc}")
 

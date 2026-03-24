@@ -129,9 +129,9 @@ def main(argv: list[str] | None = None) -> None:
     csv_path = export_csv(processes)
     json_path = export_json(processes)
 
-    console.print(f"[green]✓[/green] CSV  → {csv_path}")
-    console.print(f"[green]✓[/green] JSON → {json_path}")
-    console.print("\n[dim]Read-only mode — no processes were modified.[/dim]")
+    console.print(f"[green]OK[/green] CSV  -> {csv_path}")
+    console.print(f"[green]OK[/green] JSON -> {json_path}")
+    console.print("\n[dim]Read-only mode - no processes were modified.[/dim]")
 
 
 if __name__ == "__main__":

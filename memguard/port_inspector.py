@@ -6,7 +6,9 @@ scoring them for security risk and linking to processes.
 
 from __future__ import annotations
 
+import concurrent.futures
 import logging
+import socket
 from typing import NotRequired, TypedDict
 
 import psutil
@@ -110,7 +112,13 @@ def collect_listening_ports() -> list[PortRecord]:
     port_to_pid: dict[int, int] = {}
     
     try:
-        connections = psutil.net_connections(kind="inet")
+        with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(psutil.net_connections, "inet")
+            try:
+                connections = future.result(timeout=8)
+            except concurrent.futures.TimeoutError:
+                logger.warning("net_connections timed out - skipping port scan")
+                return ports
     except (psutil.AccessDenied, OSError):
         logger.warning("Could not enumerate network connections (may require admin)")
         return ports
@@ -128,7 +136,7 @@ def collect_listening_ports() -> list[PortRecord]:
             continue
         
         port = conn.laddr.port
-        protocol = "TCP" if conn.type == psutil.SOCK_STREAM else "UDP"
+        protocol = "TCP" if conn.type == socket.SOCK_STREAM else "UDP"
         state = str(conn.status).upper() if conn.status else "UNKNOWN"
         local_addr = f"{conn.laddr.ip}:{conn.laddr.port}"
         remote_addr = f"{conn.raddr.ip}:{conn.raddr.port}" if conn.raddr else "N/A"
