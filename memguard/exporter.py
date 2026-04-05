@@ -11,6 +11,7 @@ from pathlib import Path
 import pandas as pd
 
 from .collector import ProcessRecord
+from .port_inspector import PortRecord
 
 logger = logging.getLogger(__name__)
 
@@ -176,6 +177,78 @@ def export_full_report(
 
     dest.write_text("\n".join(lines), encoding="utf-8")
     logger.info("Exported full report with %d processes to %s", len(processes), dest)
+    return dest
+
+
+def export_ports_report(
+    ports: list[PortRecord],
+    path: str = "memguard_ports_report.md",
+    generated_at: str | None = None,
+) -> Path:
+    """Export a markdown report of port scan results.
+
+    Args:
+        ports: Port records from the last scan.
+        path: Output file path.
+        generated_at: Human-readable scan timestamp.
+
+    Returns:
+        Path to the written markdown report.
+    """
+    dest = Path(path)
+
+    high = sum(p["risk_level"] == "HIGH" for p in ports)
+    medium = sum(p["risk_level"] == "MEDIUM" for p in ports)
+    low = sum(p["risk_level"] == "LOW" for p in ports)
+    safe = sum(p["risk_level"] == "SAFE" for p in ports)
+
+    sorted_ports = sorted(ports, key=lambda p: p["risk_score"], reverse=True)
+
+    lines = [
+        "# MemGuard Ports Report",
+        "",
+        "## Scan Metadata",
+        "",
+        f"- Generated At: {generated_at or 'N/A'}",
+        "",
+        "## Summary",
+        "",
+        f"- Total Ports: {len(ports)}",
+        f"- High Risk: {high}",
+        f"- Medium Risk: {medium}",
+        f"- Low Risk: {low}",
+        f"- Safe: {safe}",
+        "",
+        "## Port Details",
+        "",
+    ]
+
+    if sorted_ports:
+        for port in sorted_ports:
+            rules_text = ", ".join(port["triggered_rules"]) if port["triggered_rules"] else "-"
+            lines.extend([
+                f"### Port {port['port']} / {port['protocol']} — {port['risk_level']} (score {port['risk_score']})",
+                f"- State: {port['state']}",
+                f"- Process: {port['process_name']} (PID {port['pid'] or 'N/A'})",
+                f"- Local Address: {port['local_addr']}",
+                f"- Remote Address: {port['remote_addr']}",
+                f"- Triggered Rules: {rules_text}",
+                "",
+            ])
+    else:
+        lines.extend(["No port records available.", ""])
+
+    lines.extend([
+        "## Full Dataset JSON",
+        "",
+        "```json",
+        json.dumps(sorted_ports, indent=2),
+        "```",
+        "",
+    ])
+
+    dest.write_text("\n".join(lines), encoding="utf-8")
+    logger.info("Exported ports report with %d ports to %s", len(ports), dest)
     return dest
 
 

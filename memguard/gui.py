@@ -14,7 +14,7 @@ import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
 from .collector import ProcessRecord, collect_processes, collect_system_overview
-from .exporter import export_csv, export_full_report, export_json
+from .exporter import export_csv, export_full_report, export_json, export_ports_report
 from .hasher import attach_sha256, load_blocklist
 from .memory_inspector import inspect_memory
 from .port_inspector import PortRecord, collect_listening_ports
@@ -672,6 +672,29 @@ class MemGuardGUI(tk.Tk):
             details_text.configure(state="disabled")
 
         tree.bind("<<TreeviewSelect>>", on_port_select)
+
+        # Save report button
+        def save_ports_report() -> None:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            path = filedialog.asksaveasfilename(
+                title="Save Ports Report",
+                defaultextension=".md",
+                initialfile=f"memguard_ports_report_{timestamp}.md",
+                filetypes=[("Markdown Files", "*.md"), ("Text Files", "*.txt"), ("All Files", "*.*")],
+                parent=ports_window,
+            )
+            if not path:
+                return
+            destination = export_ports_report(
+                self.ports,
+                path=path,
+                generated_at=self.last_scan_time,
+            )
+            messagebox.showinfo("MemGuard Ports", f"Saved ports report:\n{destination}", parent=ports_window)
+
+        btn_frame = ttk.Frame(ports_window)
+        btn_frame.pack(fill="x", padx=10, pady=(0, 4))
+        ttk.Button(btn_frame, text="Save Report", command=save_ports_report).pack(side="right")
 
         # Summary at bottom
         summary_frame = ttk.LabelFrame(ports_window, text="Summary")
