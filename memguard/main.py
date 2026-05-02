@@ -69,7 +69,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--vt-min-score",
         type=int,
-        default=20,
+        default=10,
         help="Only query VirusTotal for processes with threat_score >= this value.",
     )
     parser.add_argument(

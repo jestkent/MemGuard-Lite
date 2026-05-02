@@ -9,7 +9,7 @@ from __future__ import annotations
 import concurrent.futures
 import logging
 import socket
-from typing import NotRequired, TypedDict
+from typing import TypedDict
 
 import psutil
 
@@ -37,7 +37,7 @@ _EXPOSED_PORTS: dict[int, str] = {
     8888: "HTTP Alt (often Jupyter/dev)",
 }
 
-_EPHEMERAL_RANGE: tuple[int, int] = (49152, 65535)
+_EPHEMERAL_PORT_MIN: int = 49152
 
 
 class PortRecord(TypedDict):
@@ -55,41 +55,38 @@ class PortRecord(TypedDict):
     triggered_rules: list[str]
 
 
-def _assess_port_risk(port: int, state: str, pid: int | None) -> tuple[str, int, list[str]]:
+def _assess_port_risk(port: int, state: str, local_addr: str = "") -> tuple[str, int, list[str]]:
     """Score a port for security risk.
-    
+
     Returns:
         (risk_level, risk_score, triggered_rules)
     """
     score = 0
     rules: list[str] = []
-    
-    # Check if port is insecure (unencrypted protocols)
+
     if port in _INSECURE_PORTS:
         score += 30
         rules.append(f"Insecure protocol: {_INSECURE_PORTS[port]}")
-    
-    # Check if port is commonly exposed (databases, caches, etc.)
     elif port in _EXPOSED_PORTS:
         score += 20
         rules.append(f"Exposed service: {_EXPOSED_PORTS[port]}")
-    
-    # Check for common backdoor/exploit ports
+
     if port in {4444, 5555, 6666, 7777, 8888, 9999}:
         score += 15
         rules.append("Common backdoor/exploit port")
-    
-    # Listening state is riskier than established
+
     if state in {"LISTEN", "LISTENING"}:
         score += 5
         rules.append("Port listening for incoming connections")
-    
-    # Localhost-only is safer
-    if "127.0.0.1" in str(locals().get("local_addr", "")):
+
+    if port >= _EPHEMERAL_PORT_MIN and port not in _EXPOSED_PORTS and port not in {4444, 5555, 6666, 7777, 8888, 9999}:
+        score += 5
+        rules.append("Ephemeral port range (>= 49152)")
+
+    if local_addr.startswith("127.0.0.1"):
         score -= 10
         rules.append("Localhost only (reduced risk)")
-    
-    # Classify risk level
+
     if score >= 35:
         risk_level = "HIGH"
     elif score >= 20:
@@ -98,7 +95,7 @@ def _assess_port_risk(port: int, state: str, pid: int | None) -> tuple[str, int,
         risk_level = "LOW"
     else:
         risk_level = "SAFE"
-    
+
     return risk_level, max(0, score), rules
 
 
@@ -156,8 +153,7 @@ def collect_listening_ports() -> list[PortRecord]:
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 process_name = f"PID {pid} (unknown)"
         
-        # Score the port
-        risk_level, risk_score, triggered_rules = _assess_port_risk(port, state, pid)
+        risk_level, risk_score, triggered_rules = _assess_port_risk(port, state, local_addr)
         
         ports.append(
             {

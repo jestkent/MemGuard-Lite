@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(py -3.13 -c ' *)",
+      "Bash(py -3.13 -c \"from memguard.exporter import export_ports_csv, export_ports_json; print\\('exporter OK'\\)\")",
+      "Bash(py -3.13 -c \"from memguard.threat_intel import test_vt_connection; print\\('threat_intel OK'\\)\")",
+      "Bash(py -3.13 -c \"import psutil; print\\(psutil.__version__\\)\")"
+    ]
+  }
+}

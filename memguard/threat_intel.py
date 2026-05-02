@@ -8,6 +8,7 @@ Queries VT v3 by SHA256 in read-only mode and enriches process records with:
 
 from __future__ import annotations
 
+import contextlib
 import logging
 import os
 import time
@@ -19,7 +20,7 @@ from .collector import ProcessRecord
 logger = logging.getLogger(__name__)
 
 _VT_URL_TEMPLATE = "https://www.virustotal.com/api/v3/files/{sha256}"
-_VT_TIMEOUT_SECONDS = 5
+_VT_TIMEOUT_SECONDS = 10
 _VT_SLEEP_SECONDS = 15
 _VT_MAX_REQUESTS_DEFAULT = 8
 
@@ -30,20 +31,13 @@ def _get_vt_api_key() -> str | None:
     if api_key:
         return api_key
 
-    if os.name != "nt":
-        return None
-
-    try:
-        import winreg
-
-        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Environment") as key:
-            value, _ = winreg.QueryValueEx(key, "VT_API_KEY")
-            if isinstance(value, str) and value.strip():
-                return value.strip()
-    except OSError:
-        return None
-    except Exception:
-        return None
+    if os.name == "nt":
+        with contextlib.suppress(Exception):
+            import winreg
+            with winreg.OpenKey(winreg.HKEY_CURRENT_USER, r"Environment") as key:
+                value, _ = winreg.QueryValueEx(key, "VT_API_KEY")
+                if isinstance(value, str) and value.strip():
+                    return value.strip()
 
     return None
 
@@ -61,7 +55,7 @@ def enrich_with_virustotal(
     processes: list[ProcessRecord],
     enabled: bool = False,
     max_requests: int | None = None,
-    min_threat_score: int = 20,
+    min_threat_score: int = 10,
 ) -> list[ProcessRecord]:
     """Optionally enrich process records with VirusTotal counts.
 
@@ -168,3 +162,32 @@ def enrich_with_virustotal(
         enriched_list.append(enriched)
 
     return enriched_list
+
+
+def test_vt_connection() -> tuple[bool, str]:
+    """Ping the VT API with a single known hash to validate key + connectivity.
+
+    Returns:
+        (success, human-readable message)
+    """
+    api_key = _get_vt_api_key()
+    if not api_key:
+        return False, "VT_API_KEY is not set.\nSet it as an environment variable or in Windows user environment settings."
+
+    test_hash = "aec070645fe53ee3b3763059376134f058cc337247c978add178b6ccdfb0019f"
+    try:
+        response = requests.get(
+            _VT_URL_TEMPLATE.format(sha256=test_hash),
+            headers={"x-apikey": api_key},
+            timeout=_VT_TIMEOUT_SECONDS,
+        )
+    except requests.RequestException as exc:
+        return False, f"Request failed:\n{exc}"
+
+    if response.status_code in (200, 404):
+        return True, f"API key is valid (HTTP {response.status_code}). VirusTotal is reachable."
+    if response.status_code == 401:
+        return False, "Invalid or expired API key (HTTP 401)."
+    if response.status_code == 429:
+        return True, "Rate limited (HTTP 429) — key is valid but quota is exceeded."
+    return False, f"Unexpected response (HTTP {response.status_code})."

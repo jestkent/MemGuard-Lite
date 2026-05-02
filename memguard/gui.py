@@ -7,19 +7,25 @@ review suspicious processes, and export results to CSV/JSON files.
 from __future__ import annotations
 
 import logging
+import socket
 import threading
 from datetime import datetime
 from pathlib import Path
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
+import psutil
+
 from .collector import ProcessRecord, collect_processes, collect_system_overview
-from .exporter import export_csv, export_full_report, export_json, export_ports_report
+from .exporter import (
+    export_csv, export_full_report, export_json,
+    export_ports_csv, export_ports_json, export_ports_report,
+)
 from .hasher import attach_sha256, load_blocklist
 from .memory_inspector import inspect_memory
 from .port_inspector import PortRecord, collect_listening_ports
 from .scorer import score_processes
-from .threat_intel import enrich_with_virustotal
+from .threat_intel import enrich_with_virustotal, test_vt_connection
 from .validator import format_validation_report, validate_process_record
 
 logger = logging.getLogger(__name__)
@@ -46,7 +52,7 @@ class MemGuardGUI(tk.Tk):
         self.memory_min_score_var = tk.StringVar(value="30")
         self.vt_enabled_var = tk.BooleanVar(value=False)
         self.vt_max_requests_var = tk.StringVar(value="8")
-        self.vt_min_score_var = tk.StringVar(value="20")
+        self.vt_min_score_var = tk.StringVar(value="10")
         self.vt_suspicious_only_var = tk.BooleanVar(value=False)
 
         self.search_var = tk.StringVar(value="")
@@ -64,6 +70,9 @@ class MemGuardGUI(tk.Tk):
         self._sort_column = "threat_score"
         self._sort_desc = True
 
+        self.prev_process_keys: set[tuple[int, str, str]] = set()
+        self.new_process_keys: set[tuple[int, str, str]] = set()
+
         self._build_layout()
 
     def _build_layout(self) -> None:
@@ -71,6 +80,7 @@ class MemGuardGUI(tk.Tk):
         self._build_summary()
         self._build_results_table()
         self._build_details_panel()
+        self._build_context_menu()
 
     def _build_controls(self) -> None:
         controls = ttk.LabelFrame(self, text="Scan Controls")
@@ -92,11 +102,14 @@ class MemGuardGUI(tk.Tk):
         ttk.Checkbutton(controls, text="VT suspicious only", variable=self.vt_suspicious_only_var).grid(
             row=0, column=8, sticky="w", padx=8
         )
+        ttk.Button(controls, text="Test VT Key", command=self.test_vt_key).grid(
+            row=0, column=9, padx=(8, 4), pady=6
+        )
 
         ttk.Label(controls, text="Search:").grid(row=1, column=0, sticky="e", padx=(8, 4), pady=(0, 8))
         search_entry = ttk.Entry(controls, textvariable=self.search_var, width=35)
         search_entry.grid(row=1, column=1, columnspan=2, sticky="w", pady=(0, 8))
-        search_entry.bind("<KeyRelease>", lambda _event: self._refresh_filtered_results())
+        search_entry.bind("<KeyRelease>", lambda _: self._refresh_filtered_results())
 
         ttk.Label(controls, text="Threat filter:").grid(row=1, column=3, sticky="e", pady=(0, 8))
         threat_combo = ttk.Combobox(
@@ -107,7 +120,7 @@ class MemGuardGUI(tk.Tk):
             state="readonly",
         )
         threat_combo.grid(row=1, column=4, sticky="w", padx=(4, 8), pady=(0, 8))
-        threat_combo.bind("<<ComboboxSelected>>", lambda _event: self._refresh_filtered_results())
+        threat_combo.bind("<<ComboboxSelected>>", lambda _: self._refresh_filtered_results())
 
         ttk.Button(controls, text="Run Scan", command=self.run_scan).grid(row=1, column=5, padx=6, pady=(0, 8))
         ttk.Button(controls, text="Show Ports", command=self.show_ports_window).grid(row=1, column=6, padx=6, pady=(0, 8))
@@ -191,6 +204,10 @@ class MemGuardGUI(tk.Tk):
         hbar = ttk.Scrollbar(table_frame, orient="horizontal", command=self.tree.xview)
         self.tree.configure(yscroll=vbar.set, xscroll=hbar.set)
 
+        self.tree.tag_configure("HIGH", background="#ffcccc")
+        self.tree.tag_configure("SUSPICIOUS", background="#fff3cc")
+        self.tree.tag_configure("NEW", background="#ccffcc")
+
         self.tree.grid(row=0, column=0, sticky="nsew")
         vbar.grid(row=0, column=1, sticky="ns")
         hbar.grid(row=1, column=0, sticky="ew")
@@ -199,6 +216,7 @@ class MemGuardGUI(tk.Tk):
         table_frame.columnconfigure(0, weight=1)
 
         self.tree.bind("<<TreeviewSelect>>", self._on_select)
+        self.tree.bind("<Button-3>", self._show_context_menu)
 
     def _build_details_panel(self) -> None:
         panel = ttk.LabelFrame(self, text="Selected Process Details")
@@ -307,6 +325,20 @@ class MemGuardGUI(tk.Tk):
     def _on_scan_success(self, overview: dict[str, float], processes: list[ProcessRecord], ports: list[PortRecord]) -> None:
         self.progress["value"] = 100
         self.overview = overview
+
+        # Compute scan diff before overwriting self.processes
+        current_keys: set[tuple[int, str, str]] = {
+            (int(p.get("pid", 0)), str(p.get("name", "")), str(p.get("exe", "")))
+            for p in processes
+        }
+        if self.prev_process_keys:
+            self.new_process_keys = current_keys - self.prev_process_keys
+            gone_count = len(self.prev_process_keys - current_keys)
+        else:
+            self.new_process_keys = set()
+            gone_count = 0
+        self.prev_process_keys = current_keys
+
         self.processes = processes
         self.ports = ports
         self.filtered_ports = ports
@@ -316,7 +348,18 @@ class MemGuardGUI(tk.Tk):
         self._refresh_filtered_results()
         self._refresh_summary()
 
-        self.status_var.set(f"Scan complete - {len(processes)} processes, {len(ports)} ports")
+        new_count = len(self.new_process_keys)
+        status = f"Scan complete — {len(processes)} processes, {len(ports)} ports"
+        if new_count or gone_count:
+            status += f" | delta: +{new_count} new, -{gone_count} gone"
+        if self.vt_enabled_var.get():
+            vt_enriched = sum(isinstance(p.get("vt_malicious"), int) for p in processes)
+            if vt_enriched == 0:
+                vt_min = self._parse_int(self.vt_min_score_var.get(), fallback=10, minimum=0)
+                status += f" | VT: no processes scored ≥ {vt_min} — try lowering VT min score"
+            else:
+                status += f" | VT: {vt_enriched} process(es) enriched"
+        self.status_var.set(status)
 
     def _on_scan_error(self, exc: Exception) -> None:
         self.progress["value"] = 0
@@ -382,9 +425,20 @@ class MemGuardGUI(tk.Tk):
         self.tree.delete(*self.tree.get_children())
 
         for process in self.filtered_processes:
+            level = str(process.get("threat_level", "SAFE")).upper()
+            proc_key = (int(process.get("pid", 0)), str(process.get("name", "")), str(process.get("exe", "")))
+            if level == "HIGH":
+                row_tag = "HIGH"
+            elif level == "SUSPICIOUS":
+                row_tag = "SUSPICIOUS"
+            elif proc_key in self.new_process_keys:
+                row_tag = "NEW"
+            else:
+                row_tag = ""
             self.tree.insert(
                 "",
                 "end",
+                tags=(row_tag,) if row_tag else (),
                 values=(
                     process.get("pid", 0),
                     process.get("ppid", 0),
@@ -429,11 +483,14 @@ class MemGuardGUI(tk.Tk):
         if not selected:
             self._set_details_text("Select a process row to inspect command line and triggered rules.")
 
-    def _on_select(self, _event: object) -> None:
+    def _on_select(self, _: object) -> None:
         if not (process := self._get_selected_process()):
             return
 
-        self._set_details_text(self._build_process_details(process))
+        base = self._build_process_details(process)
+        pid = int(process.get("pid", 0) or 0)
+        conn_text = self._get_process_connections_text(pid)
+        self._set_details_text(f"{base}\n\nConnections:\n{conn_text}")
 
     def _get_selected_process(self) -> ProcessRecord | None:
         selected = self.tree.selection()
@@ -474,11 +531,15 @@ class MemGuardGUI(tk.Tk):
 
         def _worker() -> None:
             report = validate_process_record(process)
+            pid = int(process.get("pid", 0) or 0)
+            conn_text = self._get_process_connections_text(pid)
 
             def _apply_result() -> None:
                 base = self._build_process_details(process)
                 validation = format_validation_report(report)
-                self._set_details_text(f"{base}\n\n{validation}")
+                self._set_details_text(
+                    f"{base}\n\nConnections:\n{conn_text}\n\n{validation}"
+                )
                 self.status_var.set("Validation complete")
 
             self.after(0, _apply_result)
@@ -606,21 +667,26 @@ class MemGuardGUI(tk.Tk):
             anchor = "e" if column in {"Port", "PID"} else "w"
             tree.column(column, width=width, anchor=anchor)
 
-        # Sort by risk score descending
+        tree.tag_configure("HIGH", background="#ffcccc")
+        tree.tag_configure("MEDIUM", background="#ffe5cc")
+        tree.tag_configure("LOW", background="#fff3cc")
+
         sorted_ports = sorted(self.ports, key=lambda p: p["risk_score"], reverse=True)
 
         for port in sorted_ports:
-            risk_color = "red" if port["risk_level"] == "HIGH" else "orange" if port["risk_level"] == "MEDIUM" else "blue" if port["risk_level"] == "LOW" else ""
+            level = port["risk_level"]
+            row_tag = level if level in {"HIGH", "MEDIUM", "LOW"} else ""
             tree.insert(
                 "",
                 "end",
+                tags=(row_tag,) if row_tag else (),
                 values=(
                     port["port"],
                     port["protocol"],
                     port["state"],
                     port["process_name"],
                     port["pid"] or "-",
-                    f"{port['risk_level']} ({port['risk_score']})",
+                    f"{level} ({port['risk_score']})",
                     port["local_addr"],
                     port["remote_addr"],
                 ),
@@ -645,7 +711,7 @@ class MemGuardGUI(tk.Tk):
         details_text.pack(fill="both", expand=True, padx=8, pady=8)
         details_text.configure(state="disabled")
 
-        def on_port_select(_event: object) -> None:
+        def on_port_select(_: object) -> None:
             selected = tree.selection()
             if not selected:
                 return
@@ -673,7 +739,6 @@ class MemGuardGUI(tk.Tk):
 
         tree.bind("<<TreeviewSelect>>", on_port_select)
 
-        # Save report button
         def save_ports_report() -> None:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             path = filedialog.asksaveasfilename(
@@ -685,16 +750,42 @@ class MemGuardGUI(tk.Tk):
             )
             if not path:
                 return
-            destination = export_ports_report(
-                self.ports,
-                path=path,
-                generated_at=self.last_scan_time,
-            )
+            destination = export_ports_report(self.ports, path=path, generated_at=self.last_scan_time)
             messagebox.showinfo("MemGuard Ports", f"Saved ports report:\n{destination}", parent=ports_window)
+
+        def save_ports_csv() -> None:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            path = filedialog.asksaveasfilename(
+                title="Save Ports CSV",
+                defaultextension=".csv",
+                initialfile=f"memguard_ports_{timestamp}.csv",
+                filetypes=[("CSV Files", "*.csv"), ("All Files", "*.*")],
+                parent=ports_window,
+            )
+            if not path:
+                return
+            destination = export_ports_csv(self.ports, path=path)
+            messagebox.showinfo("MemGuard Ports", f"Saved CSV:\n{destination}", parent=ports_window)
+
+        def save_ports_json_file() -> None:
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            path = filedialog.asksaveasfilename(
+                title="Save Ports JSON",
+                defaultextension=".json",
+                initialfile=f"memguard_ports_{timestamp}.json",
+                filetypes=[("JSON Files", "*.json"), ("All Files", "*.*")],
+                parent=ports_window,
+            )
+            if not path:
+                return
+            destination = export_ports_json(self.ports, path=path)
+            messagebox.showinfo("MemGuard Ports", f"Saved JSON:\n{destination}", parent=ports_window)
 
         btn_frame = ttk.Frame(ports_window)
         btn_frame.pack(fill="x", padx=10, pady=(0, 4))
-        ttk.Button(btn_frame, text="Save Report", command=save_ports_report).pack(side="right")
+        ttk.Button(btn_frame, text="Save Report (.md)", command=save_ports_report).pack(side="right", padx=4)
+        ttk.Button(btn_frame, text="Save JSON", command=save_ports_json_file).pack(side="right", padx=4)
+        ttk.Button(btn_frame, text="Save CSV", command=save_ports_csv).pack(side="right", padx=4)
 
         # Summary at bottom
         summary_frame = ttk.LabelFrame(ports_window, text="Summary")
@@ -711,6 +802,86 @@ class MemGuardGUI(tk.Tk):
             f"Localhost Only: {is_localhost_only}"
         )
         ttk.Label(summary_frame, text=summary_text).pack(padx=10, pady=8)
+
+    # ── Test VT Key ───────────────────────────────────────────
+
+    def test_vt_key(self) -> None:
+        self.status_var.set("Testing VT API key…")
+
+        def _worker() -> None:
+            success, message = test_vt_connection()
+
+            def _apply() -> None:
+                self.status_var.set("VT key test complete")
+                if success:
+                    messagebox.showinfo("VT Key Test", message)
+                else:
+                    messagebox.showerror("VT Key Test", message)
+
+            self.after(0, _apply)
+
+        threading.Thread(target=_worker, daemon=True).start()
+
+    # ── Right-click copy ──────────────────────────────────────
+
+    def _build_context_menu(self) -> None:
+        self.context_menu = tk.Menu(self, tearoff=0)
+        self.context_menu.add_command(label="Copy SHA256",      command=self._copy_sha256)
+        self.context_menu.add_command(label="Copy Command Line", command=self._copy_cmdline)
+        self.context_menu.add_command(label="Copy PID",          command=self._copy_pid)
+
+    def _show_context_menu(self, event: tk.Event) -> None:  # type: ignore[type-arg]
+        row = self.tree.identify_row(event.y)
+        if row:
+            self.tree.selection_set(row)
+            self.context_menu.post(event.x_root, event.y_root)
+
+    def _copy_to_clipboard(self, value: str, label: str) -> None:
+        self.clipboard_clear()
+        self.clipboard_append(value)
+        self.status_var.set(f"Copied {label} to clipboard")
+
+    def _copy_sha256(self) -> None:
+        if process := self._get_selected_process():
+            self._copy_to_clipboard(str(process.get("sha256", "N/A")), "SHA256")
+
+    def _copy_cmdline(self) -> None:
+        if process := self._get_selected_process():
+            self._copy_to_clipboard(str(process.get("cmdline", "N/A")), "command line")
+
+    def _copy_pid(self) -> None:
+        if process := self._get_selected_process():
+            self._copy_to_clipboard(str(process.get("pid", "N/A")), "PID")
+
+    # ── Network connections ───────────────────────────────────
+
+    def _get_process_connections_text(self, pid: int) -> str:
+        if not pid:
+            return "  N/A"
+        try:
+            proc = psutil.Process(pid)
+            conns = proc.net_connections(kind="inet")
+        except psutil.AccessDenied:
+            return "  (access denied)"
+        except psutil.NoSuchProcess:
+            return "  (process no longer running)"
+        except Exception as exc:
+            return f"  (error: {exc})"
+
+        if not conns:
+            return "  none"
+
+        lines = []
+        for c in conns[:8]:
+            proto = "TCP" if c.type == socket.SOCK_STREAM else "UDP"
+            local = f"{c.laddr.ip}:{c.laddr.port}" if c.laddr else "?"
+            remote = f"{c.raddr.ip}:{c.raddr.port}" if c.raddr else "*"
+            status = f" [{c.status}]" if c.status else ""
+            lines.append(f"  {proto}  {local} → {remote}{status}")
+
+        if len(conns) > 8:
+            lines.append(f"  … and {len(conns) - 8} more")
+        return "\n".join(lines)
 
 
 def launch_gui() -> None:

@@ -252,6 +252,44 @@ def export_ports_report(
     return dest
 
 
+_PORT_COLUMNS = [
+    "port", "protocol", "state", "local_addr", "remote_addr",
+    "pid", "process_name", "risk_level", "risk_score", "triggered_rules",
+]
+
+
+def export_ports_csv(ports: list[PortRecord], path: str = "ports.csv") -> Path:
+    """Export port records to CSV.
+
+    Returns:
+        Path to the written file.
+    """
+    dest = Path(path)
+    df = pd.DataFrame(ports, columns=_PORT_COLUMNS)
+    df["triggered_rules"] = df["triggered_rules"].apply(
+        lambda r: ", ".join(r) if isinstance(r, list) else (str(r) if r else "-")
+    )
+    df.to_csv(dest, index=False)
+    logger.info("Exported %d ports to %s", len(ports), dest)
+    return dest
+
+
+def export_ports_json(ports: list[PortRecord], path: str = "ports.json") -> Path:
+    """Export port records to JSON.
+
+    Returns:
+        Path to the written file.
+    """
+    dest = Path(path)
+    df = pd.DataFrame(ports, columns=_PORT_COLUMNS)
+    df["triggered_rules"] = df["triggered_rules"].apply(
+        lambda r: ", ".join(r) if isinstance(r, list) else (str(r) if r else "-")
+    )
+    df.to_json(dest, orient="records", indent=2)
+    logger.info("Exported %d ports to %s", len(ports), dest)
+    return dest
+
+
 def export_csv(processes: list[ProcessRecord], path: str = "processes.csv") -> Path:
     """Export process list to CSV.
 

@@ -136,7 +136,8 @@ Ports are scored based on:
 - **Exposed services** (+20): MySQL (3306), PostgreSQL (5432), Redis (6379), MongoDB (27017), Elasticsearch (9200)
 - **Common backdoor ports** (+15): 4444, 5555, 6666, 7777, 8888, 9999
 - **Listening state** (+5): Port actively listening for incoming connections
-- **Localhost only** (-10): Risk reduction for 127.0.0.1 (loopback only)
+- **Ephemeral port** (+5): Port number ≥ 49152 (outside well-known and registered ranges)
+- **Localhost only** (-10): Risk reduction when local address is 127.0.0.1
 
 ### Risk Levels
 
@@ -152,9 +153,10 @@ Click **Show Ports** in the GUI (after running a scan) to view:
 - All listening ports with protocol and state
 - Associated process name and PID
 - Local and remote addresses
-- Risk assessment with triggered rules
+- Risk assessment with triggered rules (color-coded: HIGH = red, MEDIUM = orange, LOW = yellow)
 - Summary of high-risk and medium-risk ports
 - Localhost-only vs. externally exposed breakdown
+- Export port results as CSV, JSON, or Markdown report via buttons in the ports window
 
 This helps you quickly identify:
 
@@ -174,15 +176,20 @@ GUI capabilities:
 
 - Toggle memory inspection and VirusTotal options.
 - Tune thresholds (`memory_min_score`, `vt_min_score`, `vt_max_requests`).
+- **Test VT Key** button — one-click connectivity check before running a full scan.
 - Search by name, path, user, or PID.
 - Filter by threat level (`ALL`, `SAFE`, `SUSPICIOUS`, `HIGH`).
 - Sort columns for quick prioritization.
+- **Color-coded rows** — HIGH threat = red background, SUSPICIOUS = yellow, new process since last scan = green.
+- **Scan delta** — status bar shows `+N new, -N gone` processes compared to the previous scan.
+- **Active network connections** displayed in the details panel when a process row is selected.
+- **Right-click context menu** on process rows to copy SHA256, command line, or PID to clipboard.
 - Inspect detailed record and triggered rules.
 - Validate selected suspicious process.
-- Monitor **listening ports and network connections** with security risk scoring.
-- Identify insecure protocols (FTP, Telnet, unencrypted email) and exposed services.
+- Monitor **listening ports and network connections** with security risk scoring (color-coded by risk level).
+- Export ports as **CSV, JSON, or Markdown report** from the ports window.
 - Save a full AI-friendly Markdown report containing scan metadata, summary findings, and the full JSON dataset.
-- Export filtered subset to timestamped CSV/JSON.
+- Export filtered process subset to timestamped CSV/JSON.
 
 ## CLI Usage
 
@@ -233,10 +240,12 @@ setx VT_API_KEY "your_api_key_here"
 Behavior notes:
 
 - Queries VirusTotal v3 by SHA256.
-- Sleeps 15 seconds between requests (public API friendly).
-- Uses 5-second request timeout.
+- Default `vt_min_score` is `10` — only processes scoring ≥ 10 are queried (keeps quota usage practical on clean systems).
+- Sleeps 15 seconds between requests (public API rate-limit friendly).
+- Uses 10-second request timeout.
 - Handles `404`, `429`, and network failures without crashing the scan.
 - If `VT_API_KEY` is missing, logs a warning and continues.
+- Use **Test VT Key** in the GUI to verify connectivity before a full scan.
 
 ## Local Blocklist
 
@@ -298,6 +307,7 @@ This project evolved in practical stages:
 5. Added experimental memory metadata inspection for RAM-focused anomaly signals.
 6. Built a detailed desktop GUI for usability, filtering, and export workflows.
 7. Added per-row validation to support deeper analyst triage from the same interface.
+8. Added network port monitoring with risk scoring, scan-to-scan delta tracking, live connections in the details panel, right-click copy, and structured port exports.
 
 The design intentionally moved from "data collection" to "decision support" while staying read-only.
 
@@ -318,11 +328,11 @@ Recommended use:
 
 ## Future Enhancements
 
-- Historical baseline and process drift comparison.
 - Rule tuning profiles (developer workstation vs production workstation).
 - Optional YARA-like file checks for selected executables.
 - Better incident report templates from exported JSON.
 - Unit/integration test expansion around scoring and validation logic.
+- Auto-refresh / scheduled scans with configurable interval.
 
 ## Build Downloadable App (Windows)
 
