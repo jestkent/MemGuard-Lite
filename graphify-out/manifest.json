@@ -1,0 +1,94 @@
+{
+  "D:\\Desktop\\MemGuard Lite\\launch_gui.py": {
+    "mtime": 1772767459.7830534,
+    "hash": "f23c537de4e43f75fbbb2cc3015fa8ff"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\attack_map.py": {
+    "mtime": 1777969090.1531222,
+    "hash": "e0edacb14906f7e902e75f1ae847ba90"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\collector.py": {
+    "mtime": 1772610386.5451684,
+    "hash": "be611ad7be85bd9f79aadd9a81c2fcd2"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\exporter.py": {
+    "mtime": 1777969146.129549,
+    "hash": "39a0c4c8495dc3b0d8d8bf550ff4055c"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\gui.py": {
+    "mtime": 1777969206.7105336,
+    "hash": "3616a11273c345082755e7fe9645c6f2"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\hasher.py": {
+    "mtime": 1772767459.7830534,
+    "hash": "a52b9e2c8339ad5137b9763f6406ceb4"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\history_log.py": {
+    "mtime": 1777969108.2197838,
+    "hash": "e2239e802f5b7ca6eaf2d1c2f93202b4"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\main.py": {
+    "mtime": 1777449942.9028988,
+    "hash": "f8c07cdeac75c82f190583d2f641919f"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\memory_inspector.py": {
+    "mtime": 1772609910.472185,
+    "hash": "57b26f09ef6a1640b643d463f1f9009c"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\port_inspector.py": {
+    "mtime": 1777449886.8450327,
+    "hash": "c16e30862089173bb90188b8f6170717"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\scorer.py": {
+    "mtime": 1777968453.9220352,
+    "hash": "525c4de8ce445ef64e74d00bc2e13f73"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\system_whitelist.py": {
+    "mtime": 1772687917.2141004,
+    "hash": "4ef8ae56a80d2e167ace0e71d4b1a05a"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\threat_intel.py": {
+    "mtime": 1777450372.8219266,
+    "hash": "450f9d1d7084079ac79daaba6e82baa5"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\ui.py": {
+    "mtime": 1772609910.4731898,
+    "hash": "6481585c87e55b119ebd5b6016368c8d"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\validator.py": {
+    "mtime": 1772766604.1876984,
+    "hash": "f728d311d8b52ca945206dcbe3f8b354"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\__init__.py": {
+    "mtime": 1772516841.2733757,
+    "hash": "2f10561f31c5421032af8e94c2882473"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\__main__.py": {
+    "mtime": 1772516841.2733757,
+    "hash": "3ed14d01a56f08b4d9874324cc2be506"
+  },
+  "D:\\Desktop\\MemGuard Lite\\scripts\\build_windows.ps1": {
+    "mtime": 1772767459.7935674,
+    "hash": "bdd8af4a462546ac5025dd5decb50b9c"
+  },
+  "D:\\Desktop\\MemGuard Lite\\CLAUDE.md": {
+    "mtime": 1777969265.1941364,
+    "hash": "eb4609b017645c10af76570a0e63fd29"
+  },
+  "D:\\Desktop\\MemGuard Lite\\README.md": {
+    "mtime": 1777450937.2398906,
+    "hash": "90da9a9e33490c8436a226b69b9d8c23"
+  },
+  "D:\\Desktop\\MemGuard Lite\\data\\blocklist.txt": {
+    "mtime": 1772519495.543075,
+    "hash": "ab864ef04871cde87b1364d904e88590"
+  },
+  "D:\\Desktop\\MemGuard Lite\\memguard\\requirements.txt": {
+    "mtime": 1777450865.703807,
+    "hash": "eb830fec48f30d92c9f01e2354db3233"
+  },
+  "D:\\Desktop\\MemGuard Lite\\release\\README.md": {
+    "mtime": 1772767459.7830534,
+    "hash": "5c280de1a974b5d827d50e9e869767ea"
+  }
+}

@@ -13,6 +13,11 @@ processes.csv
 processes.json
 memguard_results_*.csv
 memguard_results_*.json
+memguard_history.jsonl
+memguard_full_report*.md
+memguard_ports_report*.md
+memguard_ports_*.csv
+memguard_ports_*.json
 
 # Build artifacts
 build/

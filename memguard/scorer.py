@@ -32,6 +32,50 @@ _CMDLINE_PATTERNS: Final[tuple[str, ...]] = (
     "powershell -enc",
     "base64",
     "cmd.exe /c",
+    "mshta",
+    "wscript",
+    "cscript",
+    "certutil -decode",
+    "certutil -urlcache",
+    "bitsadmin /transfer",
+    "rundll32",
+    "regsvr32",
+)
+
+# Suspicious parent → child name pairs (both lowercase).
+# Left = parent process name, right = child process name.
+_SUSPICIOUS_PARENT_CHILD: Final[tuple[tuple[str, str], ...]] = (
+    ("winword.exe", "cmd.exe"),
+    ("winword.exe", "powershell.exe"),
+    ("winword.exe", "wscript.exe"),
+    ("winword.exe", "cscript.exe"),
+    ("winword.exe", "mshta.exe"),
+    ("excel.exe", "cmd.exe"),
+    ("excel.exe", "powershell.exe"),
+    ("excel.exe", "wscript.exe"),
+    ("excel.exe", "mshta.exe"),
+    ("powerpnt.exe", "cmd.exe"),
+    ("powerpnt.exe", "powershell.exe"),
+    ("outlook.exe", "cmd.exe"),
+    ("outlook.exe", "powershell.exe"),
+    ("outlook.exe", "wscript.exe"),
+    ("explorer.exe", "powershell.exe"),
+    ("explorer.exe", "wscript.exe"),
+    ("explorer.exe", "mshta.exe"),
+    ("iexplore.exe", "cmd.exe"),
+    ("iexplore.exe", "powershell.exe"),
+    ("chrome.exe", "cmd.exe"),
+    ("chrome.exe", "powershell.exe"),
+    ("msedge.exe", "cmd.exe"),
+    ("msedge.exe", "powershell.exe"),
+    ("wmiprvse.exe", "cmd.exe"),
+    ("wmiprvse.exe", "powershell.exe"),
+    ("mshta.exe", "powershell.exe"),
+    ("mshta.exe", "cmd.exe"),
+    ("wscript.exe", "powershell.exe"),
+    ("wscript.exe", "cmd.exe"),
+    ("cscript.exe", "powershell.exe"),
+    ("cscript.exe", "cmd.exe"),
 )
 
 _ELEVATED_USERS: Final[set[str]] = {
@@ -142,6 +186,47 @@ def _has_ephemeral_listening_port(pid: int) -> bool:
     return bool(_get_ephemeral_listening_addresses(pid))
 
 
+def _get_parent_name(ppid: int) -> str | None:
+    """Return lowercase parent process name, or None on any error."""
+    if ppid <= 0:
+        return None
+    try:
+        return psutil.Process(ppid).name().lower()
+    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+        return None
+
+
+def _is_suspicious_parent_child(parent_name: str | None, child_name: str) -> bool:
+    if not parent_name:
+        return False
+    child_lower = child_name.lower()
+    return (parent_name, child_lower) in _SUSPICIOUS_PARENT_CHILD
+
+
+def _check_signature_unsigned(exe: str) -> bool:
+    """Return True when exe exists and has no valid Authenticode signature.
+
+    Uses PowerShell Get-AuthenticodeSignature — Windows only. Silent on error.
+    """
+    if os.name != "nt" or not exe or exe == "n/a":
+        return False
+    import subprocess
+    escaped = exe.replace("'", "''")
+    script = f"(Get-AuthenticodeSignature -LiteralPath '{escaped}').Status.ToString()"
+    try:
+        result = subprocess.run(
+            ["powershell", "-NoProfile", "-Command", script],
+            capture_output=True,
+            text=True,
+            timeout=6,
+            check=False,
+        )
+        status = (result.stdout or "").strip()
+        return status not in ("Valid", "")
+    except Exception:
+        return False
+
+
 def score_process(process: ProcessRecord, blocklist_hashes: set[str] | None = None) -> ProcessRecord:
     """Apply heuristic rules and return an enriched process record."""
     score = 0
@@ -192,6 +277,17 @@ def score_process(process: ProcessRecord, blocklist_hashes: set[str] | None = No
 
             score += max(0, rule_score)
             triggered_rules.append(rule_label)
+
+    ppid = process.get("ppid", 0)
+    name = process.get("name") or ""
+    parent_name = _get_parent_name(ppid)
+    if _is_suspicious_parent_child(parent_name, name):
+        score += 35
+        triggered_rules.append(f"suspicious_parent_child ({parent_name} → {name.lower()})")
+
+    if exe and exe != "n/a" and _check_signature_unsigned(exe):
+        score += 20
+        triggered_rules.append("unsigned_or_invalid_signature")
 
     if blocklist_hashes and sha256_hash and sha256_hash in blocklist_hashes:
         score += 70

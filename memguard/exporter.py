@@ -10,6 +10,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from .attack_map import format_techniques, map_rules_to_techniques
 from .collector import ProcessRecord
 from .port_inspector import PortRecord
 
@@ -129,6 +130,15 @@ def export_full_report(
         lines.extend(["", "## Current GUI Filter State", ""])
         lines.extend(f"- {key}: {value}" for key, value in active_filters.items())
 
+    technique_counter: dict[str, tuple[str, int]] = {}
+    for process in processes:
+        rules = process.get("triggered_rules")
+        if not isinstance(rules, list):
+            continue
+        for tid, name in map_rules_to_techniques(rules):
+            existing_name, count = technique_counter.get(tid, (name, 0))
+            technique_counter[tid] = (existing_name, count + 1)
+
     lines.extend(
         [
             "",
@@ -140,10 +150,21 @@ def export_full_report(
             f"- VirusTotal Enriched: {summary['vt_enriched']}",
             f"- Memory Anomalies: {summary['anomalous_memory']}",
             "",
-            "## Top Risk Findings",
-            "",
         ]
     )
+
+    if technique_counter:
+        lines.extend(["## MITRE ATT&CK Techniques Observed", ""])
+        sorted_techniques = sorted(
+            technique_counter.items(), key=lambda item: item[1][1], reverse=True
+        )
+        lines.extend(
+            f"- {tid} {name} — {count} process(es)"
+            for tid, (name, count) in sorted_techniques
+        )
+        lines.append("")
+
+    lines.extend(["## Top Risk Findings", ""])
 
     if suspicious_rows:
         for process in suspicious_rows:
@@ -157,6 +178,7 @@ def export_full_report(
                     f"- Memory Flag: {process.get('memory_flag', '-')}",
                     f"- VT (M/S/H): {process.get('vt_malicious', 0)}/{process.get('vt_suspicious', 0)}/{process.get('vt_harmless', 0)}",
                     f"- Triggered Rules: {_normalize_rules(process.get('triggered_rules'))}",
+                    f"- ATT&CK Techniques: {format_techniques(process.get('triggered_rules') if isinstance(process.get('triggered_rules'), list) else None)}",
                     f"- Command Line: {process.get('cmdline', 'N/A')}",
                     "",
                 ]

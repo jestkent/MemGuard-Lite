@@ -53,11 +53,21 @@ Core modules:
 - memguard/exporter.py: CSV/JSON/full markdown report export (processes and ports).
 - memguard/gui.py: Tkinter desktop workflow.
 - memguard/ui.py: rich terminal UI rendering.
+- memguard/attack_map.py: MITRE ATT&CK technique mapping for triggered_rules (display/export only).
+- memguard/history_log.py: append-only JSONL of HIGH/SUSPICIOUS findings + persistent threat lookup.
 
 ## Current Feature Set
 
 - Process telemetry with PID, user, cmdline, RSS/CPU.
-- Deterministic threat scoring with triggered_rules evidence.
+- Deterministic threat scoring with triggered_rules evidence:
+  - temp_executable_path (+30)
+  - suspicious_commandline (+20): powershell -enc, base64, cmd.exe /c, mshta, wscript, cscript, certutil -decode/urlcache, bitsadmin /transfer, rundll32, regsvr32
+  - elevated_user_running_from_user_space (+15)
+  - listening_ephemeral_port (+25, system-adjusted to +5, loopback reduces by -10)
+  - suspicious_parent_child (+35): e.g. winword.exe → cmd.exe, explorer.exe → mshta.exe
+  - unsigned_or_invalid_signature (+20): passive Authenticode check on every scan
+  - blocklist match (+70)
+  - VirusTotal malicious >= 5 (+50)
 - Optional memory anomaly scoring.
 - Optional VirusTotal reputation enrichment (default min_threat_score=10, timeout=10s).
 - Test VT Key button — one-click API connectivity check before scanning.
@@ -69,6 +79,9 @@ Core modules:
 - Validate Selected for live process/file/hash/signature checks.
 - Show Ports viewer with risk scores for insecure/exposed services (color-coded rows).
 - Port scoring: ephemeral range (>=49152, +5) and localhost reduction (-10) both correctly applied.
+- MITRE ATT&CK technique mapping: triggered_rules → ATT&CK IDs at display + full report time (T1036, T1059, T1078, T1571, T1553.002, T1027, T1055).
+- Persistent scan history: HIGH/SUSPICIOUS findings appended to memguard_history.jsonl on each scan; "Show Persistent Threats" button surfaces processes flagged 3+ times.
+- GUI auto-refresh: optional checkbox + interval (sec, min 10) re-runs scan on a timer.
 - Exports:
   - processes.csv
   - processes.json
@@ -98,6 +111,11 @@ Do not commit generated/runtime files such as:
 - processes.json
 - memguard_results_*.csv
 - memguard_results_*.json
+- memguard_history.jsonl
+- memguard_full_report*.md
+- memguard_ports_report*.md
+- memguard_ports_*.csv
+- memguard_ports_*.json
 
 Keep ignored build/runtime directories out of commits:
 
@@ -180,12 +198,14 @@ A change is complete when:
 This project has a graphify knowledge graph at graphify-out/.
 
 Rules:
+
 - Before answering architecture or codebase questions, read graphify-out/GRAPH_REPORT.md for god nodes and community structure
 - If graphify-out/wiki/index.md exists, navigate it instead of reading raw files
 - For cross-module "how does X relate to Y" questions, prefer `graphify query "<question>"`, `graphify path "<A>" "<B>"`, or `graphify explain "<concept>"` over grep — these traverse the graph's EXTRACTED + INFERRED edges instead of scanning files
 - After modifying code files in this session, run `graphify update .` to keep the graph current (AST-only, no API cost)
 
 ## Session Rules
+
 - Check C:\Users\Cerus\OneDrive\Documents\Obsidian Vault\projects\MemGuard Lite.md before starting work each session
 - Update the Session Log in that note at the end of each session
 - Run /graphify . after major refactors to keep graph current

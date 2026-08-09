@@ -21,7 +21,9 @@ from .exporter import (
     export_csv, export_full_report, export_json,
     export_ports_csv, export_ports_json, export_ports_report,
 )
+from .attack_map import format_techniques
 from .hasher import attach_sha256, load_blocklist
+from .history_log import append_scan_findings, find_persistent_threats
 from .memory_inspector import inspect_memory
 from .port_inspector import PortRecord, collect_listening_ports
 from .scorer import score_processes
@@ -58,6 +60,10 @@ class MemGuardGUI(tk.Tk):
         self.search_var = tk.StringVar(value="")
         self.threat_filter_var = tk.StringVar(value="ALL")
         self.status_var = tk.StringVar(value="Ready")
+
+        self.auto_refresh_var = tk.BooleanVar(value=False)
+        self.auto_refresh_interval_var = tk.StringVar(value="60")
+        self._auto_refresh_after_id: str | None = None
 
         self.summary_total_var = tk.StringVar(value="0")
         self.summary_suspicious_var = tk.StringVar(value="0")
@@ -128,6 +134,19 @@ class MemGuardGUI(tk.Tk):
         ttk.Button(controls, text="Save JSON", command=self.save_json).grid(row=1, column=8, padx=6, pady=(0, 8))
         ttk.Button(controls, text="Save Full Report", command=self.save_full_report).grid(row=1, column=9, padx=6, pady=(0, 8))
         ttk.Button(controls, text="Validate Selected", command=self.validate_selected).grid(row=1, column=10, padx=6, pady=(0, 8))
+        ttk.Checkbutton(
+            controls,
+            text="Auto-refresh",
+            variable=self.auto_refresh_var,
+            command=self._on_auto_refresh_toggle,
+        ).grid(row=2, column=0, sticky="w", padx=8, pady=(0, 8))
+        ttk.Label(controls, text="Interval (sec):").grid(row=2, column=1, sticky="e", pady=(0, 8))
+        ttk.Entry(controls, textvariable=self.auto_refresh_interval_var, width=7).grid(
+            row=2, column=2, sticky="w", padx=(4, 10), pady=(0, 8)
+        )
+        ttk.Button(controls, text="Show Persistent Threats", command=self.show_persistent_threats).grid(
+            row=2, column=3, columnspan=2, sticky="w", padx=6, pady=(0, 8)
+        )
 
         self.progress = ttk.Progressbar(controls, mode="determinate", length=220, maximum=100)
         self.progress.grid(row=1, column=11, padx=(8, 4), pady=(0, 8), sticky="e")
@@ -345,8 +364,13 @@ class MemGuardGUI(tk.Tk):
         self.last_scan_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.summary_scan_time_var.set(self.last_scan_time)
 
+        appended = append_scan_findings(processes, scan_timestamp=self.last_scan_time)
+        if appended:
+            logger.info("Logged %d findings to scan history", appended)
+
         self._refresh_filtered_results()
         self._refresh_summary()
+        self._reschedule_auto_refresh()
 
         new_count = len(self.new_process_keys)
         status = f"Scan complete — {len(processes)} processes, {len(ports)} ports"
@@ -511,6 +535,8 @@ class MemGuardGUI(tk.Tk):
         else:
             rules_text = str(rules)
 
+        attack_text = format_techniques(rules if isinstance(rules, list) else None)
+
         return (
             f"PID: {process.get('pid', 'N/A')}\n"
             f"Name: {process.get('name', 'N/A')}\n"
@@ -519,6 +545,7 @@ class MemGuardGUI(tk.Tk):
             f"Memory Flag: {process.get('memory_flag', '-')}, Memory Score: {process.get('memory_anomaly_score', '-') }\n"
             f"VT (M/S/H): {process.get('vt_malicious', 0)}/{process.get('vt_suspicious', 0)}/{process.get('vt_harmless', 0)}\n"
             f"Triggered Rules: {rules_text}\n"
+            f"ATT&CK: {attack_text}\n"
             f"Command Line: {process.get('cmdline', 'N/A')}"
         )
 
@@ -882,6 +909,95 @@ class MemGuardGUI(tk.Tk):
         if len(conns) > 8:
             lines.append(f"  … and {len(conns) - 8} more")
         return "\n".join(lines)
+
+
+    # ── Auto-refresh ──────────────────────────────────────────
+
+    def _on_auto_refresh_toggle(self) -> None:
+        if self.auto_refresh_var.get():
+            interval = self._parse_int(self.auto_refresh_interval_var.get(), fallback=60, minimum=10)
+            self.status_var.set(f"Auto-refresh enabled ({interval}s)")
+            self._reschedule_auto_refresh()
+        else:
+            self._cancel_auto_refresh()
+            self.status_var.set("Auto-refresh disabled")
+
+    def _reschedule_auto_refresh(self) -> None:
+        self._cancel_auto_refresh()
+        if not self.auto_refresh_var.get():
+            return
+        interval = self._parse_int(self.auto_refresh_interval_var.get(), fallback=60, minimum=10)
+        self._auto_refresh_after_id = self.after(interval * 1000, self._auto_refresh_tick)
+
+    def _cancel_auto_refresh(self) -> None:
+        if self._auto_refresh_after_id is not None:
+            try:
+                self.after_cancel(self._auto_refresh_after_id)
+            except Exception:
+                pass
+            self._auto_refresh_after_id = None
+
+    def _auto_refresh_tick(self) -> None:
+        self._auto_refresh_after_id = None
+        if self.auto_refresh_var.get():
+            self.run_scan()
+
+    # ── Persistent threats viewer ─────────────────────────────
+
+    def show_persistent_threats(self) -> None:
+        persistent = find_persistent_threats()
+        if not persistent:
+            messagebox.showinfo(
+                "MemGuard Persistent Threats",
+                "No process has appeared in HIGH/SUSPICIOUS findings 3+ times yet.\n"
+                "Run more scans to build history.",
+            )
+            return
+
+        window = tk.Toplevel(self)
+        window.title("MemGuard - Persistent Threats")
+        window.geometry("1100x500")
+        window.minsize(800, 360)
+
+        frame = ttk.LabelFrame(window, text="Processes Repeatedly Flagged Across Scans")
+        frame.pack(fill="both", expand=True, padx=10, pady=10)
+
+        columns = ("occurrences", "name", "threat_level", "threat_score", "exe", "sha256", "last_seen")
+        tree = ttk.Treeview(frame, columns=columns, show="headings", height=18)
+        headings = {
+            "occurrences": ("Occurrences", 90),
+            "name": ("Name", 160),
+            "threat_level": ("Last Level", 90),
+            "threat_score": ("Last Score", 90),
+            "exe": ("Executable", 360),
+            "sha256": ("SHA256", 200),
+            "last_seen": ("Last Seen", 150),
+        }
+        for column, (title, width) in headings.items():
+            tree.heading(column, text=title)
+            tree.column(column, width=width, anchor="w")
+
+        for record in persistent:
+            tree.insert(
+                "",
+                "end",
+                values=(
+                    record.get("occurrences", 0),
+                    record.get("name", "-"),
+                    record.get("threat_level", "-"),
+                    record.get("threat_score", "-"),
+                    record.get("exe", "-"),
+                    str(record.get("sha256", ""))[:20] + ("…" if len(str(record.get("sha256", ""))) > 20 else ""),
+                    record.get("timestamp", "-"),
+                ),
+            )
+
+        vbar = ttk.Scrollbar(frame, orient="vertical", command=tree.yview)
+        tree.configure(yscroll=vbar.set)
+        tree.grid(row=0, column=0, sticky="nsew")
+        vbar.grid(row=0, column=1, sticky="ns")
+        frame.rowconfigure(0, weight=1)
+        frame.columnconfigure(0, weight=1)
 
 
 def launch_gui() -> None:

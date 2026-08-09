@@ -2,11 +2,16 @@
   "permissions": {
     "allow": [
       "PowerShell(python -c \"import graphify; print\\('graphify OK:', graphify.__version__\\)\")",
-      "PowerShell(\\(Get-Content \"d:\\\\Desktop\\\\MemGuard Lite\\\\CLAUDE.md\" -Raw -Encoding UTF8\\) | Select-String -Pattern \"graphify\" -AllMatches | Select-Object -First 3)"
+      "PowerShell(\\(Get-Content \"d:\\\\Desktop\\\\MemGuard Lite\\\\CLAUDE.md\" -Raw -Encoding UTF8\\) | Select-String -Pattern \"graphify\" -AllMatches | Select-Object -First 3)",
+      "Read(//c/Users/Cerus/OneDrive/Documents/Obsidian Vault/projects/**)",
+      "Bash(py -3.13 -c \"import memguard.scorer; print\\('OK'\\)\")",
+      "Bash(py -m graphify update .)",
+      "Bash(py -3.13 -c \"import memguard.attack_map, memguard.history_log, memguard.exporter, memguard.gui, memguard.scorer; print\\('OK'\\)\")"
     ],
     "additionalDirectories": [
       "D:\\Desktop\\MemGuard Lite",
-      "D:\\Desktop\\MemGuard Lite\\graphify-out"
+      "D:\\Desktop\\MemGuard Lite\\graphify-out",
+      "C:\\Users\\Cerus\\OneDrive\\Documents\\Obsidian Vault\\projects"
     ]
   }
 }
