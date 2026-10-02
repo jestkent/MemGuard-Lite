@@ -12,14 +12,19 @@ import ctypes
 import logging
 import os
 from ctypes import wintypes
+from functools import lru_cache
 from typing import Final
 
 import psutil
 
 from .collector import ProcessRecord
+from memguard.port_inspector import is_loopback_address
 from memguard.system_whitelist import is_system_process
 
 logger = logging.getLogger(__name__)
+
+# Resolved once: MemGuard's own PID, excluded from scoring (see score_process).
+_OWN_PID: Final[int] = os.getpid()
 
 _TEMP_PATH_PATTERNS: Final[tuple[str, ...]] = (
     "appdata\\local\\temp",
@@ -203,11 +208,36 @@ def _is_suspicious_parent_child(parent_name: str | None, child_name: str) -> boo
     return (parent_name, child_lower) in _SUSPICIOUS_PARENT_CHILD
 
 
+@lru_cache(maxsize=8192)
+def _signature_unsigned_cached(exe: str, fingerprint: tuple[float, int]) -> bool:
+    """Cached Authenticode result for one binary.
+
+    `fingerprint` is (mtime, size) and is part of the cache key, so a binary
+    replaced on disk is re-checked rather than served stale.
+    """
+    return _signature_unsigned_uncached(exe)
+
+
 def _check_signature_unsigned(exe: str) -> bool:
     """Return True when exe exists and has no valid Authenticode signature.
 
-    Uses PowerShell Get-AuthenticodeSignature — Windows only. Silent on error.
+    Each check spawns a PowerShell process (~0.3s), and a host runs many
+    processes off the same binary — 414 checks over 145 unique paths on a
+    typical scan, scored twice per run. Results are cached per binary so the
+    cost is paid once per unique executable instead of once per process.
     """
+    if os.name != "nt" or not exe or exe == "n/a":
+        return False
+    try:
+        stat = os.stat(exe)
+    except OSError:
+        # Unreadable or missing: fall through uncached, preserving prior behavior.
+        return _signature_unsigned_uncached(exe)
+    return _signature_unsigned_cached(exe, (stat.st_mtime, stat.st_size))
+
+
+def _signature_unsigned_uncached(exe: str) -> bool:
+    """Run PowerShell Get-AuthenticodeSignature — Windows only. Silent on error."""
     if os.name != "nt" or not exe or exe == "n/a":
         return False
     import subprocess
@@ -229,6 +259,20 @@ def _check_signature_unsigned(exe: str) -> bool:
 
 def score_process(process: ProcessRecord, blocklist_hashes: set[str] | None = None) -> ProcessRecord:
     """Apply heuristic rules and return an enriched process record."""
+    # MemGuard never scores itself. Relaunched as Administrator its interpreter
+    # still lives in user space (…/AppData/…/python.exe), which fires
+    # elevated_user_running_from_user_space on EVERY elevated scan and writes
+    # the false finding to the append-only history, where it would reach the
+    # persistent-threat threshold after three scans. The row is still listed,
+    # labelled, so the exclusion stays visible rather than hidden.
+    if int(process.get("pid", 0) or 0) == _OWN_PID:
+        enriched = dict(process)
+        enriched["threat_score"] = 0
+        enriched["threat_level"] = _classify_score(0)
+        enriched["triggered_rules"] = ["memguard_self (own process, not scored)"]
+        enriched["data_confidence"] = process.get("data_confidence", "FULL")
+        return enriched
+
     score = 0
     triggered_rules: list[str] = []
 
@@ -270,7 +314,7 @@ def score_process(process: ProcessRecord, blocklist_hashes: set[str] | None = No
                 rule_label = "listening_ephemeral_port (system_adjusted)"
                 logger.debug("Adjusted score for PID %s due to system whitelist", pid)
 
-            if all(address == "127.0.0.1" for address in ephemeral_addresses):
+            if all(is_loopback_address(address) for address in ephemeral_addresses):
                 rule_score = max(0, rule_score - 10)
                 rule_label = "listening_ephemeral_port (loopback_only)"
                 logger.debug("Reduced score for PID %s due to loopback port", pid)
@@ -283,7 +327,7 @@ def score_process(process: ProcessRecord, blocklist_hashes: set[str] | None = No
     parent_name = _get_parent_name(ppid)
     if _is_suspicious_parent_child(parent_name, name):
         score += 35
-        triggered_rules.append(f"suspicious_parent_child ({parent_name} → {name.lower()})")
+        triggered_rules.append(f"suspicious_parent_child ({parent_name} -> {name.lower()})")
 
     if exe and exe != "n/a" and _check_signature_unsigned(exe):
         score += 20
@@ -303,13 +347,42 @@ def score_process(process: ProcessRecord, blocklist_hashes: set[str] | None = No
     if memory_flag == "ANOMALOUS":
         triggered_rules.append("Memory anomaly detected")
 
+    # Evidence that could not be read is recorded, never scored. Adding points
+    # for a denied field would punish ordinary SYSTEM processes; adding none
+    # and staying silent would let an unassessed process read as cleared. The
+    # rule is informational and carries 0 points on purpose.
+    denied_fields = process.get("access_denied_fields") or []
+    if denied_fields:
+        triggered_rules.append(
+            f"unverifiable_data ({', '.join(sorted(denied_fields))})"
+        )
+
     enriched = dict(process)
     enriched["threat_score"] = score
     enriched["threat_level"] = _classify_score(score)
     enriched["triggered_rules"] = triggered_rules
+    enriched["data_confidence"] = "PARTIAL" if denied_fields else "FULL"
     return enriched
 
 
-def score_processes(processes: list[ProcessRecord], blocklist_hashes: set[str] | None = None) -> list[ProcessRecord]:
-    """Score all processes while preserving input ordering."""
-    return [score_process(process, blocklist_hashes=blocklist_hashes) for process in processes]
+def score_processes(
+    processes: list[ProcessRecord],
+    blocklist_hashes: set[str] | None = None,
+    progress_cb=None,
+) -> list[ProcessRecord]:
+    """Score all processes while preserving input ordering.
+
+    Args:
+        processes: Records to score.
+        blocklist_hashes: Optional local SHA256 blocklist.
+        progress_cb: Optional callable(done, total). Signature verification
+            dominates this step on a cold cache, so a caller driving a
+            progress bar needs to see movement during it.
+    """
+    total = len(processes)
+    scored: list[ProcessRecord] = []
+    for index, process in enumerate(processes, start=1):
+        scored.append(score_process(process, blocklist_hashes=blocklist_hashes))
+        if progress_cb and (index % 10 == 0 or index == total):
+            progress_cb(index, total)
+    return scored

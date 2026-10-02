@@ -23,13 +23,15 @@ COLUMNS = [
     "vms_mb", "num_memory_maps", "private_writable_regions", "executable_writable_regions",
     "memory_anomaly_score", "memory_flag",
     "threat_score", "threat_level", "triggered_rules",
+    "data_confidence",
 ]
 
 
 def _clean_export_strings(df: pd.DataFrame) -> pd.DataFrame:
     """Normalize string fields to avoid newline characters in exported data."""
     text_columns = [
-        "name", "exe", "user", "cmdline", "start_time", "sha256", "threat_level", "memory_flag"
+        "name", "exe", "user", "cmdline", "start_time", "sha256", "threat_level", "memory_flag",
+        "data_confidence",
     ]
     for column in text_columns:
         if column in df.columns:

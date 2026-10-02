@@ -5,15 +5,34 @@ with color-coded memory usage indicators.
 """
 
 import logging
+import sys
 
 from rich.console import Console
 from rich.table import Table
 from rich.panel import Panel
 from rich.text import Text
 
-from .collector import ProcessRecord, SystemOverview
+from .collector import ProcessRecord, SystemOverview, is_elevated
 
 logger = logging.getLogger(__name__)
+
+
+def _harden_stream_encoding() -> None:
+    """Never let an unencodable character abort a scan before export.
+
+    Process names, command lines, and rule labels are machine telemetry and
+    may contain characters the active console codepage cannot represent
+    (cp1252 consoles, piped output, redirected files). Replacing them keeps
+    display lossy but the run intact.
+    """
+    for stream in (sys.stdout, sys.stderr):
+        try:
+            stream.reconfigure(errors="replace")
+        except (AttributeError, OSError, ValueError):
+            continue
+
+
+_harden_stream_encoding()
 
 console = Console()
 
@@ -132,6 +151,43 @@ def show_process_table(processes: list[ProcessRecord], limit: int = 25, memory_e
     console.print(
         f"\n  [dim]Showing {min(limit, len(processes))} of {len(processes)} total processes[/dim]\n"
     )
+
+
+def show_collection_coverage(processes: list[ProcessRecord]) -> None:
+    """Warn when part of the scan could not be read.
+
+    A triage tool that renders unreadable processes identically to verified
+    clean ones invites an analyst to treat "never checked" as "checked and
+    fine". This panel states the size of the blind spot explicitly.
+    """
+    partial = [p for p in processes if p.get("data_confidence") == "PARTIAL"]
+    if not partial:
+        console.print(Panel(
+            "[green]Full visibility: every process disclosed its metadata.[/green]",
+            title="Collection Coverage", border_style="green"))
+        console.print()
+        return
+
+    denied_cmdline = sum(1 for p in partial if "cmdline" in (p.get("access_denied_fields") or []))
+    total = len(processes)
+    pct = round(100 * len(partial) / max(1, total))
+    elevated = is_elevated()
+
+    lines = [
+        f"[yellow]{len(partial)} of {total} processes ({pct}%) returned incomplete metadata.[/yellow]",
+        f"Command line unreadable for {denied_cmdline} process(es) - "
+        f"the suspicious_commandline rule cannot fire for those.",
+        "They are marked data_confidence=PARTIAL, not cleared.",
+    ]
+    if not elevated:
+        lines.extend((
+            "",
+            "[bold red]MemGuard is running WITHOUT elevation.[/bold red] "
+            "Re-run as Administrator to read SYSTEM-owned processes.",
+        ))
+    body = "\n".join(lines)
+    console.print(Panel(body, title="Collection Coverage", border_style="yellow"))
+    console.print()
 
 
 def show_threat_alerts(processes: list[ProcessRecord]) -> None:

@@ -100,21 +100,29 @@ def find_persistent_threats(
     path: str | os.PathLike[str] | None = None,
     threshold: int = _PERSISTENCE_THRESHOLD,
 ) -> list[dict[str, object]]:
-    """Return findings that have appeared in the log >= threshold times.
+    """Return findings seen in >= threshold distinct scans.
 
-    Identity is (sha256 if present else exe). Returns sorted by occurrence
-    count descending.
+    Identity is (sha256 if present else exe). Counting is per scan, not per
+    log row: a multi-instance application (Electron, Chromium) writes one
+    record per live process in a single scan, and those must not add up to
+    persistence on their own. Returns sorted by scan count descending.
     """
     dest = _resolve_history_path(path)
-    counts: Counter[str] = Counter()
+    scans_seen: dict[str, set[str]] = {}
     last_seen: dict[str, dict[str, object]] = {}
 
-    for record in _iter_history(dest):
+    for index, record in enumerate(_iter_history(dest)):
         identity = str(record.get("sha256") or record.get("exe") or "").lower()
         if not identity or identity == "n/a":
             continue
-        counts[identity] += 1
+        # A row with no timestamp cannot be grouped, so it counts as its own scan.
+        scan_id = str(record.get("timestamp") or "") or f"__untimestamped_{index}"
+        scans_seen.setdefault(identity, set()).add(scan_id)
         last_seen[identity] = record
+
+    counts: Counter[str] = Counter(
+        {identity: len(scans) for identity, scans in scans_seen.items()}
+    )
 
     persistent: list[dict[str, object]] = []
     for identity, count in counts.most_common():

@@ -79,6 +79,17 @@ Heuristic rules currently implemented:
 	- Elevated context + user-space executable path (risk combination).
 - `+25` / adjusted `listening_ephemeral_port`
 	- Listening on ephemeral ports; reduced for loopback-only and whitelisted system behavior.
+	- `memguard_self` (0 points): MemGuard does not score its own process. Running elevated from a user-space Python install would otherwise make the tool flag itself. The row is still listed and labelled.
+	- `unverifiable_data` (0 points): command line or user could not be read. Marks the row `data_confidence=PARTIAL` so it is not mistaken for a verified-clean process. Run as Administrator to recover this data - on a typical host ~36% of processes (mostly `svchost.exe`) are unreadable without elevation, and they cannot trigger the `suspicious_commandline` rule.
+
+### Running with Administrator rights
+
+Elevation grants **read** access to SYSTEM-owned process metadata. MemGuard stays read-only and modifies nothing at any privilege level.
+
+- CLI: `py -3.13 -m memguard --elevate`
+- GUI: **Restart as Administrator** button (next to the auto-refresh controls)
+
+Windows cannot elevate a process that is already running, so both paths relaunch MemGuard through the UAC consent prompt and close the original instance. Elevation is never requested automatically, and declining the prompt leaves the current scan running unchanged. Unsaved GUI results are lost on restart, so export first if you need them.
 - `+70` `Matched local blocklist`
 	- SHA256 appears in `data/blocklist.txt`.
 - `+50` `VirusTotal malicious detections >= 5`
@@ -137,7 +148,7 @@ Ports are scored based on:
 - **Common backdoor ports** (+15): 4444, 5555, 6666, 7777, 8888, 9999
 - **Listening state** (+5): Port actively listening for incoming connections
 - **Ephemeral port** (+5): Port number ≥ 49152 (outside well-known and registered ranges)
-- **Localhost only** (-10): Risk reduction when local address is 127.0.0.1
+- **Localhost only** (-10): Risk reduction when the local address is loopback (127.0.0.0/8, `::1`, or `::ffff:127.0.0.1`)
 
 ### Risk Levels
 

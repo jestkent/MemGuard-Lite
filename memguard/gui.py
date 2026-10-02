@@ -16,7 +16,8 @@ from tkinter import filedialog, messagebox, ttk
 
 import psutil
 
-from .collector import ProcessRecord, collect_processes, collect_system_overview
+from .collector import ProcessRecord, collect_processes, collect_system_overview, is_elevated
+from .elevation import relaunch_as_admin
 from .exporter import (
     export_csv, export_full_report, export_json,
     export_ports_csv, export_ports_json, export_ports_report,
@@ -69,6 +70,7 @@ class MemGuardGUI(tk.Tk):
         self.summary_suspicious_var = tk.StringVar(value="0")
         self.summary_high_var = tk.StringVar(value="0")
         self.summary_vt_var = tk.StringVar(value="0")
+        self.summary_unverified_var = tk.StringVar(value="0")
         self.summary_ram_var = tk.StringVar(value="-")
         self.summary_cpu_var = tk.StringVar(value="-")
         self.summary_scan_time_var = tk.StringVar(value=self.last_scan_time)
@@ -148,6 +150,20 @@ class MemGuardGUI(tk.Tk):
             row=2, column=3, columnspan=2, sticky="w", padx=6, pady=(0, 8)
         )
 
+        # Elevation state is shown even when it cannot be changed, so the
+        # analyst always knows whether this scan can see SYSTEM processes.
+        self.elevate_button = ttk.Button(
+            controls,
+            text="Restart as Administrator",
+            command=self.restart_as_administrator,
+        )
+        self.elevate_button.grid(row=2, column=5, columnspan=2, sticky="w", padx=6, pady=(0, 8))
+
+        self.elevation_status_var = tk.StringVar()
+        self.elevation_label = ttk.Label(controls, textvariable=self.elevation_status_var)
+        self.elevation_label.grid(row=2, column=7, columnspan=3, sticky="w", padx=6, pady=(0, 8))
+        self._refresh_elevation_state()
+
         self.progress = ttk.Progressbar(controls, mode="determinate", length=220, maximum=100)
         self.progress.grid(row=1, column=11, padx=(8, 4), pady=(0, 8), sticky="e")
 
@@ -163,6 +179,7 @@ class MemGuardGUI(tk.Tk):
             ("Suspicious", self.summary_suspicious_var),
             ("High", self.summary_high_var),
             ("VT Enriched", self.summary_vt_var),
+            ("Unverified", self.summary_unverified_var),
             ("Used RAM", self.summary_ram_var),
             ("CPU", self.summary_cpu_var),
             ("Last Scan", self.summary_scan_time_var),
@@ -191,6 +208,7 @@ class MemGuardGUI(tk.Tk):
             "cpu_percent",
             "threat_score",
             "threat_level",
+            "data_confidence",
             "memory_flag",
             "vt_malicious",
             "exe",
@@ -208,6 +226,7 @@ class MemGuardGUI(tk.Tk):
             "cpu_percent": ("CPU %", 80),
             "threat_score": ("Threat", 80),
             "threat_level": ("Level", 100),
+            "data_confidence": ("Confidence", 90),
             "memory_flag": ("Mem Flag", 90),
             "vt_malicious": ("VT M", 70),
             "exe": ("Executable", 360),
@@ -226,6 +245,9 @@ class MemGuardGUI(tk.Tk):
         self.tree.tag_configure("HIGH", background="#ffcccc")
         self.tree.tag_configure("SUSPICIOUS", background="#fff3cc")
         self.tree.tag_configure("NEW", background="#ccffcc")
+        # Unreadable metadata is not a clean bill of health; grey it so a
+        # PARTIAL row never reads as a verified-clean row.
+        self.tree.tag_configure("PARTIAL", background="#e4e4e4", foreground="#444444")
 
         self.tree.grid(row=0, column=0, sticky="nsew")
         vbar.grid(row=0, column=1, sticky="ns")
@@ -272,14 +294,25 @@ class MemGuardGUI(tk.Tk):
         _report(15, "Collecting processes...")
         processes = collect_processes()
 
-        _report(25, f"Hashing {len(processes)} executables (slow step)...")
+        _report(25, f"Hashing {len(processes)} executables...")
         processes = attach_sha256(processes)
 
-        _report(70, "Scoring processes...")
-        processes = score_processes(processes, blocklist_hashes=self.blocklist_hashes)
+        # Signature verification dominates this step on a cold cache, so drive
+        # the bar from the per-process callback instead of leaving it parked.
+        def _scoring_progress(done: int, total: int) -> None:
+            span = 76 - 30
+            _report(30 + int(span * done / max(1, total)),
+                    f"Verifying signatures & scoring... {done}/{total}")
+
+        _report(30, "Verifying signatures & scoring...")
+        processes = score_processes(
+            processes,
+            blocklist_hashes=self.blocklist_hashes,
+            progress_cb=_scoring_progress,
+        )
 
         if memory_enabled:
-            _report(78, "Inspecting memory regions...")
+            _report(80, "Inspecting memory regions...")
             processes = inspect_memory(
                 processes,
                 min_threat_score=memory_min_score,
@@ -383,6 +416,16 @@ class MemGuardGUI(tk.Tk):
                 status += f" | VT: no processes scored ≥ {vt_min} — try lowering VT min score"
             else:
                 status += f" | VT: {vt_enriched} process(es) enriched"
+
+        # Surface the blind spot in the same line as the result, so a scan that
+        # could only read part of the system never looks like a complete one.
+        unverified = sum(
+            str(p.get("data_confidence", "FULL")).upper() == "PARTIAL" for p in processes
+        )
+        if unverified:
+            status += f" | {unverified} unverified"
+            if not is_elevated():
+                status += " (not elevated - run as Administrator)"
         self.status_var.set(status)
 
     def _on_scan_error(self, exc: Exception) -> None:
@@ -457,6 +500,8 @@ class MemGuardGUI(tk.Tk):
                 row_tag = "SUSPICIOUS"
             elif proc_key in self.new_process_keys:
                 row_tag = "NEW"
+            elif str(process.get("data_confidence", "FULL")).upper() == "PARTIAL":
+                row_tag = "PARTIAL"
             else:
                 row_tag = ""
             self.tree.insert(
@@ -472,6 +517,7 @@ class MemGuardGUI(tk.Tk):
                     f"{float(process.get('cpu_percent', 0) or 0):.1f}",
                     int(process.get("threat_score", 0) or 0),
                     process.get("threat_level", "SAFE"),
+                    process.get("data_confidence", "FULL"),
                     process.get("memory_flag", "-"),
                     int(process.get("vt_malicious", 0) or 0),
                     process.get("exe", "N/A"),
@@ -492,6 +538,11 @@ class MemGuardGUI(tk.Tk):
         self.summary_suspicious_var.set(str(suspicious))
         self.summary_high_var.set(str(high))
         self.summary_vt_var.set(str(vt_enriched))
+        unverified = sum(
+            str(process.get("data_confidence", "FULL")).upper() == "PARTIAL"
+            for process in self.filtered_processes
+        )
+        self.summary_unverified_var.set(str(unverified))
 
         if self.overview:
             used_ram = float(self.overview.get("used_ram_mb", 0.0) or 0.0)
@@ -820,7 +871,10 @@ class MemGuardGUI(tk.Tk):
 
         high_risk = sum(p["risk_level"] == "HIGH" for p in self.ports)
         medium_risk = sum(p["risk_level"] == "MEDIUM" for p in self.ports)
-        is_localhost_only = sum("127.0.0.1" in p["local_addr"] for p in self.ports)
+        is_localhost_only = sum(
+            any("Localhost only" in rule for rule in p["triggered_rules"])
+            for p in self.ports
+        )
 
         summary_text = (
             f"Total Ports: {len(self.ports)} | "
@@ -829,6 +883,58 @@ class MemGuardGUI(tk.Tk):
             f"Localhost Only: {is_localhost_only}"
         )
         ttk.Label(summary_frame, text=summary_text).pack(padx=10, pady=8)
+
+    # ── Elevation ─────────────────────────────────────────────
+
+    def _refresh_elevation_state(self) -> None:
+        """Reflect the current token in the button and status label."""
+        if is_elevated():
+            self.elevation_status_var.set("Administrator - full process visibility")
+            self.elevate_button.state(["disabled"])
+        else:
+            self.elevation_status_var.set("Standard user - SYSTEM process details hidden")
+            self.elevate_button.state(["!disabled"])
+
+    def restart_as_administrator(self) -> None:
+        """Relaunch MemGuard elevated after explicit confirmation.
+
+        Windows cannot elevate a running process, so this starts a new instance
+        through the UAC prompt and closes this one. Elevation is requested only
+        here, never automatically.
+        """
+        if is_elevated():
+            messagebox.showinfo(
+                "Administrator",
+                "MemGuard is already running with Administrator rights.",
+            )
+            self._refresh_elevation_state()
+            return
+
+        confirmed = messagebox.askyesno(
+            "Restart as Administrator",
+            "MemGuard will close and reopen with Administrator rights.\n\n"
+            "Windows will show a UAC consent prompt.\n\n"
+            "This grants READ access to command line and user data for "
+            "SYSTEM-owned processes, which are currently marked PARTIAL. "
+            "MemGuard stays read-only and still modifies nothing.\n\n"
+            "Any unsaved scan results in this window will be lost. Continue?",
+        )
+        if not confirmed:
+            self.status_var.set("Elevation cancelled")
+            return
+
+        self.status_var.set("Requesting Administrator rights…")
+        self.update_idletasks()
+
+        started, message = relaunch_as_admin()
+        if started:
+            self._cancel_auto_refresh()
+            self.destroy()
+            return
+
+        self.status_var.set(message)
+        messagebox.showwarning("Restart as Administrator", message)
+        self._refresh_elevation_state()
 
     # ── Test VT Key ───────────────────────────────────────────
 

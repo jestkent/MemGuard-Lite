@@ -7,6 +7,7 @@ scoring them for security risk and linking to processes.
 from __future__ import annotations
 
 import concurrent.futures
+import ipaddress
 import logging
 import socket
 from typing import TypedDict
@@ -55,8 +56,27 @@ class PortRecord(TypedDict):
     triggered_rules: list[str]
 
 
-def _assess_port_risk(port: int, state: str, local_addr: str = "") -> tuple[str, int, list[str]]:
+def is_loopback_address(address: str) -> bool:
+    """True if address is a loopback IP (127.0.0.0/8, ::1, ::ffff:127.0.0.1).
+
+    Takes a bare IP, not an "ip:port" string: an IPv6 address contains colons
+    of its own, so the joined form cannot be split reliably.
+    """
+    if not address:
+        return False
+    try:
+        return ipaddress.ip_address(address.strip("[]")).is_loopback
+    except ValueError:
+        return False
+
+
+def _assess_port_risk(port: int, state: str, local_ip: str = "") -> tuple[str, int, list[str]]:
     """Score a port for security risk.
+
+    Args:
+        port: Local port number.
+        state: Connection state (LISTEN, ESTABLISHED, ...).
+        local_ip: Bare local IP address, used for the loopback reduction.
 
     Returns:
         (risk_level, risk_score, triggered_rules)
@@ -83,7 +103,7 @@ def _assess_port_risk(port: int, state: str, local_addr: str = "") -> tuple[str,
         score += 5
         rules.append("Ephemeral port range (>= 49152)")
 
-    if local_addr.startswith("127.0.0.1"):
+    if is_loopback_address(local_ip):
         score -= 10
         rules.append("Localhost only (reduced risk)")
 
@@ -153,7 +173,7 @@ def collect_listening_ports() -> list[PortRecord]:
             except (psutil.NoSuchProcess, psutil.AccessDenied):
                 process_name = f"PID {pid} (unknown)"
         
-        risk_level, risk_score, triggered_rules = _assess_port_risk(port, state, local_addr)
+        risk_level, risk_score, triggered_rules = _assess_port_risk(port, state, conn.laddr.ip)
         
         ports.append(
             {

@@ -15,9 +15,11 @@ from .hasher import attach_sha256, load_blocklist
 from .memory_inspector import inspect_memory
 from .scorer import score_processes
 from .threat_intel import enrich_with_virustotal
+from .elevation import is_elevated, relaunch_as_admin
 from .gui import launch_gui
 from .ui import (
     show_banner,
+    show_collection_coverage,
     show_process_table,
     show_system_overview,
     show_threat_alerts,
@@ -73,6 +75,16 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Only query VirusTotal for processes with threat_score >= this value.",
     )
     parser.add_argument(
+        "--elevate",
+        action="store_true",
+        default=False,
+        help=(
+            "Relaunch through the UAC prompt with Administrator rights. Grants "
+            "read access to SYSTEM-owned process metadata (command line, user) "
+            "that is otherwise denied. Read-only behavior is unchanged."
+        ),
+    )
+    parser.add_argument(
         "--vt-suspicious-only",
         action="store_true",
         default=False,
@@ -84,6 +96,19 @@ def _build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> None:
     """Entry point for MemGuard CLI."""
     args = _build_parser().parse_args(argv)
+
+    if args.elevate:
+        # Drop --elevate from the relaunched command so the elevated instance
+        # cannot request elevation again.
+        forwarded = [a for a in (argv if argv is not None else sys.argv[1:]) if a != "--elevate"]
+        relaunch_argv = [sys.argv[0], *forwarded]
+        started, message = relaunch_as_admin(relaunch_argv)
+        console.print(f"[cyan]{message}[/cyan]")
+        if started:
+            return
+        if not is_elevated():
+            console.print("[yellow]Continuing without elevation - SYSTEM-owned "
+                          "process metadata will be unreadable.[/yellow]")
 
     if args.gui:
         launch_gui()
@@ -122,6 +147,7 @@ def main(argv: list[str] | None = None) -> None:
     # ── Display ──────────────────────────────────────────────
     show_system_overview(overview)
     show_process_table(processes, limit=25, memory_enabled=args.memory)
+    show_collection_coverage(processes)
     show_threat_alerts(processes)
     show_virustotal_findings(processes)
 

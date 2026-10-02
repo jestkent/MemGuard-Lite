@@ -59,7 +59,7 @@
       "source_file": "launch_gui.py",
       "source_location": "L1",
       "id": "launch_gui_py",
-      "community": 11,
+      "community": 12,
       "norm_label": "launch_gui.py"
     },
     {
@@ -68,7 +68,7 @@
       "source_file": "launch_gui.py",
       "source_location": "L1",
       "id": "memguard_lite_launch_gui_rationale_1",
-      "community": 11,
+      "community": 12,
       "norm_label": "windows executable entrypoint for memguard gui."
     },
     {
@@ -77,7 +77,7 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L1",
       "id": "memguard_attack_map_py",
-      "community": 6,
+      "community": 8,
       "norm_label": "attack_map.py"
     },
     {
@@ -86,7 +86,7 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L31",
       "id": "memguard_attack_map_map_rule_to_technique",
-      "community": 6,
+      "community": 8,
       "norm_label": "map_rule_to_technique()"
     },
     {
@@ -95,7 +95,7 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L43",
       "id": "memguard_attack_map_map_rules_to_techniques",
-      "community": 6,
+      "community": 8,
       "norm_label": "map_rules_to_techniques()"
     },
     {
@@ -104,7 +104,7 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L57",
       "id": "memguard_attack_map_format_techniques",
-      "community": 6,
+      "community": 8,
       "norm_label": "format_techniques()"
     },
     {
@@ -113,7 +113,7 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L1",
       "id": "memguard_attack_map_rationale_1",
-      "community": 6,
+      "community": 8,
       "norm_label": "mitre att&ck technique mapping for memguard scoring rules.  read-only lookup: ma"
     },
     {
@@ -122,7 +122,7 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L32",
       "id": "memguard_attack_map_rationale_32",
-      "community": 6,
+      "community": 8,
       "norm_label": "return (technique_id, technique_name) for a rule string, or none."
     },
     {
@@ -131,7 +131,7 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L44",
       "id": "memguard_attack_map_rationale_44",
-      "community": 6,
+      "community": 8,
       "norm_label": "return deduplicated list of (id, name) tuples for a list of rules."
     },
     {
@@ -140,7 +140,7 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L58",
       "id": "memguard_attack_map_rationale_58",
-      "community": 6,
+      "community": 8,
       "norm_label": "human-readable comma-separated string. empty \u2192 '-'."
     },
     {
@@ -149,16 +149,16 @@
       "source_file": "memguard\\collector.py",
       "source_location": "L1",
       "id": "memguard_collector_py",
-      "community": 2,
+      "community": 5,
       "norm_label": "collector.py"
     },
     {
       "label": "ProcessRecord",
       "file_type": "code",
       "source_file": "memguard\\collector.py",
-      "source_location": "L28",
+      "source_location": "L29",
       "id": "memguard_collector_processrecord",
-      "community": 2,
+      "community": 7,
       "norm_label": "processrecord"
     },
     {
@@ -167,43 +167,61 @@
       "source_file": "",
       "source_location": "",
       "id": "typeddict",
-      "community": 2,
+      "community": 7,
       "norm_label": "typeddict"
     },
     {
       "label": "SystemOverview",
       "file_type": "code",
       "source_file": "memguard\\collector.py",
-      "source_location": "L55",
+      "source_location": "L58",
       "id": "memguard_collector_systemoverview",
-      "community": 2,
+      "community": 7,
       "norm_label": "systemoverview"
     },
     {
       "label": "_sanitize_text()",
       "file_type": "code",
       "source_file": "memguard\\collector.py",
-      "source_location": "L64",
+      "source_location": "L67",
       "id": "memguard_collector_sanitize_text",
-      "community": 2,
+      "community": 5,
       "norm_label": "_sanitize_text()"
+    },
+    {
+      "label": "is_elevated()",
+      "file_type": "code",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L76",
+      "id": "memguard_collector_is_elevated",
+      "community": 3,
+      "norm_label": "is_elevated()"
+    },
+    {
+      "label": "_probe_denied_fields()",
+      "file_type": "code",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L91",
+      "id": "memguard_collector_probe_denied_fields",
+      "community": 5,
+      "norm_label": "_probe_denied_fields()"
     },
     {
       "label": "collect_system_overview()",
       "file_type": "code",
       "source_file": "memguard\\collector.py",
-      "source_location": "L73",
+      "source_location": "L114",
       "id": "memguard_collector_collect_system_overview",
-      "community": 2,
+      "community": 5,
       "norm_label": "collect_system_overview()"
     },
     {
       "label": "collect_processes()",
       "file_type": "code",
       "source_file": "memguard\\collector.py",
-      "source_location": "L84",
+      "source_location": "L125",
       "id": "memguard_collector_collect_processes",
-      "community": 2,
+      "community": 5,
       "norm_label": "collect_processes()"
     },
     {
@@ -212,53 +230,125 @@
       "source_file": "memguard\\collector.py",
       "source_location": "L1",
       "id": "memguard_collector_rationale_1",
-      "community": 2,
+      "community": 5,
       "norm_label": "process data collection module.  enumerates running processes and collects for"
     },
     {
       "label": "Internal process data model used across MemGuard layers.",
       "file_type": "rationale",
       "source_file": "memguard\\collector.py",
-      "source_location": "L29",
-      "id": "memguard_collector_rationale_29",
-      "community": 2,
+      "source_location": "L30",
+      "id": "memguard_collector_rationale_30",
+      "community": 7,
       "norm_label": "internal process data model used across memguard layers."
     },
     {
       "label": "System-level telemetry shown above the process table.",
       "file_type": "rationale",
       "source_file": "memguard\\collector.py",
-      "source_location": "L56",
-      "id": "memguard_collector_rationale_56",
-      "community": 2,
+      "source_location": "L59",
+      "id": "memguard_collector_rationale_59",
+      "community": 7,
       "norm_label": "system-level telemetry shown above the process table."
     },
     {
       "label": "Remove newlines/tabs from text fields to keep exports parse-safe.",
       "file_type": "rationale",
       "source_file": "memguard\\collector.py",
-      "source_location": "L65",
-      "id": "memguard_collector_rationale_65",
-      "community": 2,
+      "source_location": "L68",
+      "id": "memguard_collector_rationale_68",
+      "community": 5,
       "norm_label": "remove newlines/tabs from text fields to keep exports parse-safe."
+    },
+    {
+      "label": "True when the current process holds an elevated (admin) token.      Without el",
+      "file_type": "rationale",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L77",
+      "id": "memguard_collector_rationale_77",
+      "community": 3,
+      "norm_label": "true when the current process holds an elevated (admin) token.      without el"
+    },
+    {
+      "label": "Return the names of fields Windows refused to disclose.      psutil.process_it",
+      "file_type": "rationale",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L92",
+      "id": "memguard_collector_rationale_92",
+      "community": 5,
+      "norm_label": "return the names of fields windows refused to disclose.      psutil.process_it"
     },
     {
       "label": "Collect total/used/free RAM and current CPU usage percentage.",
       "file_type": "rationale",
       "source_file": "memguard\\collector.py",
-      "source_location": "L74",
-      "id": "memguard_collector_rationale_74",
-      "community": 2,
+      "source_location": "L115",
+      "id": "memguard_collector_rationale_115",
+      "community": 5,
       "norm_label": "collect total/used/free ram and current cpu usage percentage."
     },
     {
       "label": "Enumerate all running processes and collect metadata.      Returns:         L",
       "file_type": "rationale",
       "source_file": "memguard\\collector.py",
-      "source_location": "L85",
-      "id": "memguard_collector_rationale_85",
-      "community": 2,
+      "source_location": "L126",
+      "id": "memguard_collector_rationale_126",
+      "community": 5,
       "norm_label": "enumerate all running processes and collect metadata.      returns:         l"
+    },
+    {
+      "label": "elevation.py",
+      "file_type": "code",
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L1",
+      "id": "memguard_elevation_py",
+      "community": 6,
+      "norm_label": "elevation.py"
+    },
+    {
+      "label": "build_relaunch_command()",
+      "file_type": "code",
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L35",
+      "id": "memguard_elevation_build_relaunch_command",
+      "community": 6,
+      "norm_label": "build_relaunch_command()"
+    },
+    {
+      "label": "relaunch_as_admin()",
+      "file_type": "code",
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L62",
+      "id": "memguard_elevation_relaunch_as_admin",
+      "community": 6,
+      "norm_label": "relaunch_as_admin()"
+    },
+    {
+      "label": "Opt-in privilege elevation for fuller read visibility.  Windows cannot raise the",
+      "file_type": "rationale",
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L1",
+      "id": "memguard_elevation_rationale_1",
+      "community": 6,
+      "norm_label": "opt-in privilege elevation for fuller read visibility.  windows cannot raise the"
+    },
+    {
+      "label": "Return (executable, argument_string) that re-runs this app as-is.      Kept sepa",
+      "file_type": "rationale",
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L36",
+      "id": "memguard_elevation_rationale_36",
+      "community": 6,
+      "norm_label": "return (executable, argument_string) that re-runs this app as-is.      kept sepa"
+    },
+    {
+      "label": "Relaunch MemGuard elevated via the UAC prompt.      Returns:         (started, m",
+      "file_type": "rationale",
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L63",
+      "id": "memguard_elevation_rationale_63",
+      "community": 6,
+      "norm_label": "relaunch memguard elevated via the uac prompt.      returns:         (started, m"
     },
     {
       "label": "exporter.py",
@@ -273,7 +363,7 @@
       "label": "_clean_export_strings()",
       "file_type": "code",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L29",
+      "source_location": "L30",
       "id": "memguard_exporter_clean_export_strings",
       "community": 4,
       "norm_label": "_clean_export_strings()"
@@ -282,7 +372,7 @@
       "label": "_to_dataframe()",
       "file_type": "code",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L47",
+      "source_location": "L49",
       "id": "memguard_exporter_to_dataframe",
       "community": 4,
       "norm_label": "_to_dataframe()"
@@ -291,7 +381,7 @@
       "label": "_normalize_rules()",
       "file_type": "code",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L54",
+      "source_location": "L56",
       "id": "memguard_exporter_normalize_rules",
       "community": 4,
       "norm_label": "_normalize_rules()"
@@ -300,7 +390,7 @@
       "label": "_build_summary()",
       "file_type": "code",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L60",
+      "source_location": "L62",
       "id": "memguard_exporter_build_summary",
       "community": 4,
       "norm_label": "_build_summary()"
@@ -309,7 +399,7 @@
       "label": "export_full_report()",
       "file_type": "code",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L74",
+      "source_location": "L76",
       "id": "memguard_exporter_export_full_report",
       "community": 4,
       "norm_label": "export_full_report()"
@@ -318,7 +408,7 @@
       "label": "export_ports_report()",
       "file_type": "code",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L205",
+      "source_location": "L207",
       "id": "memguard_exporter_export_ports_report",
       "community": 4,
       "norm_label": "export_ports_report()"
@@ -327,7 +417,7 @@
       "label": "export_ports_csv()",
       "file_type": "code",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L283",
+      "source_location": "L285",
       "id": "memguard_exporter_export_ports_csv",
       "community": 4,
       "norm_label": "export_ports_csv()"
@@ -336,7 +426,7 @@
       "label": "export_ports_json()",
       "file_type": "code",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L299",
+      "source_location": "L301",
       "id": "memguard_exporter_export_ports_json",
       "community": 4,
       "norm_label": "export_ports_json()"
@@ -345,7 +435,7 @@
       "label": "export_csv()",
       "file_type": "code",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L315",
+      "source_location": "L317",
       "id": "memguard_exporter_export_csv",
       "community": 4,
       "norm_label": "export_csv()"
@@ -354,7 +444,7 @@
       "label": "export_json()",
       "file_type": "code",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L332",
+      "source_location": "L334",
       "id": "memguard_exporter_export_json",
       "community": 4,
       "norm_label": "export_json()"
@@ -372,8 +462,8 @@
       "label": "Normalize string fields to avoid newline characters in exported data.",
       "file_type": "rationale",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L30",
-      "id": "memguard_exporter_rationale_30",
+      "source_location": "L31",
+      "id": "memguard_exporter_rationale_31",
       "community": 4,
       "norm_label": "normalize string fields to avoid newline characters in exported data."
     },
@@ -381,8 +471,8 @@
       "label": "Convert a list of ProcessRecord dictionaries to a pandas DataFrame.",
       "file_type": "rationale",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L48",
-      "id": "memguard_exporter_rationale_48",
+      "source_location": "L50",
+      "id": "memguard_exporter_rationale_50",
       "community": 4,
       "norm_label": "convert a list of processrecord dictionaries to a pandas dataframe."
     },
@@ -390,8 +480,8 @@
       "label": "Export an AI-friendly markdown report with the full scan dataset embedded.",
       "file_type": "rationale",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L82",
-      "id": "memguard_exporter_rationale_82",
+      "source_location": "L84",
+      "id": "memguard_exporter_rationale_84",
       "community": 4,
       "norm_label": "export an ai-friendly markdown report with the full scan dataset embedded."
     },
@@ -399,8 +489,8 @@
       "label": "Export a markdown report of port scan results.      Args:         ports: Port",
       "file_type": "rationale",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L210",
-      "id": "memguard_exporter_rationale_210",
+      "source_location": "L212",
+      "id": "memguard_exporter_rationale_212",
       "community": 4,
       "norm_label": "export a markdown report of port scan results.      args:         ports: port"
     },
@@ -408,8 +498,8 @@
       "label": "Export port records to CSV.      Returns:         Path to the written file.",
       "file_type": "rationale",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L284",
-      "id": "memguard_exporter_rationale_284",
+      "source_location": "L286",
+      "id": "memguard_exporter_rationale_286",
       "community": 4,
       "norm_label": "export port records to csv.      returns:         path to the written file."
     },
@@ -417,8 +507,8 @@
       "label": "Export port records to JSON.      Returns:         Path to the written file.",
       "file_type": "rationale",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L300",
-      "id": "memguard_exporter_rationale_300",
+      "source_location": "L302",
+      "id": "memguard_exporter_rationale_302",
       "community": 4,
       "norm_label": "export port records to json.      returns:         path to the written file."
     },
@@ -426,8 +516,8 @@
       "label": "Export process list to CSV.      Args:         processes: Collected process d",
       "file_type": "rationale",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L316",
-      "id": "memguard_exporter_rationale_316",
+      "source_location": "L318",
+      "id": "memguard_exporter_rationale_318",
       "community": 4,
       "norm_label": "export process list to csv.      args:         processes: collected process d"
     },
@@ -435,8 +525,8 @@
       "label": "Export process list to JSON.      Args:         processes: Collected process",
       "file_type": "rationale",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L333",
-      "id": "memguard_exporter_rationale_333",
+      "source_location": "L335",
+      "id": "memguard_exporter_rationale_335",
       "community": 4,
       "norm_label": "export process list to json.      args:         processes: collected process"
     },
@@ -453,412 +543,430 @@
       "label": "MemGuardGUI",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L36",
+      "source_location": "L37",
       "id": "memguard_gui_memguardgui",
-      "community": 0,
+      "community": 1,
       "norm_label": "memguardgui"
     },
     {
       "label": ".__init__()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L39",
+      "source_location": "L40",
       "id": "memguard_gui_memguardgui_init",
-      "community": 7,
+      "community": 5,
       "norm_label": ".__init__()"
     },
     {
       "label": "._build_layout()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L84",
+      "source_location": "L86",
       "id": "memguard_gui_memguardgui_build_layout",
-      "community": 0,
+      "community": 1,
       "norm_label": "._build_layout()"
     },
     {
       "label": "._build_controls()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L91",
+      "source_location": "L93",
       "id": "memguard_gui_memguardgui_build_controls",
-      "community": 0,
+      "community": 1,
       "norm_label": "._build_controls()"
     },
     {
       "label": "._build_summary()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L157",
+      "source_location": "L173",
       "id": "memguard_gui_memguardgui_build_summary",
-      "community": 0,
+      "community": 1,
       "norm_label": "._build_summary()"
     },
     {
       "label": "._build_results_table()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L181",
+      "source_location": "L198",
       "id": "memguard_gui_memguardgui_build_results_table",
-      "community": 0,
+      "community": 1,
       "norm_label": "._build_results_table()"
     },
     {
       "label": "._build_details_panel()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L240",
+      "source_location": "L262",
       "id": "memguard_gui_memguardgui_build_details_panel",
-      "community": 0,
+      "community": 1,
       "norm_label": "._build_details_panel()"
     },
     {
       "label": "._parse_int()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L248",
+      "source_location": "L270",
       "id": "memguard_gui_memguardgui_parse_int",
-      "community": 0,
+      "community": 1,
       "norm_label": "._parse_int()"
     },
     {
       "label": "._scan_pipeline()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L255",
+      "source_location": "L277",
       "id": "memguard_gui_memguardgui_scan_pipeline",
-      "community": 2,
+      "community": 5,
       "norm_label": "._scan_pipeline()"
     },
     {
       "label": "._post_progress()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L307",
+      "source_location": "L340",
       "id": "memguard_gui_memguardgui_post_progress",
-      "community": 0,
+      "community": 1,
       "norm_label": "._post_progress()"
     },
     {
       "label": "._apply_progress()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L311",
+      "source_location": "L344",
       "id": "memguard_gui_memguardgui_apply_progress",
-      "community": 0,
+      "community": 1,
       "norm_label": "._apply_progress()"
     },
     {
       "label": ".run_scan()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L315",
+      "source_location": "L348",
       "id": "memguard_gui_memguardgui_run_scan",
-      "community": 0,
+      "community": 1,
       "norm_label": ".run_scan()"
     },
     {
       "label": "._on_scan_success()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L344",
+      "source_location": "L377",
       "id": "memguard_gui_memguardgui_on_scan_success",
-      "community": 0,
+      "community": 1,
       "norm_label": "._on_scan_success()"
     },
     {
       "label": "._on_scan_error()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L388",
+      "source_location": "L431",
       "id": "memguard_gui_memguardgui_on_scan_error",
-      "community": 0,
+      "community": 1,
       "norm_label": "._on_scan_error()"
     },
     {
       "label": "._current_filtered()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L393",
+      "source_location": "L436",
       "id": "memguard_gui_memguardgui_current_filtered",
-      "community": 0,
+      "community": 1,
       "norm_label": "._current_filtered()"
     },
     {
       "label": "._sort_by()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L420",
+      "source_location": "L463",
       "id": "memguard_gui_memguardgui_sort_by",
-      "community": 0,
+      "community": 1,
       "norm_label": "._sort_by()"
     },
     {
       "label": "._sort_rows()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L429",
+      "source_location": "L472",
       "id": "memguard_gui_memguardgui_sort_rows",
-      "community": 0,
+      "community": 1,
       "norm_label": "._sort_rows()"
     },
     {
       "label": "._refresh_filtered_results()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L445",
+      "source_location": "L488",
       "id": "memguard_gui_memguardgui_refresh_filtered_results",
-      "community": 0,
+      "community": 1,
       "norm_label": "._refresh_filtered_results()"
     },
     {
       "label": "._refresh_summary()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L485",
+      "source_location": "L531",
       "id": "memguard_gui_memguardgui_refresh_summary",
-      "community": 0,
+      "community": 1,
       "norm_label": "._refresh_summary()"
     },
     {
       "label": "._clear_details_if_needed()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L505",
+      "source_location": "L556",
       "id": "memguard_gui_memguardgui_clear_details_if_needed",
-      "community": 0,
+      "community": 1,
       "norm_label": "._clear_details_if_needed()"
     },
     {
       "label": "._on_select()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L510",
+      "source_location": "L561",
       "id": "memguard_gui_memguardgui_on_select",
-      "community": 0,
+      "community": 1,
       "norm_label": "._on_select()"
     },
     {
       "label": "._get_selected_process()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L519",
+      "source_location": "L570",
       "id": "memguard_gui_memguardgui_get_selected_process",
-      "community": 0,
+      "community": 1,
       "norm_label": "._get_selected_process()"
     },
     {
       "label": "._build_process_details()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L531",
+      "source_location": "L582",
       "id": "memguard_gui_memguardgui_build_process_details",
-      "community": 6,
+      "community": 8,
       "norm_label": "._build_process_details()"
     },
     {
       "label": ".validate_selected()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L552",
+      "source_location": "L603",
       "id": "memguard_gui_memguardgui_validate_selected",
-      "community": 0,
+      "community": 1,
       "norm_label": ".validate_selected()"
     },
     {
       "label": "._set_details_text()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L576",
+      "source_location": "L627",
       "id": "memguard_gui_memguardgui_set_details_text",
-      "community": 0,
+      "community": 1,
       "norm_label": "._set_details_text()"
     },
     {
       "label": "._current_scan_options()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L582",
+      "source_location": "L633",
       "id": "memguard_gui_memguardgui_current_scan_options",
-      "community": 0,
+      "community": 1,
       "norm_label": "._current_scan_options()"
     },
     {
       "label": "._current_filter_state()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L592",
+      "source_location": "L643",
       "id": "memguard_gui_memguardgui_current_filter_state",
-      "community": 0,
+      "community": 1,
       "norm_label": "._current_filter_state()"
     },
     {
       "label": "._export_to_path()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L600",
+      "source_location": "L651",
       "id": "memguard_gui_memguardgui_export_to_path",
-      "community": 0,
+      "community": 1,
       "norm_label": "._export_to_path()"
     },
     {
       "label": ".save_csv()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L613",
+      "source_location": "L664",
       "id": "memguard_gui_memguardgui_save_csv",
-      "community": 0,
+      "community": 1,
       "norm_label": ".save_csv()"
     },
     {
       "label": ".save_json()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L623",
+      "source_location": "L674",
       "id": "memguard_gui_memguardgui_save_json",
-      "community": 0,
+      "community": 1,
       "norm_label": ".save_json()"
     },
     {
       "label": ".save_full_report()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L633",
+      "source_location": "L684",
       "id": "memguard_gui_memguardgui_save_full_report",
-      "community": 0,
+      "community": 1,
       "norm_label": ".save_full_report()"
     },
     {
       "label": ".show_ports_window()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L664",
+      "source_location": "L715",
       "id": "memguard_gui_memguardgui_show_ports_window",
-      "community": 0,
+      "community": 1,
       "norm_label": ".show_ports_window()"
+    },
+    {
+      "label": "._refresh_elevation_state()",
+      "file_type": "code",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L889",
+      "id": "memguard_gui_memguardgui_refresh_elevation_state",
+      "community": 1,
+      "norm_label": "._refresh_elevation_state()"
+    },
+    {
+      "label": ".restart_as_administrator()",
+      "file_type": "code",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L898",
+      "id": "memguard_gui_memguardgui_restart_as_administrator",
+      "community": 1,
+      "norm_label": ".restart_as_administrator()"
     },
     {
       "label": ".test_vt_key()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L835",
+      "source_location": "L941",
       "id": "memguard_gui_memguardgui_test_vt_key",
-      "community": 0,
+      "community": 1,
       "norm_label": ".test_vt_key()"
     },
     {
       "label": "._build_context_menu()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L854",
+      "source_location": "L960",
       "id": "memguard_gui_memguardgui_build_context_menu",
-      "community": 0,
+      "community": 1,
       "norm_label": "._build_context_menu()"
     },
     {
       "label": "._show_context_menu()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L860",
+      "source_location": "L966",
       "id": "memguard_gui_memguardgui_show_context_menu",
-      "community": 0,
+      "community": 1,
       "norm_label": "._show_context_menu()"
     },
     {
       "label": "._copy_to_clipboard()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L866",
+      "source_location": "L972",
       "id": "memguard_gui_memguardgui_copy_to_clipboard",
-      "community": 0,
+      "community": 1,
       "norm_label": "._copy_to_clipboard()"
     },
     {
       "label": "._copy_sha256()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L871",
+      "source_location": "L977",
       "id": "memguard_gui_memguardgui_copy_sha256",
-      "community": 0,
+      "community": 1,
       "norm_label": "._copy_sha256()"
     },
     {
       "label": "._copy_cmdline()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L875",
+      "source_location": "L981",
       "id": "memguard_gui_memguardgui_copy_cmdline",
-      "community": 0,
+      "community": 1,
       "norm_label": "._copy_cmdline()"
     },
     {
       "label": "._copy_pid()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L879",
+      "source_location": "L985",
       "id": "memguard_gui_memguardgui_copy_pid",
-      "community": 0,
+      "community": 1,
       "norm_label": "._copy_pid()"
     },
     {
       "label": "._get_process_connections_text()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L885",
+      "source_location": "L991",
       "id": "memguard_gui_memguardgui_get_process_connections_text",
-      "community": 0,
+      "community": 1,
       "norm_label": "._get_process_connections_text()"
     },
     {
       "label": "._on_auto_refresh_toggle()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L916",
+      "source_location": "L1022",
       "id": "memguard_gui_memguardgui_on_auto_refresh_toggle",
-      "community": 0,
+      "community": 1,
       "norm_label": "._on_auto_refresh_toggle()"
     },
     {
       "label": "._reschedule_auto_refresh()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L925",
+      "source_location": "L1031",
       "id": "memguard_gui_memguardgui_reschedule_auto_refresh",
-      "community": 0,
+      "community": 1,
       "norm_label": "._reschedule_auto_refresh()"
     },
     {
       "label": "._cancel_auto_refresh()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L932",
+      "source_location": "L1038",
       "id": "memguard_gui_memguardgui_cancel_auto_refresh",
-      "community": 0,
+      "community": 1,
       "norm_label": "._cancel_auto_refresh()"
     },
     {
       "label": "._auto_refresh_tick()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L940",
+      "source_location": "L1046",
       "id": "memguard_gui_memguardgui_auto_refresh_tick",
-      "community": 0,
+      "community": 1,
       "norm_label": "._auto_refresh_tick()"
     },
     {
       "label": ".show_persistent_threats()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L947",
+      "source_location": "L1053",
       "id": "memguard_gui_memguardgui_show_persistent_threats",
-      "community": 6,
+      "community": 8,
       "norm_label": ".show_persistent_threats()"
     },
     {
       "label": "launch_gui()",
       "file_type": "code",
       "source_file": "memguard\\gui.py",
-      "source_location": "L1003",
+      "source_location": "L1109",
       "id": "memguard_gui_launch_gui",
       "community": 6,
       "norm_label": "launch_gui()"
@@ -876,26 +984,44 @@
       "label": "Tkinter desktop application for MemGuard scans.",
       "file_type": "rationale",
       "source_file": "memguard\\gui.py",
-      "source_location": "L37",
-      "id": "memguard_gui_rationale_37",
-      "community": 0,
+      "source_location": "L38",
+      "id": "memguard_gui_rationale_38",
+      "community": 1,
       "norm_label": "tkinter desktop application for memguard scans."
     },
     {
       "label": "Thread-safe progress update \u2014 callable from the worker thread.",
       "file_type": "rationale",
       "source_file": "memguard\\gui.py",
-      "source_location": "L308",
-      "id": "memguard_gui_rationale_308",
-      "community": 0,
+      "source_location": "L341",
+      "id": "memguard_gui_rationale_341",
+      "community": 1,
       "norm_label": "thread-safe progress update \u2014 callable from the worker thread."
+    },
+    {
+      "label": "Reflect the current token in the button and status label.",
+      "file_type": "rationale",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L890",
+      "id": "memguard_gui_rationale_890",
+      "community": 1,
+      "norm_label": "reflect the current token in the button and status label."
+    },
+    {
+      "label": "Relaunch MemGuard elevated after explicit confirmation.          Windows canno",
+      "file_type": "rationale",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L899",
+      "id": "memguard_gui_rationale_899",
+      "community": 1,
+      "norm_label": "relaunch memguard elevated after explicit confirmation.          windows canno"
     },
     {
       "label": "Launch the MemGuard desktop GUI.",
       "file_type": "rationale",
       "source_file": "memguard\\gui.py",
-      "source_location": "L1004",
-      "id": "memguard_gui_rationale_1004",
+      "source_location": "L1110",
+      "id": "memguard_gui_rationale_1110",
       "community": 6,
       "norm_label": "launch the memguard desktop gui."
     },
@@ -905,7 +1031,7 @@
       "source_file": "memguard\\hasher.py",
       "source_location": "L1",
       "id": "memguard_hasher_py",
-      "community": 7,
+      "community": 5,
       "norm_label": "hasher.py"
     },
     {
@@ -914,7 +1040,7 @@
       "source_file": "memguard\\hasher.py",
       "source_location": "L18",
       "id": "memguard_hasher_resolve_resource_path",
-      "community": 7,
+      "community": 5,
       "norm_label": "_resolve_resource_path()"
     },
     {
@@ -923,7 +1049,7 @@
       "source_file": "memguard\\hasher.py",
       "source_location": "L28",
       "id": "memguard_hasher_load_blocklist",
-      "community": 7,
+      "community": 5,
       "norm_label": "load_blocklist()"
     },
     {
@@ -932,7 +1058,7 @@
       "source_file": "memguard\\hasher.py",
       "source_location": "L46",
       "id": "memguard_hasher_compute_sha256",
-      "community": 7,
+      "community": 5,
       "norm_label": "_compute_sha256()"
     },
     {
@@ -941,7 +1067,7 @@
       "source_file": "memguard\\hasher.py",
       "source_location": "L59",
       "id": "memguard_hasher_attach_sha256",
-      "community": 7,
+      "community": 5,
       "norm_label": "attach_sha256()"
     },
     {
@@ -950,7 +1076,7 @@
       "source_file": "memguard\\hasher.py",
       "source_location": "L1",
       "id": "memguard_hasher_rationale_1",
-      "community": 7,
+      "community": 5,
       "norm_label": "executable hashing and local blocklist loading for memguard.  layer 3 artifact"
     },
     {
@@ -959,7 +1085,7 @@
       "source_file": "memguard\\hasher.py",
       "source_location": "L19",
       "id": "memguard_hasher_rationale_19",
-      "community": 7,
+      "community": 5,
       "norm_label": "resolve data file paths for source runs and frozen executable runs."
     },
     {
@@ -968,7 +1094,7 @@
       "source_file": "memguard\\hasher.py",
       "source_location": "L29",
       "id": "memguard_hasher_rationale_29",
-      "community": 7,
+      "community": 5,
       "norm_label": "load local sha256 blocklist once and return hashes as a lowercase set."
     },
     {
@@ -977,7 +1103,7 @@
       "source_file": "memguard\\hasher.py",
       "source_location": "L47",
       "id": "memguard_hasher_rationale_47",
-      "community": 7,
+      "community": 5,
       "norm_label": "compute sha256 hash for a file path, returning none on read errors."
     },
     {
@@ -986,7 +1112,7 @@
       "source_file": "memguard\\hasher.py",
       "source_location": "L60",
       "id": "memguard_hasher_rationale_60",
-      "community": 7,
+      "community": 5,
       "norm_label": "attach executable sha256 to each process using an in-memory path cache."
     },
     {
@@ -995,7 +1121,7 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L1",
       "id": "memguard_history_log_py",
-      "community": 6,
+      "community": 8,
       "norm_label": "history_log.py"
     },
     {
@@ -1004,7 +1130,7 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L29",
       "id": "memguard_history_log_resolve_history_path",
-      "community": 6,
+      "community": 8,
       "norm_label": "_resolve_history_path()"
     },
     {
@@ -1013,7 +1139,7 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L33",
       "id": "memguard_history_log_append_scan_findings",
-      "community": 6,
+      "community": 8,
       "norm_label": "append_scan_findings()"
     },
     {
@@ -1022,7 +1148,7 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L82",
       "id": "memguard_history_log_iter_history",
-      "community": 6,
+      "community": 8,
       "norm_label": "_iter_history()"
     },
     {
@@ -1031,35 +1157,35 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L99",
       "id": "memguard_history_log_find_persistent_threats",
-      "community": 6,
+      "community": 8,
       "norm_label": "find_persistent_threats()"
     },
     {
-      "label": "Persistent scan history log for MemGuard.  Append-only JSONL of HIGH/SUSPICIOUS",
+      "label": "Persistent scan history log for MemGuard.  Append-only JSONL of HIGH/SUSPICIOU",
       "file_type": "rationale",
       "source_file": "memguard\\history_log.py",
       "source_location": "L1",
       "id": "memguard_history_log_rationale_1",
-      "community": 6,
-      "norm_label": "persistent scan history log for memguard.  append-only jsonl of high/suspicious"
+      "community": 8,
+      "norm_label": "persistent scan history log for memguard.  append-only jsonl of high/suspiciou"
     },
     {
-      "label": "Append HIGH/SUSPICIOUS findings from a scan to the history log.      Returns the",
+      "label": "Append HIGH/SUSPICIOUS findings from a scan to the history log.      Returns t",
       "file_type": "rationale",
       "source_file": "memguard\\history_log.py",
       "source_location": "L38",
       "id": "memguard_history_log_rationale_38",
-      "community": 6,
-      "norm_label": "append high/suspicious findings from a scan to the history log.      returns the"
+      "community": 8,
+      "norm_label": "append high/suspicious findings from a scan to the history log.      returns t"
     },
     {
-      "label": "Return findings that have appeared in the log >= threshold times.      Identity",
+      "label": "Return findings seen in >= threshold distinct scans.      Identity is (sha256",
       "file_type": "rationale",
       "source_file": "memguard\\history_log.py",
       "source_location": "L103",
       "id": "memguard_history_log_rationale_103",
-      "community": 6,
-      "norm_label": "return findings that have appeared in the log >= threshold times.      identity"
+      "community": 8,
+      "norm_label": "return findings seen in >= threshold distinct scans.      identity is (sha256"
     },
     {
       "label": "__main__.py",
@@ -1067,25 +1193,25 @@
       "source_file": "memguard\\__main__.py",
       "source_location": "L1",
       "id": "memguard_main_py",
-      "community": 5,
+      "community": 6,
       "norm_label": "__main__.py"
     },
     {
       "label": "_build_parser()",
       "file_type": "code",
       "source_file": "memguard\\main.py",
-      "source_location": "L36",
+      "source_location": "L38",
       "id": "memguard_main_build_parser",
-      "community": 5,
+      "community": 6,
       "norm_label": "_build_parser()"
     },
     {
       "label": "main()",
       "file_type": "code",
       "source_file": "memguard\\main.py",
-      "source_location": "L84",
+      "source_location": "L96",
       "id": "memguard_main_main",
-      "community": 5,
+      "community": 3,
       "norm_label": "main()"
     },
     {
@@ -1094,25 +1220,25 @@
       "source_file": "memguard\\__main__.py",
       "source_location": "L1",
       "id": "memguard_main_rationale_1",
-      "community": 5,
+      "community": 6,
       "norm_label": "allow running the package directly: python -m memguard"
     },
     {
       "label": "Build CLI parser for MemGuard options.",
       "file_type": "rationale",
       "source_file": "memguard\\main.py",
-      "source_location": "L37",
-      "id": "memguard_main_rationale_37",
-      "community": 5,
+      "source_location": "L39",
+      "id": "memguard_main_rationale_39",
+      "community": 6,
       "norm_label": "build cli parser for memguard options."
     },
     {
       "label": "Entry point for MemGuard CLI.",
       "file_type": "rationale",
       "source_file": "memguard\\main.py",
-      "source_location": "L85",
-      "id": "memguard_main_rationale_85",
-      "community": 5,
+      "source_location": "L97",
+      "id": "memguard_main_rationale_97",
+      "community": 3,
       "norm_label": "entry point for memguard cli."
     },
     {
@@ -1121,7 +1247,7 @@
       "source_file": "memguard\\memory_inspector.py",
       "source_location": "L1",
       "id": "memguard_memory_inspector_py",
-      "community": 2,
+      "community": 6,
       "norm_label": "memory_inspector.py"
     },
     {
@@ -1130,7 +1256,7 @@
       "source_file": "memguard\\memory_inspector.py",
       "source_location": "L21",
       "id": "memguard_memory_inspector_is_anonymous_path",
-      "community": 2,
+      "community": 6,
       "norm_label": "_is_anonymous_path()"
     },
     {
@@ -1139,7 +1265,7 @@
       "source_file": "memguard\\memory_inspector.py",
       "source_location": "L31",
       "id": "memguard_memory_inspector_inspect_process_memory",
-      "community": 2,
+      "community": 6,
       "norm_label": "_inspect_process_memory()"
     },
     {
@@ -1148,7 +1274,7 @@
       "source_file": "memguard\\memory_inspector.py",
       "source_location": "L85",
       "id": "memguard_memory_inspector_inspect_memory",
-      "community": 2,
+      "community": 6,
       "norm_label": "inspect_memory()"
     },
     {
@@ -1157,7 +1283,7 @@
       "source_file": "memguard\\memory_inspector.py",
       "source_location": "L1",
       "id": "memguard_memory_inspector_rationale_1",
-      "community": 2,
+      "community": 6,
       "norm_label": "experimental memory metadata inspection for high-risk processes.  this module"
     },
     {
@@ -1166,7 +1292,7 @@
       "source_file": "memguard\\memory_inspector.py",
       "source_location": "L22",
       "id": "memguard_memory_inspector_rationale_22",
-      "community": 2,
+      "community": 6,
       "norm_label": "return true when a memory map path is empty or anonymous."
     },
     {
@@ -1175,7 +1301,7 @@
       "source_file": "memguard\\memory_inspector.py",
       "source_location": "L32",
       "id": "memguard_memory_inspector_rationale_32",
-      "community": 2,
+      "community": 6,
       "norm_label": "attach memory metadata and anomaly flags to a single process record."
     },
     {
@@ -1184,7 +1310,7 @@
       "source_file": "memguard\\memory_inspector.py",
       "source_location": "L90",
       "id": "memguard_memory_inspector_rationale_90",
-      "community": 2,
+      "community": 6,
       "norm_label": "inspect memory metadata for top risky processes.      only inspects up to ``ma"
     },
     {
@@ -1193,34 +1319,43 @@
       "source_file": "memguard\\port_inspector.py",
       "source_location": "L1",
       "id": "memguard_port_inspector_py",
-      "community": 2,
+      "community": 7,
       "norm_label": "port_inspector.py"
     },
     {
       "label": "PortRecord",
       "file_type": "code",
       "source_file": "memguard\\port_inspector.py",
-      "source_location": "L43",
+      "source_location": "L44",
       "id": "memguard_port_inspector_portrecord",
-      "community": 2,
+      "community": 7,
       "norm_label": "portrecord"
+    },
+    {
+      "label": "is_loopback_address()",
+      "file_type": "code",
+      "source_file": "memguard\\port_inspector.py",
+      "source_location": "L59",
+      "id": "memguard_port_inspector_is_loopback_address",
+      "community": 7,
+      "norm_label": "is_loopback_address()"
     },
     {
       "label": "_assess_port_risk()",
       "file_type": "code",
       "source_file": "memguard\\port_inspector.py",
-      "source_location": "L58",
+      "source_location": "L73",
       "id": "memguard_port_inspector_assess_port_risk",
-      "community": 2,
+      "community": 7,
       "norm_label": "_assess_port_risk()"
     },
     {
       "label": "collect_listening_ports()",
       "file_type": "code",
       "source_file": "memguard\\port_inspector.py",
-      "source_location": "L102",
+      "source_location": "L122",
       "id": "memguard_port_inspector_collect_listening_ports",
-      "community": 2,
+      "community": 7,
       "norm_label": "collect_listening_ports()"
     },
     {
@@ -1229,34 +1364,43 @@
       "source_file": "memguard\\port_inspector.py",
       "source_location": "L1",
       "id": "memguard_port_inspector_rationale_1",
-      "community": 2,
+      "community": 7,
       "norm_label": "network port inspection module.  collects listening ports and active network c"
     },
     {
       "label": "Network port record with security scoring.",
       "file_type": "rationale",
       "source_file": "memguard\\port_inspector.py",
-      "source_location": "L44",
-      "id": "memguard_port_inspector_rationale_44",
-      "community": 2,
+      "source_location": "L45",
+      "id": "memguard_port_inspector_rationale_45",
+      "community": 7,
       "norm_label": "network port record with security scoring."
     },
     {
-      "label": "Score a port for security risk.      Returns:         (risk_level, risk_score",
+      "label": "True if address is a loopback IP (127.0.0.0/8, ::1, ::ffff:127.0.0.1).      Ta",
       "file_type": "rationale",
       "source_file": "memguard\\port_inspector.py",
-      "source_location": "L59",
-      "id": "memguard_port_inspector_rationale_59",
-      "community": 2,
-      "norm_label": "score a port for security risk.      returns:         (risk_level, risk_score"
+      "source_location": "L60",
+      "id": "memguard_port_inspector_rationale_60",
+      "community": 7,
+      "norm_label": "true if address is a loopback ip (127.0.0.0/8, ::1, ::ffff:127.0.0.1).      ta"
+    },
+    {
+      "label": "Score a port for security risk.      Args:         port: Local port number.",
+      "file_type": "rationale",
+      "source_file": "memguard\\port_inspector.py",
+      "source_location": "L74",
+      "id": "memguard_port_inspector_rationale_74",
+      "community": 7,
+      "norm_label": "score a port for security risk.      args:         port: local port number."
     },
     {
       "label": "Collect all listening ports and active connections.          Returns:",
       "file_type": "rationale",
       "source_file": "memguard\\port_inspector.py",
-      "source_location": "L103",
-      "id": "memguard_port_inspector_rationale_103",
-      "community": 2,
+      "source_location": "L123",
+      "id": "memguard_port_inspector_rationale_123",
+      "community": 7,
       "norm_label": "collect all listening ports and active connections.          returns:"
     },
     {
@@ -1265,97 +1409,115 @@
       "source_file": "memguard\\scorer.py",
       "source_location": "L1",
       "id": "memguard_scorer_py",
-      "community": 3,
+      "community": 0,
       "norm_label": "scorer.py"
     },
     {
       "label": "_classify_score()",
       "file_type": "code",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L93",
+      "source_location": "L98",
       "id": "memguard_scorer_classify_score",
-      "community": 3,
+      "community": 0,
       "norm_label": "_classify_score()"
     },
     {
       "label": "_is_windows_token_elevated()",
       "file_type": "code",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L102",
+      "source_location": "L107",
       "id": "memguard_scorer_is_windows_token_elevated",
-      "community": 3,
+      "community": 0,
       "norm_label": "_is_windows_token_elevated()"
     },
     {
       "label": "_is_process_elevated()",
       "file_type": "code",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L145",
+      "source_location": "L150",
       "id": "memguard_scorer_is_process_elevated",
-      "community": 3,
+      "community": 0,
       "norm_label": "_is_process_elevated()"
     },
     {
       "label": "_get_ephemeral_listening_addresses()",
       "file_type": "code",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L160",
+      "source_location": "L165",
       "id": "memguard_scorer_get_ephemeral_listening_addresses",
-      "community": 3,
+      "community": 0,
       "norm_label": "_get_ephemeral_listening_addresses()"
     },
     {
       "label": "_has_ephemeral_listening_port()",
       "file_type": "code",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L184",
+      "source_location": "L189",
       "id": "memguard_scorer_has_ephemeral_listening_port",
-      "community": 3,
+      "community": 0,
       "norm_label": "_has_ephemeral_listening_port()"
     },
     {
       "label": "_get_parent_name()",
       "file_type": "code",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L189",
+      "source_location": "L194",
       "id": "memguard_scorer_get_parent_name",
-      "community": 3,
+      "community": 0,
       "norm_label": "_get_parent_name()"
     },
     {
       "label": "_is_suspicious_parent_child()",
       "file_type": "code",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L199",
+      "source_location": "L204",
       "id": "memguard_scorer_is_suspicious_parent_child",
-      "community": 3,
+      "community": 0,
       "norm_label": "_is_suspicious_parent_child()"
+    },
+    {
+      "label": "_signature_unsigned_cached()",
+      "file_type": "code",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L212",
+      "id": "memguard_scorer_signature_unsigned_cached",
+      "community": 0,
+      "norm_label": "_signature_unsigned_cached()"
     },
     {
       "label": "_check_signature_unsigned()",
       "file_type": "code",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L206",
+      "source_location": "L221",
       "id": "memguard_scorer_check_signature_unsigned",
-      "community": 3,
+      "community": 0,
       "norm_label": "_check_signature_unsigned()"
+    },
+    {
+      "label": "_signature_unsigned_uncached()",
+      "file_type": "code",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L239",
+      "id": "memguard_scorer_signature_unsigned_uncached",
+      "community": 0,
+      "norm_label": "_signature_unsigned_uncached()"
     },
     {
       "label": "score_process()",
       "file_type": "code",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L230",
+      "source_location": "L260",
       "id": "memguard_scorer_score_process",
-      "community": 3,
+      "community": 0,
       "norm_label": "score_process()"
     },
     {
       "label": "score_processes()",
       "file_type": "code",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L313",
+      "source_location": "L368",
       "id": "memguard_scorer_score_processes",
-      "community": 3,
+      "community": 5,
       "norm_label": "score_processes()"
     },
     {
@@ -1364,89 +1526,107 @@
       "source_file": "memguard\\scorer.py",
       "source_location": "L1",
       "id": "memguard_scorer_rationale_1",
-      "community": 3,
+      "community": 0,
       "norm_label": "heuristic threat scoring engine for memguard.  layer 2 scoring is read-only an"
     },
     {
       "label": "Map numeric score to threat level.",
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L94",
-      "id": "memguard_scorer_rationale_94",
-      "community": 3,
+      "source_location": "L99",
+      "id": "memguard_scorer_rationale_99",
+      "community": 0,
       "norm_label": "map numeric score to threat level."
     },
     {
       "label": "Best-effort Windows token elevation check for a process PID.",
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L103",
-      "id": "memguard_scorer_rationale_103",
-      "community": 3,
+      "source_location": "L108",
+      "id": "memguard_scorer_rationale_108",
+      "community": 0,
       "norm_label": "best-effort windows token elevation check for a process pid."
     },
     {
       "label": "Detect elevated execution context while minimizing false positives.",
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L146",
-      "id": "memguard_scorer_rationale_146",
-      "community": 3,
+      "source_location": "L151",
+      "id": "memguard_scorer_rationale_151",
+      "community": 0,
       "norm_label": "detect elevated execution context while minimizing false positives."
     },
     {
       "label": "Return inet listening addresses where local port is > 49152.      Returns an e",
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L161",
-      "id": "memguard_scorer_rationale_161",
-      "community": 3,
+      "source_location": "L166",
+      "id": "memguard_scorer_rationale_166",
+      "community": 0,
       "norm_label": "return inet listening addresses where local port is > 49152.      returns an e"
     },
     {
       "label": "Check if a process has any listening inet connection on port > 49152.",
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L185",
-      "id": "memguard_scorer_rationale_185",
-      "community": 3,
+      "source_location": "L190",
+      "id": "memguard_scorer_rationale_190",
+      "community": 0,
       "norm_label": "check if a process has any listening inet connection on port > 49152."
     },
     {
       "label": "Return lowercase parent process name, or None on any error.",
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L190",
-      "id": "memguard_scorer_rationale_190",
-      "community": 3,
+      "source_location": "L195",
+      "id": "memguard_scorer_rationale_195",
+      "community": 0,
       "norm_label": "return lowercase parent process name, or none on any error."
     },
     {
-      "label": "Return True when exe exists and has no valid Authenticode signature.      Uses",
+      "label": "Cached Authenticode result for one binary.      `fingerprint` is (mtime, size)",
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L207",
-      "id": "memguard_scorer_rationale_207",
-      "community": 3,
-      "norm_label": "return true when exe exists and has no valid authenticode signature.      uses"
+      "source_location": "L213",
+      "id": "memguard_scorer_rationale_213",
+      "community": 0,
+      "norm_label": "cached authenticode result for one binary.      `fingerprint` is (mtime, size)"
+    },
+    {
+      "label": "Return True when exe exists and has no valid Authenticode signature.      Each",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L222",
+      "id": "memguard_scorer_rationale_222",
+      "community": 0,
+      "norm_label": "return true when exe exists and has no valid authenticode signature.      each"
+    },
+    {
+      "label": "Run PowerShell Get-AuthenticodeSignature \u2014 Windows only. Silent on error.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L240",
+      "id": "memguard_scorer_rationale_240",
+      "community": 0,
+      "norm_label": "run powershell get-authenticodesignature \u2014 windows only. silent on error."
     },
     {
       "label": "Apply heuristic rules and return an enriched process record.",
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L231",
-      "id": "memguard_scorer_rationale_231",
-      "community": 3,
+      "source_location": "L261",
+      "id": "memguard_scorer_rationale_261",
+      "community": 0,
       "norm_label": "apply heuristic rules and return an enriched process record."
     },
     {
-      "label": "Score all processes while preserving input ordering.",
+      "label": "Score all processes while preserving input ordering.      Args:         proce",
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L314",
-      "id": "memguard_scorer_rationale_314",
-      "community": 3,
-      "norm_label": "score all processes while preserving input ordering."
+      "source_location": "L373",
+      "id": "memguard_scorer_rationale_373",
+      "community": 5,
+      "norm_label": "score all processes while preserving input ordering.      args:         proce"
     },
     {
       "label": "system_whitelist.py",
@@ -1454,7 +1634,7 @@
       "source_file": "memguard\\system_whitelist.py",
       "source_location": "L1",
       "id": "memguard_system_whitelist_py",
-      "community": 3,
+      "community": 0,
       "norm_label": "system_whitelist.py"
     },
     {
@@ -1463,7 +1643,7 @@
       "source_file": "memguard\\system_whitelist.py",
       "source_location": "L15",
       "id": "memguard_system_whitelist_is_system_process",
-      "community": 3,
+      "community": 0,
       "norm_label": "is_system_process()"
     },
     {
@@ -1472,7 +1652,7 @@
       "source_file": "memguard\\system_whitelist.py",
       "source_location": "L1",
       "id": "memguard_system_whitelist_rationale_1",
-      "community": 3,
+      "community": 0,
       "norm_label": "logic-only whitelist checks for trusted windows system processes."
     },
     {
@@ -1481,7 +1661,7 @@
       "source_file": "memguard\\system_whitelist.py",
       "source_location": "L16",
       "id": "memguard_system_whitelist_rationale_16",
-      "community": 3,
+      "community": 0,
       "norm_label": "return true when a process matches trusted system name and location."
     },
     {
@@ -1580,79 +1760,97 @@
       "source_file": "memguard\\ui.py",
       "source_location": "L1",
       "id": "memguard_ui_py",
-      "community": 5,
+      "community": 3,
       "norm_label": "ui.py"
+    },
+    {
+      "label": "_harden_stream_encoding()",
+      "file_type": "code",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L20",
+      "id": "memguard_ui_harden_stream_encoding",
+      "community": 3,
+      "norm_label": "_harden_stream_encoding()"
     },
     {
       "label": "_memory_style()",
       "file_type": "code",
       "source_file": "memguard\\ui.py",
-      "source_location": "L25",
+      "source_location": "L44",
       "id": "memguard_ui_memory_style",
-      "community": 5,
+      "community": 3,
       "norm_label": "_memory_style()"
     },
     {
       "label": "_threat_level_style()",
       "file_type": "code",
       "source_file": "memguard\\ui.py",
-      "source_location": "L34",
+      "source_location": "L53",
       "id": "memguard_ui_threat_level_style",
-      "community": 5,
+      "community": 3,
       "norm_label": "_threat_level_style()"
     },
     {
       "label": "_memory_flag_style()",
       "file_type": "code",
       "source_file": "memguard\\ui.py",
-      "source_location": "L43",
+      "source_location": "L62",
       "id": "memguard_ui_memory_flag_style",
-      "community": 5,
+      "community": 3,
       "norm_label": "_memory_flag_style()"
     },
     {
       "label": "show_banner()",
       "file_type": "code",
       "source_file": "memguard\\ui.py",
-      "source_location": "L50",
+      "source_location": "L69",
       "id": "memguard_ui_show_banner",
-      "community": 5,
+      "community": 3,
       "norm_label": "show_banner()"
     },
     {
       "label": "show_system_overview()",
       "file_type": "code",
       "source_file": "memguard\\ui.py",
-      "source_location": "L57",
+      "source_location": "L76",
       "id": "memguard_ui_show_system_overview",
-      "community": 5,
+      "community": 3,
       "norm_label": "show_system_overview()"
     },
     {
       "label": "show_process_table()",
       "file_type": "code",
       "source_file": "memguard\\ui.py",
-      "source_location": "L72",
+      "source_location": "L91",
       "id": "memguard_ui_show_process_table",
-      "community": 5,
+      "community": 3,
       "norm_label": "show_process_table()"
+    },
+    {
+      "label": "show_collection_coverage()",
+      "file_type": "code",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L156",
+      "id": "memguard_ui_show_collection_coverage",
+      "community": 3,
+      "norm_label": "show_collection_coverage()"
     },
     {
       "label": "show_threat_alerts()",
       "file_type": "code",
       "source_file": "memguard\\ui.py",
-      "source_location": "L137",
+      "source_location": "L193",
       "id": "memguard_ui_show_threat_alerts",
-      "community": 5,
+      "community": 3,
       "norm_label": "show_threat_alerts()"
     },
     {
       "label": "show_virustotal_findings()",
       "file_type": "code",
       "source_file": "memguard\\ui.py",
-      "source_location": "L172",
+      "source_location": "L228",
       "id": "memguard_ui_show_virustotal_findings",
-      "community": 5,
+      "community": 3,
       "norm_label": "show_virustotal_findings()"
     },
     {
@@ -1661,79 +1859,97 @@
       "source_file": "memguard\\ui.py",
       "source_location": "L1",
       "id": "memguard_ui_rationale_1",
-      "community": 5,
+      "community": 3,
       "norm_label": "terminal ui module.  renders the startup banner and process table using rich,"
+    },
+    {
+      "label": "Never let an unencodable character abort a scan before export.      Process na",
+      "file_type": "rationale",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L21",
+      "id": "memguard_ui_rationale_21",
+      "community": 3,
+      "norm_label": "never let an unencodable character abort a scan before export.      process na"
     },
     {
       "label": "Return a rich style string based on memory usage.",
       "file_type": "rationale",
       "source_file": "memguard\\ui.py",
-      "source_location": "L26",
-      "id": "memguard_ui_rationale_26",
-      "community": 5,
+      "source_location": "L45",
+      "id": "memguard_ui_rationale_45",
+      "community": 3,
       "norm_label": "return a rich style string based on memory usage."
     },
     {
       "label": "Return color style for threat level labels.",
       "file_type": "rationale",
       "source_file": "memguard\\ui.py",
-      "source_location": "L35",
-      "id": "memguard_ui_rationale_35",
-      "community": 5,
+      "source_location": "L54",
+      "id": "memguard_ui_rationale_54",
+      "community": 3,
       "norm_label": "return color style for threat level labels."
     },
     {
       "label": "Return color style for memory anomaly labels.",
       "file_type": "rationale",
       "source_file": "memguard\\ui.py",
-      "source_location": "L44",
-      "id": "memguard_ui_rationale_44",
-      "community": 5,
+      "source_location": "L63",
+      "id": "memguard_ui_rationale_63",
+      "community": 3,
       "norm_label": "return color style for memory anomaly labels."
     },
     {
       "label": "Display the MemGuard startup banner.",
       "file_type": "rationale",
       "source_file": "memguard\\ui.py",
-      "source_location": "L51",
-      "id": "memguard_ui_rationale_51",
-      "community": 5,
+      "source_location": "L70",
+      "id": "memguard_ui_rationale_70",
+      "community": 3,
       "norm_label": "display the memguard startup banner."
     },
     {
       "label": "Render RAM and CPU telemetry above the process table.",
       "file_type": "rationale",
       "source_file": "memguard\\ui.py",
-      "source_location": "L58",
-      "id": "memguard_ui_rationale_58",
-      "community": 5,
+      "source_location": "L77",
+      "id": "memguard_ui_rationale_77",
+      "community": 3,
       "norm_label": "render ram and cpu telemetry above the process table."
     },
     {
       "label": "Render a rich table of the top N processes sorted by memory.      Args:",
       "file_type": "rationale",
       "source_file": "memguard\\ui.py",
-      "source_location": "L73",
-      "id": "memguard_ui_rationale_73",
-      "community": 5,
+      "source_location": "L92",
+      "id": "memguard_ui_rationale_92",
+      "community": 3,
       "norm_label": "render a rich table of the top n processes sorted by memory.      args:"
+    },
+    {
+      "label": "Warn when part of the scan could not be read.      A triage tool that renders",
+      "file_type": "rationale",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L157",
+      "id": "memguard_ui_rationale_157",
+      "community": 3,
+      "norm_label": "warn when part of the scan could not be read.      a triage tool that renders"
     },
     {
       "label": "Render a secondary panel with suspicious/malicious process alerts.",
       "file_type": "rationale",
       "source_file": "memguard\\ui.py",
-      "source_location": "L138",
-      "id": "memguard_ui_rationale_138",
-      "community": 5,
+      "source_location": "L194",
+      "id": "memguard_ui_rationale_194",
+      "community": 3,
       "norm_label": "render a secondary panel with suspicious/malicious process alerts."
     },
     {
       "label": "Render a panel summarizing VirusTotal enrichment results.",
       "file_type": "rationale",
       "source_file": "memguard\\ui.py",
-      "source_location": "L173",
-      "id": "memguard_ui_rationale_173",
-      "community": 5,
+      "source_location": "L229",
+      "id": "memguard_ui_rationale_229",
+      "community": 3,
       "norm_label": "render a panel summarizing virustotal enrichment results."
     },
     {
@@ -1742,7 +1958,7 @@
       "source_file": "memguard\\validator.py",
       "source_location": "L1",
       "id": "memguard_validator_py",
-      "community": 8,
+      "community": 10,
       "norm_label": "validator.py"
     },
     {
@@ -1751,7 +1967,7 @@
       "source_file": "memguard\\validator.py",
       "source_location": "L17",
       "id": "memguard_validator_validationreport",
-      "community": 2,
+      "community": 7,
       "norm_label": "validationreport"
     },
     {
@@ -1760,7 +1976,7 @@
       "source_file": "memguard\\validator.py",
       "source_location": "L36",
       "id": "memguard_validator_compute_sha256",
-      "community": 8,
+      "community": 10,
       "norm_label": "_compute_sha256()"
     },
     {
@@ -1769,7 +1985,7 @@
       "source_file": "memguard\\validator.py",
       "source_location": "L47",
       "id": "memguard_validator_is_temp_path",
-      "community": 8,
+      "community": 10,
       "norm_label": "_is_temp_path()"
     },
     {
@@ -1778,7 +1994,7 @@
       "source_file": "memguard\\validator.py",
       "source_location": "L59",
       "id": "memguard_validator_powershell_escape_single_quotes",
-      "community": 8,
+      "community": 10,
       "norm_label": "_powershell_escape_single_quotes()"
     },
     {
@@ -1787,7 +2003,7 @@
       "source_file": "memguard\\validator.py",
       "source_location": "L63",
       "id": "memguard_validator_get_windows_signature",
-      "community": 8,
+      "community": 10,
       "norm_label": "_get_windows_signature()"
     },
     {
@@ -1796,7 +2012,7 @@
       "source_file": "memguard\\validator.py",
       "source_location": "L93",
       "id": "memguard_validator_validate_process_record",
-      "community": 8,
+      "community": 10,
       "norm_label": "validate_process_record()"
     },
     {
@@ -1805,7 +2021,7 @@
       "source_file": "memguard\\validator.py",
       "source_location": "L132",
       "id": "memguard_validator_format_validation_report",
-      "community": 8,
+      "community": 10,
       "norm_label": "format_validation_report()"
     },
     {
@@ -1814,7 +2030,7 @@
       "source_file": "memguard\\validator.py",
       "source_location": "L1",
       "id": "memguard_validator_rationale_1",
-      "community": 8,
+      "community": 10,
       "norm_label": "read-only validation utilities for suspicious process entries."
     },
     {
@@ -1823,7 +2039,7 @@
       "source_file": "memguard\\validator.py",
       "source_location": "L18",
       "id": "memguard_validator_rationale_18",
-      "community": 2,
+      "community": 7,
       "norm_label": "validation result model for a selected process record."
     },
     {
@@ -1832,7 +2048,7 @@
       "source_file": "memguard\\validator.py",
       "source_location": "L94",
       "id": "memguard_validator_rationale_94",
-      "community": 8,
+      "community": 10,
       "norm_label": "perform read-only validation checks on a selected process row."
     },
     {
@@ -1841,7 +2057,7 @@
       "source_file": "memguard\\validator.py",
       "source_location": "L133",
       "id": "memguard_validator_rationale_133",
-      "community": 8,
+      "community": 10,
       "norm_label": "format validation results for gui display."
     },
     {
@@ -1850,7 +2066,7 @@
       "source_file": "memguard\\__init__.py",
       "source_location": "L1",
       "id": "memguard_init_py",
-      "community": 12,
+      "community": 13,
       "norm_label": "__init__.py"
     },
     {
@@ -1859,8 +2075,575 @@
       "source_file": "scripts\\build_windows.ps1",
       "source_location": "L1",
       "id": "scripts_build_windows_ps1",
-      "community": 13,
+      "community": 14,
       "norm_label": "build_windows.ps1"
+    },
+    {
+      "label": "Map numeric score to threat level.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L96",
+      "community": 0,
+      "norm_label": "map numeric score to threat level.",
+      "id": "memguard_scorer_rationale_96"
+    },
+    {
+      "label": "Best-effort Windows token elevation check for a process PID.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L105",
+      "community": 0,
+      "norm_label": "best-effort windows token elevation check for a process pid.",
+      "id": "memguard_scorer_rationale_105"
+    },
+    {
+      "label": "Detect elevated execution context while minimizing false positives.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L148",
+      "community": 0,
+      "norm_label": "detect elevated execution context while minimizing false positives.",
+      "id": "memguard_scorer_rationale_148"
+    },
+    {
+      "label": "Return inet listening addresses where local port is > 49152.      Returns an e",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L163",
+      "community": 0,
+      "norm_label": "return inet listening addresses where local port is > 49152.      returns an e",
+      "id": "memguard_scorer_rationale_163"
+    },
+    {
+      "label": "Check if a process has any listening inet connection on port > 49152.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L187",
+      "community": 0,
+      "norm_label": "check if a process has any listening inet connection on port > 49152.",
+      "id": "memguard_scorer_rationale_187"
+    },
+    {
+      "label": "Return lowercase parent process name, or None on any error.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L192",
+      "community": 0,
+      "norm_label": "return lowercase parent process name, or none on any error.",
+      "id": "memguard_scorer_rationale_192"
+    },
+    {
+      "label": "Cached Authenticode result for one binary.      `fingerprint` is (mtime, size)",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L210",
+      "community": 0,
+      "norm_label": "cached authenticode result for one binary.      `fingerprint` is (mtime, size)",
+      "id": "memguard_scorer_rationale_210"
+    },
+    {
+      "label": "Return True when exe exists and has no valid Authenticode signature.      Each",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L219",
+      "community": 0,
+      "norm_label": "return true when exe exists and has no valid authenticode signature.      each",
+      "id": "memguard_scorer_rationale_219"
+    },
+    {
+      "label": "Run PowerShell Get-AuthenticodeSignature \u2014 Windows only. Silent on error.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L237",
+      "community": 0,
+      "norm_label": "run powershell get-authenticodesignature \u2014 windows only. silent on error.",
+      "id": "memguard_scorer_rationale_237"
+    },
+    {
+      "label": "Apply heuristic rules and return an enriched process record.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L258",
+      "community": 0,
+      "norm_label": "apply heuristic rules and return an enriched process record.",
+      "id": "memguard_scorer_rationale_258"
+    },
+    {
+      "label": "Score all processes while preserving input ordering.      Args:         proce",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L356",
+      "community": 5,
+      "norm_label": "score all processes while preserving input ordering.      args:         proce",
+      "id": "memguard_scorer_rationale_356"
+    },
+    {
+      "label": "Tkinter desktop application for MemGuard scans.",
+      "file_type": "rationale",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L37",
+      "community": 1,
+      "norm_label": "tkinter desktop application for memguard scans.",
+      "id": "memguard_gui_rationale_37"
+    },
+    {
+      "label": "Thread-safe progress update \u2014 callable from the worker thread.",
+      "file_type": "rationale",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L326",
+      "community": 1,
+      "norm_label": "thread-safe progress update \u2014 callable from the worker thread.",
+      "id": "memguard_gui_rationale_326"
+    },
+    {
+      "label": "Launch the MemGuard desktop GUI.",
+      "file_type": "rationale",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L1043",
+      "community": 6,
+      "norm_label": "launch the memguard desktop gui.",
+      "id": "memguard_gui_rationale_1043"
+    },
+    {
+      "label": "Build CLI parser for MemGuard options.",
+      "file_type": "rationale",
+      "source_file": "memguard\\main.py",
+      "source_location": "L38",
+      "community": 6,
+      "norm_label": "build cli parser for memguard options.",
+      "id": "memguard_main_rationale_38"
+    },
+    {
+      "label": "Entry point for MemGuard CLI.",
+      "file_type": "rationale",
+      "source_file": "memguard\\main.py",
+      "source_location": "L86",
+      "community": 3,
+      "norm_label": "entry point for memguard cli.",
+      "id": "memguard_main_rationale_86"
+    },
+    {
+      "label": "Internal process data model used across MemGuard layers.",
+      "file_type": "rationale",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L29",
+      "community": 7,
+      "norm_label": "internal process data model used across memguard layers.",
+      "id": "memguard_collector_rationale_29"
+    },
+    {
+      "label": "System-level telemetry shown above the process table.",
+      "file_type": "rationale",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L56",
+      "community": 7,
+      "norm_label": "system-level telemetry shown above the process table.",
+      "id": "memguard_collector_rationale_56"
+    },
+    {
+      "label": "Remove newlines/tabs from text fields to keep exports parse-safe.",
+      "file_type": "rationale",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L65",
+      "community": 5,
+      "norm_label": "remove newlines/tabs from text fields to keep exports parse-safe.",
+      "id": "memguard_collector_rationale_65"
+    },
+    {
+      "label": "Collect total/used/free RAM and current CPU usage percentage.",
+      "file_type": "rationale",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L74",
+      "community": 5,
+      "norm_label": "collect total/used/free ram and current cpu usage percentage.",
+      "id": "memguard_collector_rationale_74"
+    },
+    {
+      "label": "Enumerate all running processes and collect metadata.      Returns:         L",
+      "file_type": "rationale",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L85",
+      "community": 5,
+      "norm_label": "enumerate all running processes and collect metadata.      returns:         l",
+      "id": "memguard_collector_rationale_85"
+    },
+    {
+      "label": "Normalize string fields to avoid newline characters in exported data.",
+      "file_type": "rationale",
+      "source_file": "memguard\\exporter.py",
+      "source_location": "L30",
+      "community": 4,
+      "norm_label": "normalize string fields to avoid newline characters in exported data.",
+      "id": "memguard_exporter_rationale_30"
+    },
+    {
+      "label": "Convert a list of ProcessRecord dictionaries to a pandas DataFrame.",
+      "file_type": "rationale",
+      "source_file": "memguard\\exporter.py",
+      "source_location": "L48",
+      "community": 4,
+      "norm_label": "convert a list of processrecord dictionaries to a pandas dataframe.",
+      "id": "memguard_exporter_rationale_48"
+    },
+    {
+      "label": "Export an AI-friendly markdown report with the full scan dataset embedded.",
+      "file_type": "rationale",
+      "source_file": "memguard\\exporter.py",
+      "source_location": "L82",
+      "community": 4,
+      "norm_label": "export an ai-friendly markdown report with the full scan dataset embedded.",
+      "id": "memguard_exporter_rationale_82"
+    },
+    {
+      "label": "Export a markdown report of port scan results.      Args:         ports: Port",
+      "file_type": "rationale",
+      "source_file": "memguard\\exporter.py",
+      "source_location": "L210",
+      "community": 4,
+      "norm_label": "export a markdown report of port scan results.      args:         ports: port",
+      "id": "memguard_exporter_rationale_210"
+    },
+    {
+      "label": "Export port records to CSV.      Returns:         Path to the written file.",
+      "file_type": "rationale",
+      "source_file": "memguard\\exporter.py",
+      "source_location": "L284",
+      "community": 4,
+      "norm_label": "export port records to csv.      returns:         path to the written file.",
+      "id": "memguard_exporter_rationale_284"
+    },
+    {
+      "label": "Export port records to JSON.      Returns:         Path to the written file.",
+      "file_type": "rationale",
+      "source_file": "memguard\\exporter.py",
+      "source_location": "L300",
+      "community": 4,
+      "norm_label": "export port records to json.      returns:         path to the written file.",
+      "id": "memguard_exporter_rationale_300"
+    },
+    {
+      "label": "Export process list to CSV.      Args:         processes: Collected process d",
+      "file_type": "rationale",
+      "source_file": "memguard\\exporter.py",
+      "source_location": "L316",
+      "community": 4,
+      "norm_label": "export process list to csv.      args:         processes: collected process d",
+      "id": "memguard_exporter_rationale_316"
+    },
+    {
+      "label": "Export process list to JSON.      Args:         processes: Collected process",
+      "file_type": "rationale",
+      "source_file": "memguard\\exporter.py",
+      "source_location": "L333",
+      "community": 4,
+      "norm_label": "export process list to json.      args:         processes: collected process",
+      "id": "memguard_exporter_rationale_333"
+    },
+    {
+      "label": "Thread-safe progress update \u2014 callable from the worker thread.",
+      "file_type": "rationale",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L308",
+      "community": 1,
+      "norm_label": "thread-safe progress update \u2014 callable from the worker thread.",
+      "id": "memguard_gui_rationale_308"
+    },
+    {
+      "label": "Launch the MemGuard desktop GUI.",
+      "file_type": "rationale",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L1007",
+      "community": 6,
+      "norm_label": "launch the memguard desktop gui.",
+      "id": "memguard_gui_rationale_1007"
+    },
+    {
+      "label": "Build CLI parser for MemGuard options.",
+      "file_type": "rationale",
+      "source_file": "memguard\\main.py",
+      "source_location": "L37",
+      "community": 6,
+      "norm_label": "build cli parser for memguard options.",
+      "id": "memguard_main_rationale_37"
+    },
+    {
+      "label": "Entry point for MemGuard CLI.",
+      "file_type": "rationale",
+      "source_file": "memguard\\main.py",
+      "source_location": "L85",
+      "community": 3,
+      "norm_label": "entry point for memguard cli.",
+      "id": "memguard_main_rationale_85"
+    },
+    {
+      "label": "Map numeric score to threat level.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L95",
+      "community": 0,
+      "norm_label": "map numeric score to threat level.",
+      "id": "memguard_scorer_rationale_95"
+    },
+    {
+      "label": "Best-effort Windows token elevation check for a process PID.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L104",
+      "community": 0,
+      "norm_label": "best-effort windows token elevation check for a process pid.",
+      "id": "memguard_scorer_rationale_104"
+    },
+    {
+      "label": "Detect elevated execution context while minimizing false positives.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L147",
+      "community": 0,
+      "norm_label": "detect elevated execution context while minimizing false positives.",
+      "id": "memguard_scorer_rationale_147"
+    },
+    {
+      "label": "Return inet listening addresses where local port is > 49152.      Returns an e",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L162",
+      "community": 0,
+      "norm_label": "return inet listening addresses where local port is > 49152.      returns an e",
+      "id": "memguard_scorer_rationale_162"
+    },
+    {
+      "label": "Check if a process has any listening inet connection on port > 49152.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L186",
+      "community": 0,
+      "norm_label": "check if a process has any listening inet connection on port > 49152.",
+      "id": "memguard_scorer_rationale_186"
+    },
+    {
+      "label": "Return lowercase parent process name, or None on any error.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L191",
+      "community": 0,
+      "norm_label": "return lowercase parent process name, or none on any error.",
+      "id": "memguard_scorer_rationale_191"
+    },
+    {
+      "label": "Return True when exe exists and has no valid Authenticode signature.      Uses",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L208",
+      "community": 0,
+      "norm_label": "return true when exe exists and has no valid authenticode signature.      uses",
+      "id": "memguard_scorer_rationale_208"
+    },
+    {
+      "label": "Apply heuristic rules and return an enriched process record.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L232",
+      "community": 0,
+      "norm_label": "apply heuristic rules and return an enriched process record.",
+      "id": "memguard_scorer_rationale_232"
+    },
+    {
+      "label": "Score all processes while preserving input ordering.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L315",
+      "community": 5,
+      "norm_label": "score all processes while preserving input ordering.",
+      "id": "memguard_scorer_rationale_315"
+    },
+    {
+      "label": "Render a panel summarizing VirusTotal enrichment results.",
+      "file_type": "rationale",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L192",
+      "community": 3,
+      "norm_label": "render a panel summarizing virustotal enrichment results.",
+      "id": "memguard_ui_rationale_192"
+    },
+    {
+      "label": "Launch the MemGuard desktop GUI.",
+      "file_type": "rationale",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L1004",
+      "community": 6,
+      "norm_label": "launch the memguard desktop gui.",
+      "id": "memguard_gui_rationale_1004"
+    },
+    {
+      "label": "Network port record with security scoring.",
+      "file_type": "rationale",
+      "source_file": "memguard\\port_inspector.py",
+      "source_location": "L44",
+      "community": 7,
+      "norm_label": "network port record with security scoring.",
+      "id": "memguard_port_inspector_rationale_44"
+    },
+    {
+      "label": "Score a port for security risk.      Returns:         (risk_level, risk_score",
+      "file_type": "rationale",
+      "source_file": "memguard\\port_inspector.py",
+      "source_location": "L59",
+      "community": 7,
+      "norm_label": "score a port for security risk.      returns:         (risk_level, risk_score",
+      "id": "memguard_port_inspector_rationale_59"
+    },
+    {
+      "label": "Collect all listening ports and active connections.          Returns:",
+      "file_type": "rationale",
+      "source_file": "memguard\\port_inspector.py",
+      "source_location": "L103",
+      "community": 7,
+      "norm_label": "collect all listening ports and active connections.          returns:",
+      "id": "memguard_port_inspector_rationale_103"
+    },
+    {
+      "label": "Map numeric score to threat level.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L94",
+      "community": 0,
+      "norm_label": "map numeric score to threat level.",
+      "id": "memguard_scorer_rationale_94"
+    },
+    {
+      "label": "Best-effort Windows token elevation check for a process PID.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L103",
+      "community": 0,
+      "norm_label": "best-effort windows token elevation check for a process pid.",
+      "id": "memguard_scorer_rationale_103"
+    },
+    {
+      "label": "Detect elevated execution context while minimizing false positives.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L146",
+      "community": 0,
+      "norm_label": "detect elevated execution context while minimizing false positives.",
+      "id": "memguard_scorer_rationale_146"
+    },
+    {
+      "label": "Return inet listening addresses where local port is > 49152.      Returns an e",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L161",
+      "community": 0,
+      "norm_label": "return inet listening addresses where local port is > 49152.      returns an e",
+      "id": "memguard_scorer_rationale_161"
+    },
+    {
+      "label": "Check if a process has any listening inet connection on port > 49152.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L185",
+      "community": 0,
+      "norm_label": "check if a process has any listening inet connection on port > 49152.",
+      "id": "memguard_scorer_rationale_185"
+    },
+    {
+      "label": "Return True when exe exists and has no valid Authenticode signature.      Uses",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L207",
+      "community": 0,
+      "norm_label": "return true when exe exists and has no valid authenticode signature.      uses",
+      "id": "memguard_scorer_rationale_207"
+    },
+    {
+      "label": "Apply heuristic rules and return an enriched process record.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L231",
+      "community": 0,
+      "norm_label": "apply heuristic rules and return an enriched process record.",
+      "id": "memguard_scorer_rationale_231"
+    },
+    {
+      "label": "Score all processes while preserving input ordering.",
+      "file_type": "rationale",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L314",
+      "community": 5,
+      "norm_label": "score all processes while preserving input ordering.",
+      "id": "memguard_scorer_rationale_314"
+    },
+    {
+      "label": "Return a rich style string based on memory usage.",
+      "file_type": "rationale",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L26",
+      "community": 3,
+      "norm_label": "return a rich style string based on memory usage.",
+      "id": "memguard_ui_rationale_26"
+    },
+    {
+      "label": "Return color style for threat level labels.",
+      "file_type": "rationale",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L35",
+      "community": 3,
+      "norm_label": "return color style for threat level labels.",
+      "id": "memguard_ui_rationale_35"
+    },
+    {
+      "label": "Return color style for memory anomaly labels.",
+      "file_type": "rationale",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L44",
+      "community": 3,
+      "norm_label": "return color style for memory anomaly labels.",
+      "id": "memguard_ui_rationale_44"
+    },
+    {
+      "label": "Display the MemGuard startup banner.",
+      "file_type": "rationale",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L51",
+      "community": 3,
+      "norm_label": "display the memguard startup banner.",
+      "id": "memguard_ui_rationale_51"
+    },
+    {
+      "label": "Render RAM and CPU telemetry above the process table.",
+      "file_type": "rationale",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L58",
+      "community": 3,
+      "norm_label": "render ram and cpu telemetry above the process table.",
+      "id": "memguard_ui_rationale_58"
+    },
+    {
+      "label": "Render a rich table of the top N processes sorted by memory.      Args:",
+      "file_type": "rationale",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L73",
+      "community": 3,
+      "norm_label": "render a rich table of the top n processes sorted by memory.      args:",
+      "id": "memguard_ui_rationale_73"
+    },
+    {
+      "label": "Render a secondary panel with suspicious/malicious process alerts.",
+      "file_type": "rationale",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L138",
+      "community": 3,
+      "norm_label": "render a secondary panel with suspicious/malicious process alerts.",
+      "id": "memguard_ui_rationale_138"
+    },
+    {
+      "label": "Render a panel summarizing VirusTotal enrichment results.",
+      "file_type": "rationale",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L173",
+      "community": 3,
+      "norm_label": "render a panel summarizing virustotal enrichment results.",
+      "id": "memguard_ui_rationale_173"
     },
     {
       "label": "Normalize string fields to avoid newline characters in exported data.",
@@ -1939,7 +2722,7 @@
       "file_type": "rationale",
       "source_file": "memguard\\gui.py",
       "source_location": "L35",
-      "community": 0,
+      "community": 1,
       "norm_label": "tkinter desktop application for memguard scans.",
       "id": "memguard_gui_rationale_35"
     },
@@ -1948,7 +2731,7 @@
       "file_type": "rationale",
       "source_file": "memguard\\gui.py",
       "source_location": "L289",
-      "community": 0,
+      "community": 1,
       "norm_label": "thread-safe progress update \u2014 callable from the worker thread.",
       "id": "memguard_gui_rationale_289"
     },
@@ -1966,7 +2749,7 @@
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
       "source_location": "L50",
-      "community": 3,
+      "community": 0,
       "norm_label": "map numeric score to threat level.",
       "id": "memguard_scorer_rationale_50"
     },
@@ -1975,7 +2758,7 @@
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
       "source_location": "L59",
-      "community": 3,
+      "community": 0,
       "norm_label": "best-effort windows token elevation check for a process pid.",
       "id": "memguard_scorer_rationale_59"
     },
@@ -1984,7 +2767,7 @@
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
       "source_location": "L102",
-      "community": 3,
+      "community": 0,
       "norm_label": "detect elevated execution context while minimizing false positives.",
       "id": "memguard_scorer_rationale_102"
     },
@@ -1993,7 +2776,7 @@
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
       "source_location": "L117",
-      "community": 3,
+      "community": 0,
       "norm_label": "return inet listening addresses where local port is > 49152.      returns an e",
       "id": "memguard_scorer_rationale_117"
     },
@@ -2002,7 +2785,7 @@
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
       "source_location": "L141",
-      "community": 3,
+      "community": 0,
       "norm_label": "check if a process has any listening inet connection on port > 49152.",
       "id": "memguard_scorer_rationale_141"
     },
@@ -2011,7 +2794,7 @@
       "file_type": "rationale",
       "source_file": "memguard\\scorer.py",
       "source_location": "L218",
-      "community": 3,
+      "community": 5,
       "norm_label": "score all processes while preserving input ordering.",
       "id": "memguard_scorer_rationale_218"
     },
@@ -2024,7 +2807,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "launch_gui.py gui entrypoint",
       "id": "launch_gui_entrypoint"
     },
@@ -2037,7 +2820,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "main() cli/gui orchestrator",
       "id": "main_main"
     },
@@ -2050,7 +2833,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 14,
+      "community": 15,
       "norm_label": "_build_parser() cli argument parser",
       "id": "main_build_parser"
     },
@@ -2063,7 +2846,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "processrecord typeddict",
       "id": "collector_ProcessRecord"
     },
@@ -2076,7 +2859,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 15,
+      "community": 16,
       "norm_label": "systemoverview typeddict",
       "id": "collector_SystemOverview"
     },
@@ -2089,7 +2872,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "collect_processes()",
       "id": "collector_collect_processes"
     },
@@ -2102,7 +2885,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "collect_system_overview()",
       "id": "collector_collect_system_overview"
     },
@@ -2115,7 +2898,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "_sanitize_text() credential redaction",
       "id": "collector_sanitize_text"
     },
@@ -2128,7 +2911,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "attach_sha256() hash attachment",
       "id": "hasher_attach_sha256"
     },
@@ -2141,7 +2924,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "load_blocklist() sha256 blocklist loader",
       "id": "hasher_load_blocklist"
     },
@@ -2154,7 +2937,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "_resolve_resource_path() pyinstaller-aware path resolution",
       "id": "hasher_resolve_resource_path"
     },
@@ -2167,7 +2950,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "score_process() heuristic scoring",
       "id": "scorer_score_process"
     },
@@ -2180,7 +2963,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "score_processes() batch scorer",
       "id": "scorer_score_processes"
     },
@@ -2193,7 +2976,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "_classify_score() threat level classifier",
       "id": "scorer_classify_score"
     },
@@ -2206,7 +2989,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "_is_process_elevated() elevation detector",
       "id": "scorer_is_process_elevated"
     },
@@ -2219,7 +3002,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "_is_windows_token_elevated() winapi token check",
       "id": "scorer_is_windows_token_elevated"
     },
@@ -2232,7 +3015,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "_get_ephemeral_listening_addresses()",
       "id": "scorer_get_ephemeral_listening_addresses"
     },
@@ -2245,7 +3028,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "is_system_process() windows process whitelist",
       "id": "system_whitelist_is_system_process"
     },
@@ -2258,7 +3041,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "inspect_memory() batch memory inspection",
       "id": "memory_inspector_inspect_memory"
     },
@@ -2271,7 +3054,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "_inspect_process_memory() per-process memory check",
       "id": "memory_inspector_inspect_process_memory"
     },
@@ -2284,7 +3067,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "enrich_with_virustotal() vt enrichment",
       "id": "threat_intel_enrich_with_virustotal"
     },
@@ -2297,7 +3080,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "test_vt_connection() vt api key validator",
       "id": "threat_intel_test_vt_connection"
     },
@@ -2310,7 +3093,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "_get_vt_api_key() api key resolver",
       "id": "threat_intel_get_vt_api_key"
     },
@@ -2323,7 +3106,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 11,
       "norm_label": "portrecord typeddict",
       "id": "port_inspector_PortRecord"
     },
@@ -2336,7 +3119,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "collect_listening_ports()",
       "id": "port_inspector_collect_listening_ports"
     },
@@ -2349,7 +3132,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "_assess_port_risk() port risk scorer",
       "id": "port_inspector_assess_port_risk"
     },
@@ -2362,7 +3145,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "export_csv() process csv export",
       "id": "exporter_export_csv"
     },
@@ -2375,7 +3158,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "export_json() process json export",
       "id": "exporter_export_json"
     },
@@ -2388,7 +3171,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "export_full_report() ai markdown report",
       "id": "exporter_export_full_report"
     },
@@ -2401,7 +3184,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 11,
       "norm_label": "export_ports_csv() ports csv export",
       "id": "exporter_export_ports_csv"
     },
@@ -2414,7 +3197,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 11,
       "norm_label": "export_ports_json() ports json export",
       "id": "exporter_export_ports_json"
     },
@@ -2427,7 +3210,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 11,
       "norm_label": "export_ports_report() ports markdown report",
       "id": "exporter_export_ports_report"
     },
@@ -2440,7 +3223,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "validate_process_record() live process validator",
       "id": "validator_validate_process_record"
     },
@@ -2453,7 +3236,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 16,
+      "community": 17,
       "norm_label": "validationreport typeddict",
       "id": "validator_ValidationReport"
     },
@@ -2466,7 +3249,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "format_validation_report() validation formatter",
       "id": "validator_format_validation_report"
     },
@@ -2479,7 +3262,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "_get_windows_signature() authenticode checker",
       "id": "validator_get_windows_signature"
     },
@@ -2492,7 +3275,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "memguardgui tkinter application",
       "id": "gui_MemGuardGUI"
     },
@@ -2505,7 +3288,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "_scan_pipeline() threaded scan pipeline",
       "id": "gui_scan_pipeline"
     },
@@ -2518,7 +3301,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "launch_gui() gui launcher",
       "id": "gui_launch_gui"
     },
@@ -2531,7 +3314,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 10,
+      "community": 11,
       "norm_label": "show_ports_window() port viewer window",
       "id": "gui_show_ports_window"
     },
@@ -2544,7 +3327,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "validate_selected() gui validation trigger",
       "id": "gui_validate_selected"
     },
@@ -2557,7 +3340,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "show_process_table() cli process table",
       "id": "ui_show_process_table"
     },
@@ -2570,7 +3353,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "show_threat_alerts() cli threat alerts",
       "id": "ui_show_threat_alerts"
     },
@@ -2583,7 +3366,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "show_virustotal_findings() cli vt panel",
       "id": "ui_show_virustotal_findings"
     },
@@ -2596,7 +3379,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "show_system_overview() cli overview panel",
       "id": "ui_show_system_overview"
     },
@@ -2609,7 +3392,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "data/blocklist.txt sha256 blocklist file",
       "id": "data_blocklist"
     },
@@ -2622,7 +3405,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "build_windows.ps1 pyinstaller build script",
       "id": "build_script"
     },
@@ -2635,7 +3418,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "readme.md project documentation",
       "id": "readme_doc"
     },
@@ -2648,7 +3431,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 1,
+      "community": 2,
       "norm_label": "claude.md project guardrails",
       "id": "claude_md"
     },
@@ -2662,7 +3445,7 @@
       "author": null,
       "contributor": null,
       "rationale": "All modules are strictly read-only to allow safe execution on production/personal machines without risk of modification, enabling triage without introducing new risk vectors.",
-      "community": 1,
+      "community": 2,
       "norm_label": "read-only forensic safety model",
       "id": "read_only_forensic_model"
     },
@@ -2676,7 +3459,7 @@
       "author": null,
       "contributor": null,
       "rationale": "triggered_rules field is preserved on every scored process so analysts can audit exactly which heuristics fired, avoiding black-box opacity in security tooling.",
-      "community": 1,
+      "community": 2,
       "norm_label": "explainable deterministic scoring principle",
       "id": "explainable_scoring_principle"
     },
@@ -2690,7 +3473,7 @@
       "author": null,
       "contributor": null,
       "rationale": "Each scoring rule appends a human-readable string to triggered_rules, providing audit-friendly transparency that satisfies both defensive security requirements and employer interview demonstration needs.",
-      "community": 1,
+      "community": 2,
       "norm_label": "triggered_rules evidence field pattern",
       "id": "triggered_rules_evidence"
     }
@@ -2712,9 +3495,9 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_attack_map_py",
-      "target": "memguard_attack_map_map_rule_to_technique",
-      "confidence_score": 1.0
+      "target": "memguard_attack_map_map_rule_to_technique"
     },
     {
       "relation": "contains",
@@ -2722,9 +3505,9 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L43",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_attack_map_py",
-      "target": "memguard_attack_map_map_rules_to_techniques",
-      "confidence_score": 1.0
+      "target": "memguard_attack_map_map_rules_to_techniques"
     },
     {
       "relation": "contains",
@@ -2732,9 +3515,9 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L57",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_attack_map_py",
-      "target": "memguard_attack_map_format_techniques",
-      "confidence_score": 1.0
+      "target": "memguard_attack_map_format_techniques"
     },
     {
       "relation": "rationale_for",
@@ -2742,9 +3525,9 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_attack_map_rationale_1",
-      "target": "memguard_attack_map_py",
-      "confidence_score": 1.0
+      "target": "memguard_attack_map_py"
     },
     {
       "relation": "imports_from",
@@ -2753,9 +3536,9 @@
       "source_file": "memguard\\exporter.py",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_exporter_py",
-      "target": "memguard_attack_map_py",
-      "confidence_score": 1.0
+      "target": "memguard_attack_map_py"
     },
     {
       "relation": "imports_from",
@@ -2764,9 +3547,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_py",
-      "target": "memguard_attack_map_py",
-      "confidence_score": 1.0
+      "target": "memguard_attack_map_py"
     },
     {
       "relation": "imports_from",
@@ -2775,9 +3558,9 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_history_log_py",
-      "target": "memguard_attack_map_py",
-      "confidence_score": 1.0
+      "target": "memguard_attack_map_py"
     },
     {
       "relation": "calls",
@@ -2786,9 +3569,9 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L50",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_attack_map_map_rules_to_techniques",
-      "target": "memguard_attack_map_map_rule_to_technique",
-      "confidence_score": 1.0
+      "target": "memguard_attack_map_map_rule_to_technique"
     },
     {
       "relation": "rationale_for",
@@ -2796,9 +3579,9 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_attack_map_rationale_32",
-      "target": "memguard_attack_map_map_rule_to_technique",
-      "confidence_score": 1.0
+      "target": "memguard_attack_map_map_rule_to_technique"
     },
     {
       "relation": "calls",
@@ -2807,9 +3590,9 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_attack_map_format_techniques",
-      "target": "memguard_attack_map_map_rules_to_techniques",
-      "confidence_score": 1.0
+      "target": "memguard_attack_map_map_rules_to_techniques"
     },
     {
       "relation": "rationale_for",
@@ -2817,9 +3600,9 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L44",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_attack_map_rationale_44",
-      "target": "memguard_attack_map_map_rules_to_techniques",
-      "confidence_score": 1.0
+      "target": "memguard_attack_map_map_rules_to_techniques"
     },
     {
       "relation": "calls",
@@ -2849,9 +3632,9 @@
       "source_file": "memguard\\attack_map.py",
       "source_location": "L58",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_attack_map_rationale_58",
-      "target": "memguard_attack_map_format_techniques",
-      "confidence_score": 1.0
+      "target": "memguard_attack_map_format_techniques"
     },
     {
       "relation": "calls",
@@ -2909,6 +3692,26 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\collector.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_collector_py",
+      "target": "memguard_collector_is_elevated"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L91",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_collector_py",
+      "target": "memguard_collector_probe_denied_fields"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\collector.py",
       "source_location": "L73",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -2933,6 +3736,17 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "memguard_collector_rationale_1",
+      "target": "memguard_collector_py"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_elevation_py",
       "target": "memguard_collector_py"
     },
     {
@@ -2975,9 +3789,9 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_history_log_py",
-      "target": "memguard_collector_py",
-      "confidence_score": 1.0
+      "target": "memguard_collector_py"
     },
     {
       "relation": "imports_from",
@@ -3059,10 +3873,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\collector.py",
-      "source_location": "L29",
+      "source_location": "L30",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "memguard_collector_rationale_29",
+      "source": "memguard_collector_rationale_30",
       "target": "memguard_collector_processrecord"
     },
     {
@@ -3083,6 +3897,16 @@
       "weight": 0.8,
       "confidence_score": 0.5,
       "source": "memguard_validator_validationreport",
+      "target": "memguard_collector_processrecord"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L29",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_collector_rationale_29",
       "target": "memguard_collector_processrecord"
     },
     {
@@ -3119,6 +3943,16 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\collector.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_collector_rationale_59",
+      "target": "memguard_collector_systemoverview"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\collector.py",
       "source_location": "L56",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -3140,6 +3974,16 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\collector.py",
+      "source_location": "L68",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_collector_rationale_68",
+      "target": "memguard_collector_sanitize_text"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\collector.py",
       "source_location": "L65",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -3150,10 +3994,107 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\collector.py",
-      "source_location": "L74",
+      "source_location": "L77",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "memguard_collector_rationale_74",
+      "source": "memguard_collector_rationale_77",
+      "target": "memguard_collector_is_elevated"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "memguard_elevation_relaunch_as_admin",
+      "target": "memguard_collector_is_elevated"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "memguard\\gui.py",
+      "source_location": "L412",
+      "weight": 1.0,
+      "source": "memguard_gui_memguardgui_on_scan_success",
+      "target": "memguard_collector_is_elevated"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "memguard\\gui.py",
+      "source_location": "L891",
+      "weight": 1.0,
+      "source": "memguard_gui_memguardgui_refresh_elevation_state",
+      "target": "memguard_collector_is_elevated"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "memguard\\gui.py",
+      "source_location": "L905",
+      "weight": 1.0,
+      "source": "memguard_gui_memguardgui_restart_as_administrator",
+      "target": "memguard_collector_is_elevated"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "memguard\\main.py",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "memguard_main_main",
+      "target": "memguard_collector_is_elevated"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "memguard\\ui.py",
+      "source_location": "L174",
+      "weight": 1.0,
+      "source": "memguard_ui_show_collection_coverage",
+      "target": "memguard_collector_is_elevated"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L183",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_collector_collect_processes",
+      "target": "memguard_collector_probe_denied_fields"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L92",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_collector_rationale_92",
+      "target": "memguard_collector_probe_denied_fields"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L115",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_collector_rationale_115",
       "target": "memguard_collector_collect_system_overview"
     },
     {
@@ -3182,10 +4123,20 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\collector.py",
-      "source_location": "L85",
+      "source_location": "L74",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "memguard_collector_rationale_85",
+      "source": "memguard_collector_rationale_74",
+      "target": "memguard_collector_collect_system_overview"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L126",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_collector_rationale_126",
       "target": "memguard_collector_collect_processes"
     },
     {
@@ -3209,6 +4160,121 @@
       "weight": 1.0,
       "source": "memguard_main_main",
       "target": "memguard_collector_collect_processes"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\collector.py",
+      "source_location": "L85",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_collector_rationale_85",
+      "target": "memguard_collector_collect_processes"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L35",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_elevation_py",
+      "target": "memguard_elevation_build_relaunch_command"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_elevation_py",
+      "target": "memguard_elevation_relaunch_as_admin"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_elevation_rationale_1",
+      "target": "memguard_elevation_py"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_py",
+      "target": "memguard_elevation_py"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\main.py",
+      "source_location": "L18",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_main_py",
+      "target": "memguard_elevation_py"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L77",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_elevation_relaunch_as_admin",
+      "target": "memguard_elevation_build_relaunch_command"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_elevation_rationale_36",
+      "target": "memguard_elevation_build_relaunch_command"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\elevation.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_elevation_rationale_63",
+      "target": "memguard_elevation_relaunch_as_admin"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "memguard\\gui.py",
+      "source_location": "L929",
+      "weight": 1.0,
+      "source": "memguard_gui_memguardgui_restart_as_administrator",
+      "target": "memguard_elevation_relaunch_as_admin"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "memguard\\main.py",
+      "source_location": "L105",
+      "weight": 1.0,
+      "source": "memguard_main_main",
+      "target": "memguard_elevation_relaunch_as_admin"
     },
     {
       "relation": "imports_from",
@@ -3368,11 +4434,21 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\exporter.py",
+      "source_location": "L31",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_exporter_rationale_31",
+      "target": "memguard_exporter_clean_export_strings"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\exporter.py",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_exporter_rationale_30",
-      "target": "memguard_exporter_clean_export_strings",
-      "confidence_score": 1.0
+      "target": "memguard_exporter_clean_export_strings"
     },
     {
       "relation": "rationale_for",
@@ -3421,11 +4497,21 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\exporter.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_exporter_rationale_50",
+      "target": "memguard_exporter_to_dataframe"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\exporter.py",
       "source_location": "L48",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_exporter_rationale_48",
-      "target": "memguard_exporter_to_dataframe",
-      "confidence_score": 1.0
+      "target": "memguard_exporter_to_dataframe"
     },
     {
       "relation": "rationale_for",
@@ -3463,11 +4549,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L82",
+      "source_location": "L84",
       "weight": 1.0,
-      "source": "memguard_exporter_rationale_82",
-      "target": "memguard_exporter_export_full_report",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "memguard_exporter_rationale_84",
+      "target": "memguard_exporter_export_full_report"
     },
     {
       "relation": "calls",
@@ -3484,6 +4570,16 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\exporter.py",
+      "source_location": "L82",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_exporter_rationale_82",
+      "target": "memguard_exporter_export_full_report"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\exporter.py",
       "source_location": "L81",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -3494,11 +4590,21 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\exporter.py",
+      "source_location": "L212",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_exporter_rationale_212",
+      "target": "memguard_exporter_export_ports_report"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\exporter.py",
       "source_location": "L210",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_exporter_rationale_210",
-      "target": "memguard_exporter_export_ports_report",
-      "confidence_score": 1.0
+      "target": "memguard_exporter_export_ports_report"
     },
     {
       "relation": "rationale_for",
@@ -3514,11 +4620,21 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\exporter.py",
+      "source_location": "L286",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_exporter_rationale_286",
+      "target": "memguard_exporter_export_ports_csv"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\exporter.py",
       "source_location": "L284",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_exporter_rationale_284",
-      "target": "memguard_exporter_export_ports_csv",
-      "confidence_score": 1.0
+      "target": "memguard_exporter_export_ports_csv"
     },
     {
       "relation": "rationale_for",
@@ -3534,11 +4650,21 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\exporter.py",
+      "source_location": "L302",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_exporter_rationale_302",
+      "target": "memguard_exporter_export_ports_json"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\exporter.py",
       "source_location": "L300",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_exporter_rationale_300",
-      "target": "memguard_exporter_export_ports_json",
-      "confidence_score": 1.0
+      "target": "memguard_exporter_export_ports_json"
     },
     {
       "relation": "rationale_for",
@@ -3554,11 +4680,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L316",
+      "source_location": "L318",
       "weight": 1.0,
-      "source": "memguard_exporter_rationale_316",
-      "target": "memguard_exporter_export_csv",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "memguard_exporter_rationale_318",
+      "target": "memguard_exporter_export_csv"
     },
     {
       "relation": "calls",
@@ -3586,6 +4712,16 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\exporter.py",
+      "source_location": "L316",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_exporter_rationale_316",
+      "target": "memguard_exporter_export_csv"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\exporter.py",
       "source_location": "L294",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -3596,11 +4732,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\exporter.py",
-      "source_location": "L333",
+      "source_location": "L335",
       "weight": 1.0,
-      "source": "memguard_exporter_rationale_333",
-      "target": "memguard_exporter_export_json",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "memguard_exporter_rationale_335",
+      "target": "memguard_exporter_export_json"
     },
     {
       "relation": "calls",
@@ -3622,6 +4758,16 @@
       "source_location": "L130",
       "weight": 1.0,
       "source": "memguard_main_main",
+      "target": "memguard_exporter_export_json"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\exporter.py",
+      "source_location": "L333",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_exporter_rationale_333",
       "target": "memguard_exporter_export_json"
     },
     {
@@ -3652,9 +4798,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_py",
-      "target": "memguard_history_log_py",
-      "confidence_score": 1.0
+      "target": "memguard_history_log_py"
     },
     {
       "relation": "imports_from",
@@ -4066,6 +5212,26 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\gui.py",
+      "source_location": "L889",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_memguardgui",
+      "target": "memguard_gui_memguardgui_refresh_elevation_state"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L898",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_memguardgui",
+      "target": "memguard_gui_memguardgui_restart_as_administrator"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
       "source_location": "L808",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -4148,9 +5314,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L916",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_memguardgui",
-      "target": "memguard_gui_memguardgui_on_auto_refresh_toggle",
-      "confidence_score": 1.0
+      "target": "memguard_gui_memguardgui_on_auto_refresh_toggle"
     },
     {
       "relation": "method",
@@ -4158,9 +5324,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L925",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_memguardgui",
-      "target": "memguard_gui_memguardgui_reschedule_auto_refresh",
-      "confidence_score": 1.0
+      "target": "memguard_gui_memguardgui_reschedule_auto_refresh"
     },
     {
       "relation": "method",
@@ -4168,9 +5334,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L932",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_memguardgui",
-      "target": "memguard_gui_memguardgui_cancel_auto_refresh",
-      "confidence_score": 1.0
+      "target": "memguard_gui_memguardgui_cancel_auto_refresh"
     },
     {
       "relation": "method",
@@ -4178,9 +5344,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L940",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_memguardgui",
-      "target": "memguard_gui_memguardgui_auto_refresh_tick",
-      "confidence_score": 1.0
+      "target": "memguard_gui_memguardgui_auto_refresh_tick"
     },
     {
       "relation": "method",
@@ -4188,9 +5354,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L947",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_memguardgui",
-      "target": "memguard_gui_memguardgui_show_persistent_threats",
-      "confidence_score": 1.0
+      "target": "memguard_gui_memguardgui_show_persistent_threats"
     },
     {
       "relation": "calls",
@@ -4207,11 +5373,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\gui.py",
-      "source_location": "L37",
+      "source_location": "L38",
       "weight": 1.0,
-      "source": "memguard_gui_rationale_37",
-      "target": "memguard_gui_memguardgui",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "memguard_gui_rationale_38",
+      "target": "memguard_gui_memguardgui"
     },
     {
       "relation": "uses",
@@ -4222,6 +5388,16 @@
       "confidence_score": 0.5,
       "source": "memguard_gui_memguardgui",
       "target": "memguard_port_inspector_portrecord"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_rationale_37",
+      "target": "memguard_gui_memguardgui"
     },
     {
       "relation": "rationale_for",
@@ -4326,6 +5502,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\gui.py",
+      "source_location": "L165",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_memguardgui_build_controls",
+      "target": "memguard_gui_memguardgui_refresh_elevation_state"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
       "source_location": "L199",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -4372,9 +5559,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L918",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_memguardgui_on_auto_refresh_toggle",
-      "target": "memguard_gui_memguardgui_parse_int",
-      "confidence_score": 1.0
+      "target": "memguard_gui_memguardgui_parse_int"
     },
     {
       "relation": "calls",
@@ -4383,9 +5570,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L929",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_memguardgui_reschedule_auto_refresh",
-      "target": "memguard_gui_memguardgui_parse_int",
-      "confidence_score": 1.0
+      "target": "memguard_gui_memguardgui_parse_int"
     },
     {
       "relation": "calls",
@@ -4457,11 +5644,31 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\gui.py",
+      "source_location": "L341",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_rationale_341",
+      "target": "memguard_gui_memguardgui_post_progress"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L326",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_rationale_326",
+      "target": "memguard_gui_memguardgui_post_progress"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
       "source_location": "L308",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_rationale_308",
-      "target": "memguard_gui_memguardgui_post_progress",
-      "confidence_score": 1.0
+      "target": "memguard_gui_memguardgui_post_progress"
     },
     {
       "relation": "rationale_for",
@@ -4480,9 +5687,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L943",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_memguardgui_auto_refresh_tick",
-      "target": "memguard_gui_memguardgui_run_scan",
-      "confidence_score": 1.0
+      "target": "memguard_gui_memguardgui_run_scan"
     },
     {
       "relation": "calls",
@@ -4513,9 +5720,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L373",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_memguardgui_on_scan_success",
-      "target": "memguard_gui_memguardgui_reschedule_auto_refresh",
-      "confidence_score": 1.0
+      "target": "memguard_gui_memguardgui_reschedule_auto_refresh"
     },
     {
       "relation": "calls",
@@ -4731,6 +5938,48 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\gui.py",
+      "source_location": "L910",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_memguardgui_restart_as_administrator",
+      "target": "memguard_gui_memguardgui_refresh_elevation_state"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L890",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_rationale_890",
+      "target": "memguard_gui_memguardgui_refresh_elevation_state"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L931",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_memguardgui_restart_as_administrator",
+      "target": "memguard_gui_memguardgui_cancel_auto_refresh"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L899",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_rationale_899",
+      "target": "memguard_gui_memguardgui_restart_as_administrator"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
       "source_location": "L846",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -4766,9 +6015,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L920",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_memguardgui_on_auto_refresh_toggle",
-      "target": "memguard_gui_memguardgui_reschedule_auto_refresh",
-      "confidence_score": 1.0
+      "target": "memguard_gui_memguardgui_reschedule_auto_refresh"
     },
     {
       "relation": "calls",
@@ -4777,9 +6026,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L922",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_memguardgui_on_auto_refresh_toggle",
-      "target": "memguard_gui_memguardgui_cancel_auto_refresh",
-      "confidence_score": 1.0
+      "target": "memguard_gui_memguardgui_cancel_auto_refresh"
     },
     {
       "relation": "calls",
@@ -4788,9 +6037,9 @@
       "source_file": "memguard\\gui.py",
       "source_location": "L926",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_gui_memguardgui_reschedule_auto_refresh",
-      "target": "memguard_gui_memguardgui_cancel_auto_refresh",
-      "confidence_score": 1.0
+      "target": "memguard_gui_memguardgui_cancel_auto_refresh"
     },
     {
       "relation": "calls",
@@ -4807,11 +6056,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\gui.py",
-      "source_location": "L1004",
+      "source_location": "L1110",
       "weight": 1.0,
-      "source": "memguard_gui_rationale_1004",
-      "target": "memguard_gui_launch_gui",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "memguard_gui_rationale_1110",
+      "target": "memguard_gui_launch_gui"
     },
     {
       "relation": "calls",
@@ -4822,6 +6071,36 @@
       "source_location": "L89",
       "weight": 1.0,
       "source": "memguard_main_main",
+      "target": "memguard_gui_launch_gui"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L1043",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_rationale_1043",
+      "target": "memguard_gui_launch_gui"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L1007",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_rationale_1007",
+      "target": "memguard_gui_launch_gui"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\gui.py",
+      "source_location": "L1004",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_gui_rationale_1004",
       "target": "memguard_gui_launch_gui"
     },
     {
@@ -4985,9 +6264,9 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_history_log_py",
-      "target": "memguard_history_log_resolve_history_path",
-      "confidence_score": 1.0
+      "target": "memguard_history_log_resolve_history_path"
     },
     {
       "relation": "contains",
@@ -4995,9 +6274,9 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_history_log_py",
-      "target": "memguard_history_log_append_scan_findings",
-      "confidence_score": 1.0
+      "target": "memguard_history_log_append_scan_findings"
     },
     {
       "relation": "contains",
@@ -5005,9 +6284,9 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L82",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_history_log_py",
-      "target": "memguard_history_log_iter_history",
-      "confidence_score": 1.0
+      "target": "memguard_history_log_iter_history"
     },
     {
       "relation": "contains",
@@ -5015,9 +6294,9 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L99",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_history_log_py",
-      "target": "memguard_history_log_find_persistent_threats",
-      "confidence_score": 1.0
+      "target": "memguard_history_log_find_persistent_threats"
     },
     {
       "relation": "rationale_for",
@@ -5025,9 +6304,9 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_history_log_rationale_1",
-      "target": "memguard_history_log_py",
-      "confidence_score": 1.0
+      "target": "memguard_history_log_py"
     },
     {
       "relation": "calls",
@@ -5036,9 +6315,9 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L42",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_history_log_append_scan_findings",
-      "target": "memguard_history_log_resolve_history_path",
-      "confidence_score": 1.0
+      "target": "memguard_history_log_resolve_history_path"
     },
     {
       "relation": "calls",
@@ -5047,9 +6326,9 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L108",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_history_log_find_persistent_threats",
-      "target": "memguard_history_log_resolve_history_path",
-      "confidence_score": 1.0
+      "target": "memguard_history_log_resolve_history_path"
     },
     {
       "relation": "rationale_for",
@@ -5057,9 +6336,9 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_history_log_rationale_38",
-      "target": "memguard_history_log_append_scan_findings",
-      "confidence_score": 1.0
+      "target": "memguard_history_log_append_scan_findings"
     },
     {
       "relation": "calls",
@@ -5068,9 +6347,9 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L112",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_history_log_find_persistent_threats",
-      "target": "memguard_history_log_iter_history",
-      "confidence_score": 1.0
+      "target": "memguard_history_log_iter_history"
     },
     {
       "relation": "rationale_for",
@@ -5078,9 +6357,9 @@
       "source_file": "memguard\\history_log.py",
       "source_location": "L103",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "memguard_history_log_rationale_103",
-      "target": "memguard_history_log_find_persistent_threats",
-      "confidence_score": 1.0
+      "target": "memguard_history_log_find_persistent_threats"
     },
     {
       "relation": "imports_from",
@@ -5182,6 +6461,26 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\main.py",
+      "source_location": "L39",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_main_rationale_39",
+      "target": "memguard_main_build_parser"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\main.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_main_rationale_38",
+      "target": "memguard_main_build_parser"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\main.py",
       "source_location": "L37",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -5192,10 +6491,10 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\main.py",
-      "source_location": "L85",
+      "source_location": "L97",
       "weight": 1.0,
       "confidence_score": 1.0,
-      "source": "memguard_main_rationale_85",
+      "source": "memguard_main_rationale_97",
       "target": "memguard_main_main"
     },
     {
@@ -5270,6 +6569,17 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "memguard\\main.py",
+      "source_location": "L126",
+      "weight": 1.0,
+      "source": "memguard_main_main",
+      "target": "memguard_ui_show_collection_coverage"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "memguard\\main.py",
       "source_location": "L125",
       "weight": 1.0,
       "source": "memguard_main_main",
@@ -5285,6 +6595,26 @@
       "weight": 1.0,
       "source": "memguard_main_main",
       "target": "memguard_ui_show_virustotal_findings"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\main.py",
+      "source_location": "L86",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_main_rationale_86",
+      "target": "memguard_main_main"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\main.py",
+      "source_location": "L85",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_main_rationale_85",
+      "target": "memguard_main_main"
     },
     {
       "relation": "contains",
@@ -5392,6 +6722,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\port_inspector.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_port_inspector_py",
+      "target": "memguard_port_inspector_is_loopback_address"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\port_inspector.py",
       "source_location": "L58",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -5422,11 +6762,53 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\port_inspector.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_port_inspector_rationale_45",
+      "target": "memguard_port_inspector_portrecord"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\port_inspector.py",
       "source_location": "L44",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "memguard_port_inspector_rationale_44",
       "target": "memguard_port_inspector_portrecord"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\port_inspector.py",
+      "source_location": "L106",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_port_inspector_assess_port_risk",
+      "target": "memguard_port_inspector_is_loopback_address"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\port_inspector.py",
+      "source_location": "L60",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_port_inspector_rationale_60",
+      "target": "memguard_port_inspector_is_loopback_address"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L274",
+      "weight": 1.0,
+      "source": "memguard_scorer_score_process",
+      "target": "memguard_port_inspector_is_loopback_address"
     },
     {
       "relation": "calls",
@@ -5443,11 +6825,31 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\port_inspector.py",
+      "source_location": "L74",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_port_inspector_rationale_74",
+      "target": "memguard_port_inspector_assess_port_risk"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\port_inspector.py",
       "source_location": "L59",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "memguard_port_inspector_rationale_59",
       "target": "memguard_port_inspector_assess_port_risk"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\port_inspector.py",
+      "source_location": "L123",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_port_inspector_rationale_123",
+      "target": "memguard_port_inspector_collect_listening_ports"
     },
     {
       "relation": "rationale_for",
@@ -5533,11 +6935,31 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\scorer.py",
+      "source_location": "L209",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_py",
+      "target": "memguard_scorer_signature_unsigned_cached"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
       "source_location": "L206",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "memguard_scorer_py",
       "target": "memguard_scorer_check_signature_unsigned"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L236",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_py",
+      "target": "memguard_scorer_signature_unsigned_uncached"
     },
     {
       "relation": "contains",
@@ -5584,6 +7006,36 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\scorer.py",
+      "source_location": "L99",
+      "weight": 1.0,
+      "source": "memguard_scorer_rationale_99",
+      "target": "memguard_scorer_classify_score",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L96",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_96",
+      "target": "memguard_scorer_classify_score"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_95",
+      "target": "memguard_scorer_classify_score"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
       "source_location": "L94",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -5615,6 +7067,36 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\scorer.py",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "memguard_scorer_rationale_108",
+      "target": "memguard_scorer_is_windows_token_elevated",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L105",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_105",
+      "target": "memguard_scorer_is_windows_token_elevated"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L104",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_104",
+      "target": "memguard_scorer_is_windows_token_elevated"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
       "source_location": "L103",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -5640,6 +7122,36 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "memguard_scorer_score_process",
+      "target": "memguard_scorer_is_process_elevated"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L151",
+      "weight": 1.0,
+      "source": "memguard_scorer_rationale_151",
+      "target": "memguard_scorer_is_process_elevated",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L148",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_148",
+      "target": "memguard_scorer_is_process_elevated"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L147",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_147",
       "target": "memguard_scorer_is_process_elevated"
     },
     {
@@ -5688,6 +7200,36 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\scorer.py",
+      "source_location": "L166",
+      "weight": 1.0,
+      "source": "memguard_scorer_rationale_166",
+      "target": "memguard_scorer_get_ephemeral_listening_addresses",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L163",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_163",
+      "target": "memguard_scorer_get_ephemeral_listening_addresses"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L162",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_162",
+      "target": "memguard_scorer_get_ephemeral_listening_addresses"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
       "source_location": "L161",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -5703,6 +7245,36 @@
       "confidence_score": 1.0,
       "source": "memguard_scorer_rationale_117",
       "target": "memguard_scorer_get_ephemeral_listening_addresses"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L190",
+      "weight": 1.0,
+      "source": "memguard_scorer_rationale_190",
+      "target": "memguard_scorer_has_ephemeral_listening_port",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L187",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_187",
+      "target": "memguard_scorer_has_ephemeral_listening_port"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L186",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_186",
+      "target": "memguard_scorer_has_ephemeral_listening_port"
     },
     {
       "relation": "rationale_for",
@@ -5739,6 +7311,36 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\scorer.py",
+      "source_location": "L195",
+      "weight": 1.0,
+      "source": "memguard_scorer_rationale_195",
+      "target": "memguard_scorer_get_parent_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L192",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_192",
+      "target": "memguard_scorer_get_parent_name"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L191",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_191",
+      "target": "memguard_scorer_get_parent_name"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
       "source_location": "L190",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -5761,10 +7363,93 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\scorer.py",
+      "source_location": "L215",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_signature_unsigned_cached",
+      "target": "memguard_scorer_signature_unsigned_uncached"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L233",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_check_signature_unsigned",
+      "target": "memguard_scorer_signature_unsigned_cached"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L213",
+      "weight": 1.0,
+      "source": "memguard_scorer_rationale_213",
+      "target": "memguard_scorer_signature_unsigned_cached",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L210",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_210",
+      "target": "memguard_scorer_signature_unsigned_cached"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L232",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_check_signature_unsigned",
+      "target": "memguard_scorer_signature_unsigned_uncached"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
       "source_location": "L288",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "memguard_scorer_score_process",
+      "target": "memguard_scorer_check_signature_unsigned"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L222",
+      "weight": 1.0,
+      "source": "memguard_scorer_rationale_222",
+      "target": "memguard_scorer_check_signature_unsigned",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L219",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_219",
+      "target": "memguard_scorer_check_signature_unsigned"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L208",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_208",
       "target": "memguard_scorer_check_signature_unsigned"
     },
     {
@@ -5776,6 +7461,26 @@
       "confidence_score": 1.0,
       "source": "memguard_scorer_rationale_207",
       "target": "memguard_scorer_check_signature_unsigned"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L240",
+      "weight": 1.0,
+      "source": "memguard_scorer_rationale_240",
+      "target": "memguard_scorer_signature_unsigned_uncached",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L237",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_237",
+      "target": "memguard_scorer_signature_unsigned_uncached"
     },
     {
       "relation": "calls",
@@ -5792,11 +7497,11 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\scorer.py",
-      "source_location": "L231",
+      "source_location": "L261",
       "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "memguard_scorer_rationale_231",
-      "target": "memguard_scorer_score_process"
+      "source": "memguard_scorer_rationale_261",
+      "target": "memguard_scorer_score_process",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -5813,11 +7518,71 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\scorer.py",
+      "source_location": "L258",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_258",
+      "target": "memguard_scorer_score_process"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L232",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_232",
+      "target": "memguard_scorer_score_process"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L231",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_231",
+      "target": "memguard_scorer_score_process"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
       "source_location": "L146",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "memguard_scorer_rationale_146",
       "target": "memguard_scorer_score_process"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L373",
+      "weight": 1.0,
+      "source": "memguard_scorer_rationale_373",
+      "target": "memguard_scorer_score_processes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L356",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_356",
+      "target": "memguard_scorer_score_processes"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\scorer.py",
+      "source_location": "L315",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_scorer_rationale_315",
+      "target": "memguard_scorer_score_processes"
     },
     {
       "relation": "rationale_for",
@@ -5996,6 +7761,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\ui.py",
+      "source_location": "L20",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_py",
+      "target": "memguard_ui_harden_stream_encoding"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
       "source_location": "L25",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -6056,6 +7831,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\ui.py",
+      "source_location": "L156",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_py",
+      "target": "memguard_ui_show_collection_coverage"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
       "source_location": "L137",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -6083,6 +7868,16 @@
       "target": "memguard_ui_py"
     },
     {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_rationale_21",
+      "target": "memguard_ui_harden_stream_encoding"
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -6091,6 +7886,16 @@
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "memguard_ui_show_process_table",
+      "target": "memguard_ui_memory_style"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L45",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_rationale_45",
       "target": "memguard_ui_memory_style"
     },
     {
@@ -6129,6 +7934,16 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\ui.py",
+      "source_location": "L54",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_rationale_54",
+      "target": "memguard_ui_threat_level_style"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
       "source_location": "L35",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -6150,11 +7965,31 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\ui.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_rationale_63",
+      "target": "memguard_ui_memory_flag_style"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
       "source_location": "L44",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "memguard_ui_rationale_44",
       "target": "memguard_ui_memory_flag_style"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L70",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_rationale_70",
+      "target": "memguard_ui_show_banner"
     },
     {
       "relation": "rationale_for",
@@ -6170,11 +8005,31 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\ui.py",
+      "source_location": "L77",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_rationale_77",
+      "target": "memguard_ui_show_system_overview"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
       "source_location": "L58",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "memguard_ui_rationale_58",
       "target": "memguard_ui_show_system_overview"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L92",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_rationale_92",
+      "target": "memguard_ui_show_process_table"
     },
     {
       "relation": "rationale_for",
@@ -6190,11 +8045,61 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "memguard\\ui.py",
+      "source_location": "L157",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_rationale_157",
+      "target": "memguard_ui_show_collection_coverage"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L194",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_rationale_194",
+      "target": "memguard_ui_show_threat_alerts"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L157",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_rationale_157",
+      "target": "memguard_ui_show_threat_alerts"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
       "source_location": "L138",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "memguard_ui_rationale_138",
       "target": "memguard_ui_show_threat_alerts"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L229",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_rationale_229",
+      "target": "memguard_ui_show_virustotal_findings"
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "memguard\\ui.py",
+      "source_location": "L192",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "memguard_ui_rationale_192",
+      "target": "memguard_ui_show_virustotal_findings"
     },
     {
       "relation": "rationale_for",

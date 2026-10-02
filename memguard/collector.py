@@ -5,6 +5,7 @@ using psutil. Read-only — no process modification allowed.
 """
 
 import logging
+import os
 import re
 import time
 from datetime import datetime
@@ -50,6 +51,8 @@ class ProcessRecord(TypedDict):
     threat_score: NotRequired[int]
     threat_level: NotRequired[str]
     triggered_rules: NotRequired[list[str]]
+    access_denied_fields: NotRequired[list[str]]
+    data_confidence: NotRequired[str]
 
 
 class SystemOverview(TypedDict):
@@ -68,6 +71,44 @@ def _sanitize_text(value: str) -> str:
     for pattern in _SENSITIVE_ARG_PATTERNS:
         redacted = pattern.sub(r"\1[REDACTED]", redacted)
     return redacted
+
+
+def is_elevated() -> bool:
+    """True when the current process holds an elevated (admin) token.
+
+    Without elevation, Windows denies cmdline/exe reads on SYSTEM-owned
+    processes, which silently removes evidence from scoring.
+    """
+    if os.name != "nt":
+        return False
+    try:
+        import ctypes
+        return bool(ctypes.windll.shell32.IsUserAnAdmin())
+    except Exception:
+        return False
+
+
+def _probe_denied_fields(proc: "psutil.Process", info: dict) -> list[str]:
+    """Return the names of fields Windows refused to disclose.
+
+    psutil.process_iter() substitutes None for an AccessDenied attribute, so a
+    denied field and a genuinely empty one are indistinguishable in `info`.
+    Re-reading the missing ones tells the two apart — the distinction matters
+    because missing evidence must not be scored as absent evidence.
+    """
+    denied: list[str] = []
+    probes = (("cmdline", proc.cmdline), ("exe", proc.exe), ("user", proc.username))
+    for field, getter in probes:
+        key = "username" if field == "user" else field
+        if info.get(key):
+            continue
+        try:
+            getter()
+        except psutil.AccessDenied:
+            denied.append(field)
+        except Exception:
+            continue
+    return denied
 
 
 def collect_system_overview() -> SystemOverview:
@@ -139,6 +180,8 @@ def collect_processes() -> list[ProcessRecord]:
             else:
                 start_time = "N/A"
 
+            denied_fields = _probe_denied_fields(proc, info)
+
             processes.append(
                 {
                     "pid": pid,
@@ -150,6 +193,8 @@ def collect_processes() -> list[ProcessRecord]:
                     "cpu_percent": cpu_percent,
                     "cmdline": cmdline,
                     "start_time": start_time,
+                    "access_denied_fields": denied_fields,
+                    "data_confidence": "PARTIAL" if denied_fields else "FULL",
                 }
             )
 
