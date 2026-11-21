@@ -46,6 +46,28 @@ def _clean_export_strings(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
+_FORMULA_PREFIXES = ("=", "+", "-", "@", "\t", "\r")
+
+
+def _neutralize_formulas(df: pd.DataFrame) -> pd.DataFrame:
+    """Defuse spreadsheet formula injection (CWE-1236) in CSV exports.
+
+    Command lines, process names and paths are ATTACKER-CONTROLLED. A process
+    started as `=cmd|' /C calc'!A0` would otherwise land in processes.csv as a
+    live formula that Excel may evaluate when the analyst opens the file.
+    Prefixing such cells with a single quote makes spreadsheets treat them as
+    text (OWASP guidance). Applied to CSV only; JSON keeps the raw values for
+    machines. A lone "-" (the "no rules" placeholder) is not a formula and is
+    left untouched.
+    """
+    for column in df.columns:
+        if df[column].dtype == object:
+            df[column] = df[column].map(
+                lambda v: f"'{v}" if isinstance(v, str) and v != "-" and v.startswith(_FORMULA_PREFIXES) else v
+            )
+    return df
+
+
 def _to_dataframe(processes: list[ProcessRecord]) -> pd.DataFrame:
     """Convert a list of ProcessRecord dictionaries to a pandas DataFrame."""
     records = list(processes)
@@ -188,6 +210,20 @@ def export_full_report(
     else:
         lines.extend(["No process rows were available in this report.", ""])
 
+    # Plain-language meaning of every rule that fired, so a reader (human or
+    # AI) can interpret the findings without the MemGuard source code.
+    from .about import rule_glossary_markdown
+
+    rules_seen = [
+        str(rule)
+        for process in processes
+        if isinstance(process.get("triggered_rules"), list)
+        for rule in process.get("triggered_rules")  # type: ignore[union-attr]
+    ]
+    glossary = rule_glossary_markdown(rules_seen)
+    if glossary:
+        lines.extend(["## Rule Glossary", "", glossary, ""])
+
     lines.extend(
         [
             "## Full Dataset JSON",
@@ -293,7 +329,7 @@ def export_ports_csv(ports: list[PortRecord], path: str = "ports.csv") -> Path:
     df["triggered_rules"] = df["triggered_rules"].apply(
         lambda r: ", ".join(r) if isinstance(r, list) else (str(r) if r else "-")
     )
-    df.to_csv(dest, index=False)
+    _neutralize_formulas(df).to_csv(dest, index=False)
     logger.info("Exported %d ports to %s", len(ports), dest)
     return dest
 
@@ -325,7 +361,7 @@ def export_csv(processes: list[ProcessRecord], path: str = "processes.csv") -> P
         Path to the written file.
     """
     dest = Path(path)
-    df = _to_dataframe(processes)
+    df = _neutralize_formulas(_to_dataframe(processes))
     df.to_csv(dest, index=False)
     logger.info("Exported %d processes to %s", len(processes), dest)
     return dest

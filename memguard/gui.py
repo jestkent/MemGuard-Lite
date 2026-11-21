@@ -16,6 +16,8 @@ from tkinter import filedialog, messagebox, ttk
 
 import psutil
 
+from . import __version__
+from .about import APP_NAME, RuleDoc, build_sections, environment_facts, explain_rule, render_markdown
 from .collector import ProcessRecord, collect_processes, collect_system_overview, is_elevated
 from .elevation import relaunch_as_admin
 from .exporter import (
@@ -39,7 +41,7 @@ class MemGuardGUI(tk.Tk):
 
     def __init__(self) -> None:
         super().__init__()
-        self.title("MemGuard Lite - Desktop GUI")
+        self.title(f"{APP_NAME} {__version__} - Desktop GUI")
         self.geometry("1450x860")
         self.minsize(1180, 720)
 
@@ -84,14 +86,27 @@ class MemGuardGUI(tk.Tk):
         self._build_layout()
 
     def _build_layout(self) -> None:
+        # Two tabs: the existing scanner workflow, and an in-app guide that
+        # explains what MemGuard does, every rule, and its limits.
+        self.notebook = ttk.Notebook(self)
+        self.notebook.pack(fill="both", expand=True)
+        self.scan_tab = ttk.Frame(self.notebook)
+        self.about_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.scan_tab, text="  Scanner  ")
+        self.notebook.add(self.about_tab, text="  About  ")
+
         self._build_controls()
         self._build_summary()
         self._build_results_table()
         self._build_details_panel()
         self._build_context_menu()
+        self._build_about_tab()
+
+        self.notebook.bind("<<NotebookTabChanged>>", self._on_tab_changed)
+        self.bind("<F1>", lambda _: self.notebook.select(self.about_tab))
 
     def _build_controls(self) -> None:
-        controls = ttk.LabelFrame(self, text="Scan Controls")
+        controls = ttk.LabelFrame(self.scan_tab, text="Scan Controls")
         controls.pack(fill="x", padx=10, pady=(10, 6))
 
         ttk.Checkbutton(controls, text="Enable memory inspection", variable=self.memory_enabled_var).grid(
@@ -171,7 +186,7 @@ class MemGuardGUI(tk.Tk):
         status_label.grid(row=1, column=12, sticky="w", padx=(4, 8), pady=(0, 8))
 
     def _build_summary(self) -> None:
-        summary = ttk.LabelFrame(self, text="Scan Summary")
+        summary = ttk.LabelFrame(self.scan_tab, text="Scan Summary")
         summary.pack(fill="x", padx=10, pady=(0, 6))
 
         fields = [
@@ -196,7 +211,7 @@ class MemGuardGUI(tk.Tk):
             ttk.Label(summary, textvariable=var).grid(row=0, column=index * 2 + 1, sticky="w", pady=8)
 
     def _build_results_table(self) -> None:
-        table_frame = ttk.LabelFrame(self, text="Processes")
+        table_frame = ttk.LabelFrame(self.scan_tab, text="Processes")
         table_frame.pack(fill="both", expand=True, padx=10, pady=(0, 6))
 
         columns = (
@@ -260,12 +275,247 @@ class MemGuardGUI(tk.Tk):
         self.tree.bind("<Button-3>", self._show_context_menu)
 
     def _build_details_panel(self) -> None:
-        panel = ttk.LabelFrame(self, text="Selected Process Details")
+        panel = ttk.LabelFrame(self.scan_tab, text="Selected Process Details")
         panel.pack(fill="both", padx=10, pady=(0, 10))
 
         self.details_text = tk.Text(panel, height=7, wrap="word", font=("Consolas", 10))
-        self.details_text.pack(fill="both", expand=True, padx=8, pady=8)
+        details_bar = ttk.Scrollbar(panel, orient="vertical", command=self.details_text.yview)
+        self.details_text.configure(yscrollcommand=details_bar.set)
+        details_bar.pack(side="right", fill="y", pady=8)
+        self.details_text.pack(fill="both", expand=True, padx=(8, 0), pady=8)
         self.details_text.configure(state="disabled")
+
+    # ── About tab ────────────────────────────────────────────────────────
+
+    def _build_about_tab(self) -> None:
+        """Build the in-app guide: header, contents list, document, session facts."""
+        tab = self.about_tab
+
+        header = ttk.Frame(tab)
+        header.pack(fill="x", padx=14, pady=(12, 4))
+        ttk.Label(header, text=f"{APP_NAME}", font=("Segoe UI", 18, "bold")).pack(side="left")
+        ttk.Label(header, text=f"  v{__version__}", font=("Segoe UI", 11), foreground="#555555").pack(
+            side="left", pady=(8, 0)
+        )
+        ttk.Label(
+            header,
+            text="   Read-only Windows process & network triage - what it does, how it decides, and its limits",
+            foreground="#555555",
+        ).pack(side="left", pady=(8, 0))
+        ttk.Button(header, text="Save guide as Markdown...", command=self._save_about_markdown).pack(side="right")
+
+        search_row = ttk.Frame(tab)
+        search_row.pack(fill="x", padx=14, pady=(2, 6))
+        ttk.Label(search_row, text="Find in guide:").pack(side="left")
+        self.about_search_var = tk.StringVar()
+        search_entry = ttk.Entry(search_row, textvariable=self.about_search_var, width=32)
+        search_entry.pack(side="left", padx=6)
+        search_entry.bind("<Return>", lambda _: self._about_find())
+        ttk.Button(search_row, text="Find next", command=self._about_find).pack(side="left")
+        self.about_search_status = tk.StringVar(value="Tip: press F1 anywhere to open this guide.")
+        ttk.Label(search_row, textvariable=self.about_search_status, foreground="#555555").pack(
+            side="left", padx=10
+        )
+
+        # Packed before the document so it always keeps its space at the
+        # bottom; the document then takes whatever height remains.
+        facts_frame = ttk.LabelFrame(tab, text="This session")
+        facts_frame.pack(side="bottom", fill="x", padx=14, pady=(0, 12))
+
+        body = ttk.PanedWindow(tab, orient="horizontal")
+        body.pack(fill="both", expand=True, padx=14, pady=(0, 6))
+
+        # Row height from the font's line spacing so entries never clip,
+        # whatever the display scaling.
+        from tkinter import font as tkfont
+        line_space = tkfont.nametofont("TkDefaultFont").metrics("linespace")
+        ttk.Style(self).configure("AboutNav.Treeview", rowheight=line_space + 10)
+
+        nav_frame = ttk.LabelFrame(body, text="Contents")
+        self.about_nav = ttk.Treeview(nav_frame, show="tree", selectmode="browse", style="AboutNav.Treeview")
+        self.about_nav.column("#0", width=230)
+        self.about_nav.pack(fill="both", expand=True, padx=4, pady=4)
+        self.about_nav.bind("<<TreeviewSelect>>", self._on_about_nav)
+        body.add(nav_frame, weight=0)
+
+        doc_frame = ttk.Frame(body)
+        self.about_text = tk.Text(
+            doc_frame, wrap="word", font=("Segoe UI", 10), padx=18, pady=10,
+            relief="flat", borderwidth=0, background="#ffffff", cursor="arrow",
+        )
+        doc_bar = ttk.Scrollbar(doc_frame, orient="vertical", command=self.about_text.yview)
+        self.about_text.configure(yscrollcommand=doc_bar.set)
+        doc_bar.pack(side="right", fill="y")
+        self.about_text.pack(side="left", fill="both", expand=True)
+        body.add(doc_frame, weight=1)
+
+        self._configure_about_tags()
+        self._render_about_document()
+
+        self.about_fact_vars: dict[str, tk.StringVar] = {}
+        for index, (key, value) in enumerate(environment_facts()):
+            row, col = divmod(index, 3)
+            ttk.Label(facts_frame, text=f"{key}:", font=("Segoe UI", 9, "bold")).grid(
+                row=row, column=col * 2, sticky="e", padx=(10, 4), pady=2
+            )
+            var = tk.StringVar(value=value)
+            self.about_fact_vars[key] = var
+            ttk.Label(facts_frame, textvariable=var, wraplength=330).grid(
+                row=row, column=col * 2 + 1, sticky="w", pady=2
+            )
+
+    def _configure_about_tags(self) -> None:
+        text = self.about_text
+        text.tag_configure("h1", font=("Segoe UI", 15, "bold"), foreground="#1f3a5f", spacing1=16, spacing3=6)
+        text.tag_configure("h2", font=("Segoe UI", 11, "bold"), foreground="#1f3a5f", spacing1=10, spacing3=3)
+        text.tag_configure("p", spacing3=7, lmargin1=2, lmargin2=2)
+        text.tag_configure("bullet", lmargin1=12, lmargin2=28, spacing3=3)
+        text.tag_configure("note", background="#eef4fb", foreground="#1f3a5f", lmargin1=10, lmargin2=10,
+                           rmargin=10, spacing1=6, spacing3=8, font=("Segoe UI", 10, "italic"))
+        text.tag_configure("term", font=("Segoe UI", 10, "bold"), lmargin1=12, lmargin2=12, spacing1=4)
+        text.tag_configure("termmono", font=("Consolas", 10, "bold"), lmargin1=12, lmargin2=12, spacing1=6)
+        text.tag_configure("definition", lmargin1=28, lmargin2=28, spacing3=3)
+        text.tag_configure("muted", foreground="#555555")
+        text.tag_configure("rule_label", font=("Consolas", 10, "bold"), spacing1=12)
+        text.tag_configure("rule_title", font=("Segoe UI", 10, "bold"))
+        text.tag_configure("field", font=("Segoe UI", 10, "bold"))
+        text.tag_configure("rule_body", lmargin1=18, lmargin2=18, spacing3=2)
+        # Badge colours match the process table so the guide teaches the colours.
+        text.tag_configure("badge_high", background="#ffcccc", font=("Segoe UI", 9, "bold"))
+        text.tag_configure("badge_susp", background="#fff3cc", font=("Segoe UI", 9, "bold"))
+        text.tag_configure("badge_info", background="#e4e4e4", font=("Segoe UI", 9, "bold"))
+        text.tag_configure("search_hit", background="#ffe08a")
+
+    def _render_about_document(self) -> None:
+        """Render about.build_sections() into the Text widget."""
+        text = self.about_text
+        text.configure(state="normal")
+        text.delete("1.0", tk.END)
+        self.about_nav.delete(*self.about_nav.get_children())
+
+        for section in build_sections():
+            mark = f"sec_{section.id}"
+            text.mark_set(mark, "end-1c")
+            text.mark_gravity(mark, "left")
+            self.about_nav.insert("", "end", iid=section.id, text=f"  {section.title}")
+            text.insert(tk.END, f"{section.title}\n", "h1")
+
+            for kind, payload in section.blocks:
+                if kind == "p":
+                    text.insert(tk.END, f"{payload}\n", "p")
+                elif kind == "h":
+                    text.insert(tk.END, f"{payload}\n", "h2")
+                elif kind == "note":
+                    text.insert(tk.END, f"{payload}\n", "note")
+                elif kind == "bullets":
+                    for item in payload:  # type: ignore[union-attr]
+                        text.insert(tk.END, f"•  {item}\n", "bullet")
+                    text.insert(tk.END, "\n", "p")
+                elif kind == "steps":
+                    for number, item in enumerate(payload, 1):  # type: ignore[arg-type]
+                        text.insert(tk.END, f"{number}.  {item}\n", "bullet")
+                    text.insert(tk.END, "\n", "p")
+                elif kind == "table":
+                    self._render_about_table(*payload)  # type: ignore[misc]
+                elif kind == "rules":
+                    for doc in payload:  # type: ignore[union-attr]
+                        self._render_rule_card(doc)
+                    text.insert(tk.END, "\n", "p")
+
+        text.configure(state="disabled")
+
+    def _render_about_table(self, headers: list[str], rows: list[list[str]]) -> None:
+        """Tables render as term/definition pairs: they wrap cleanly at any width."""
+        text = self.about_text
+        mono = headers and headers[0] in {"Behaviour"}
+        for row in rows:
+            text.insert(tk.END, f"{row[0]}\n", "termmono" if mono else "term")
+            if len(row) > 2:
+                text.insert(tk.END, "   ".join(row[1:-1]) + "\n", ("definition", "muted"))
+            text.insert(tk.END, f"{row[-1]}\n", "definition")
+        text.insert(tk.END, "\n", "p")
+
+    def _render_rule_card(self, doc: RuleDoc) -> None:
+        text = self.about_text
+        if doc.points >= 40:
+            badge = "badge_high"
+        elif doc.points >= 15:
+            badge = "badge_susp"
+        else:
+            badge = "badge_info"
+        badge_text = f"+{doc.points}" if doc.points else "0 pts"
+        text.insert(tk.END, f"{doc.label}", "rule_label")
+        text.insert(tk.END, "   ")
+        text.insert(tk.END, f" {badge_text} ", badge)
+        text.insert(tk.END, f"   {doc.attack}\n", "muted")
+        if doc.points_note or not doc.points:
+            note = doc.points_note.strip("()") if doc.points_note else "informational - recorded, never scored"
+            text.insert(tk.END, f"{note}\n", ("rule_body", "muted"))
+        text.insert(tk.END, f"{doc.title}\n", ("rule_title", "rule_body"))
+        for field_name, value in (("What it checks: ", doc.what),
+                                  ("Why it matters: ", doc.why),
+                                  ("Innocent causes: ", doc.benign)):
+            text.insert(tk.END, field_name, ("field", "rule_body"))
+            text.insert(tk.END, f"{value}\n", "rule_body")
+
+    def _on_about_nav(self, _: object) -> None:
+        selected = self.about_nav.selection()
+        if selected:
+            # Legacy "yview index" form puts that line at the TOP of the view.
+            self.about_text.yview(f"sec_{selected[0]}")
+
+    def _about_find(self) -> None:
+        """Find the next occurrence of the search text and scroll to it."""
+        needle = self.about_search_var.get().strip()
+        text = self.about_text
+        text.tag_remove("search_hit", "1.0", tk.END)
+        if not needle:
+            self.about_search_status.set("Type a word, e.g. svchost, PARTIAL or VirusTotal.")
+            return
+        # A new search term starts from the top; repeating the same term
+        # continues after the previous hit.
+        if needle != getattr(self, "_about_search_last", None):
+            self._about_search_pos = "1.0"
+            self._about_search_last = needle
+        start = getattr(self, "_about_search_pos", "1.0")
+        found = text.search(needle, start, nocase=True, stopindex=tk.END) or text.search(
+            needle, "1.0", nocase=True, stopindex=tk.END
+        )
+        if not found:
+            self.about_search_status.set(f"'{needle}' not found.")
+            return
+        end = f"{found}+{len(needle)}c"
+        text.tag_add("search_hit", found, end)
+        text.see(found)
+        self._about_search_pos = end
+        total = len(text.get("1.0", tk.END).lower().split(needle.lower())) - 1
+        self.about_search_status.set(f"{total} match(es). Press Enter for the next one.")
+
+    def _on_tab_changed(self, _: object) -> None:
+        """Refresh the live session facts whenever the About tab is opened."""
+        if self.notebook.select() != str(self.about_tab):
+            return
+        try:
+            for key, value in environment_facts():
+                if key in self.about_fact_vars:
+                    self.about_fact_vars[key].set(value)
+        except Exception as exc:  # pragma: no cover - GUI runtime safety
+            logger.debug("Could not refresh session facts: %s", exc)
+
+    def _save_about_markdown(self) -> None:
+        path = filedialog.asksaveasfilename(
+            title="Save MemGuard guide",
+            defaultextension=".md",
+            initialfile="MemGuard_Lite_Guide.md",
+            filetypes=[("Markdown", "*.md"), ("All files", "*.*")],
+        )
+        if not path:
+            return
+        try:
+            Path(path).write_text(render_markdown(), encoding="utf-8")
+            messagebox.showinfo("MemGuard", f"Guide saved:\n{path}")
+        except OSError as exc:
+            messagebox.showerror("MemGuard", f"Could not save the guide:\n{exc}")
 
     def _parse_int(self, value: str, fallback: int, minimum: int = 0) -> int:
         try:
@@ -588,16 +838,28 @@ class MemGuardGUI(tk.Tk):
 
         attack_text = format_techniques(rules if isinstance(rules, list) else None)
 
+        # Plain-language reasons, one per rule, so the analyst does not need
+        # to look rule names up (full detail lives in the About tab).
+        explanations = [
+            f"  - {rule.split(' (')[0]}: {reason}"
+            for rule in (rules if isinstance(rules, list) else [])
+            if (reason := explain_rule(str(rule)))
+        ]
+        why_text = ("\nWhy flagged (see About tab for details):\n" + "\n".join(explanations)) if explanations else ""
+
         return (
-            f"PID: {process.get('pid', 'N/A')}\n"
+            f"PID: {process.get('pid', 'N/A')}   PPID: {process.get('ppid', 'N/A')}\n"
             f"Name: {process.get('name', 'N/A')}\n"
-            f"Threat: {process.get('threat_level', 'SAFE')} (score {process.get('threat_score', 0)})\n"
+            f"Executable: {process.get('exe', 'N/A')}\n"
+            f"Threat: {process.get('threat_level', 'SAFE')} (score {process.get('threat_score', 0)})"
+            f"   Data confidence: {process.get('data_confidence', 'FULL')}\n"
             f"SHA256: {process.get('sha256', 'N/A')}\n"
             f"Memory Flag: {process.get('memory_flag', '-')}, Memory Score: {process.get('memory_anomaly_score', '-') }\n"
             f"VT (M/S/H): {process.get('vt_malicious', 0)}/{process.get('vt_suspicious', 0)}/{process.get('vt_harmless', 0)}\n"
             f"Triggered Rules: {rules_text}\n"
             f"ATT&CK: {attack_text}\n"
             f"Command Line: {process.get('cmdline', 'N/A')}"
+            f"{why_text}"
         )
 
     def validate_selected(self) -> None:

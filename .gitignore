@@ -14,6 +14,7 @@ processes.json
 memguard_results_*.csv
 memguard_results_*.json
 memguard_history.jsonl
+memguard_history*.jsonl
 memguard_full_report*.md
 memguard_ports_report*.md
 memguard_ports_*.csv
@@ -31,3 +32,6 @@ release/
 # Local env files
 .env
 .env.*
+
+# Test cache
+.pytest_cache/

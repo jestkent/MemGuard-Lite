@@ -45,7 +45,10 @@ Core modules:
 - memguard/main.py: app entrypoint and orchestration.
 - memguard/collector.py: process and system telemetry collection, plus collection-integrity tracking (is_elevated(), _probe_denied_fields()).
 - memguard/hasher.py: SHA256 attachment and blocklist loading.
-- memguard/scorer.py: explainable scoring engine.
+- memguard/scorer.py: explainable scoring engine. RULE_POINTS / LEVEL_THRESHOLDS are the single source of weights; about.py reads them.
+- memguard/cmdline_rules.py: command-line normalisation + behaviour tags (TAGS: weight, ATT&CK id, summary).
+- memguard/masquerade.py: process-identity checks (PROTECTED_BINARIES folders, find_lookalike, is_microsoft_signer, EXPECTED_PARENTS, SINGLETON_PROCESSES).
+- memguard/about.py: in-app guide (GUI About tab, CLI --about, report Rule Glossary). ASCII-only text.
 - memguard/memory_inspector.py: memory metadata checks.
 - memguard/threat_intel.py: VirusTotal v3 enrichment + test_vt_connection().
 - memguard/validator.py: read-only validation of selected process rows.
@@ -53,7 +56,8 @@ Core modules:
 - memguard/exporter.py: CSV/JSON/full markdown report export (processes and ports).
 - memguard/gui.py: Tkinter desktop workflow.
 - memguard/ui.py: rich terminal UI rendering.
-- memguard/attack_map.py: MITRE ATT&CK technique mapping for triggered_rules (display/export only).
+- memguard/attack_map.py: MITRE ATT&CK technique mapping for triggered_rules (display/export only). "suspicious_commandline (a, b)" expands to one technique per tag.
+- tests/: pytest suite (run `py -3.13 -m pytest`). Includes live-host false-positive guards.
 - memguard/history_log.py: append-only JSONL of HIGH/SUSPICIOUS findings + persistent threat lookup.
 - memguard/elevation.py: opt-in UAC relaunch (build_relaunch_command(), relaunch_as_admin()). Read-access only; never automatic.
 
@@ -62,7 +66,14 @@ Core modules:
 - Process telemetry with PID, user, cmdline, RSS/CPU.
 - Deterministic threat scoring with triggered_rules evidence:
   - temp_executable_path (+30)
-  - suspicious_commandline (+20): powershell -enc, base64, cmd.exe /c, mshta, wscript, cscript, certutil -decode/urlcache, bitsadmin /transfer, rundll32, regsvr32
+  - suspicious_commandline (<tags>) (+20, or +40 for lsass_memory_dump / inhibit_system_recovery / defender_tampering): cmdline_rules.py normalises first (-e/-ec/-EncodedCommand//enc, pwsh, ^ carets, backticks, quotes, '+' concatenation, Unicode dashes) then matches BEHAVIOUR. Score = strongest tag, never the sum. Plain "cmd /c" and bare rundll32/regsvr32 deliberately do NOT score: Node launches every child as `cmd.exe /d /s /c ...` and Node's escaping (`npx ^-y^ ^pkg^`) puts carets at word BOUNDARIES, so command_obfuscation only counts carets/backticks INSIDE words (a plain caret count gave 5 false positives on the reference host). Backtick exclusions are only `n `t `r `0.
+  - system_binary_wrong_location (+40): protected Windows name outside its real folder (relative to %SystemRoot%). Unknown path ("N/A") returns None = not judged.
+  - process_name_lookalike (+30): one OSA edit (incl. transposition) or homoglyph/digit twin of a protected name. Deterministic priority order (svchost first) resolves ties such as "svhost" (1 edit from svchost AND sihost). Stems < 5 chars skipped; taskhost/taskhostex allowlisted.
+  - microsoft_name_wrong_signer (+40): protected name, Authenticode Valid, Organization field != "Microsoft Corporation". Subject is PARSED field-by-field; a substring test would accept a CN that merely contains "O=Microsoft Corporation". Signer comes from the SAME PowerShell call as the status (no extra launches; per-call cost measured unchanged at ~0.2s).
+  - unexpected_parent (+40): core process with a live parent outside EXPECTED_PARENTS (SANS Hunt Evil table; verified 98/98 svchost -> services on the reference host). A parent that is gone is never "wrong" (wininit/csrss/winlogon parents always exit).
+  - duplicate_singleton_process (+30): >1 lsass/services/wininit/lsaiso. Needs whole-scan context, so score_processes() passes singleton_counts ("<name>" count and "<name>#genuine" = copies in the real folder); score_process() alone skips it. When exactly one copy is genuine it is NOT flagged (live stress test: a fake lsass made the real lsass SUSPICIOUS).
+  - cmdline "TOOL ... SWITCH" behaviours are (head, tail) pairs in _SEQUENCE_RULES, matched as "first head, then tail after it". Never write them back as one "head.*tail" regex: that is quadratic and a crafted 32,767-char command line cost 0.7 s per process (scan-stall attack). Worst case is now ~12 ms; a pytest guard enforces < 0.15 s.
+  - parent_unverifiable (0 points): _resolve_parent() returns "reused" when the process holding the PPID started AFTER the child (recycled PID). Parent rules are then skipped, not judged on a stranger's name.
   - elevated_user_running_from_user_space (+15)
   - listening_ephemeral_port (+25, system-adjusted to +5, loopback reduces by -10)
   - suspicious_parent_child (+35): e.g. winword.exe -> cmd.exe, explorer.exe -> mshta.exe (rule label uses an ASCII arrow; triggered_rules must stay ASCII-safe so cp1252 consoles cannot abort a scan before export)
@@ -94,6 +105,13 @@ Core modules:
 - Right-click context menu on process rows: Copy SHA256, Copy Command Line, Copy PID.
 - Validate Selected for live process/file/hash/signature checks.
 - Show Ports viewer with risk scores for insecure/exposed services (color-coded rows).
+- System-process whitelist (port score softening) now requires the exact folder via masquerade.is_in_expected_location. The old `startswith("c:\\windows")` accepted C:\Windows2\svchost.exe, and standard users can create folders in the root of C:.
+- GUI is a ttk.Notebook: "Scanner" (original workflow, widgets parented to self.scan_tab) and "About" (F1). About renders about.build_sections() into a Text widget with a contents Treeview, Find, live "This session" facts (refreshed on tab change) and Save guide as Markdown. Details panel adds "Why flagged" lines from about.explain_rule().
+- CLI --about prints the guide (rich Markdown; verified to work with PYTHONIOENCODING=cp1252).
+- CSV exports run exporter._neutralize_formulas: cells starting with = + - @ \t \r get a ' prefix (CWE-1236; command lines are attacker-controlled). JSON stays raw. Lone "-" placeholder untouched.
+- scorer coerces record fields with str() / _safe_int() so malformed records cannot crash scoring (found by fuzzing).
+- Stress harness in scripts/stress/ (opt-in, NOT run by pytest): stress_fuzz.py (scan-stall inputs, fuzz, malformed records, determinism, hostile exports; --skip-live for a fast run) and stress_live.py --run (benign adversary emulation: renamed/relocated PING/node/cmd, encoded/obfuscated Start-Sleep, inert cradles, + load/churn, checked by PID against a real CLI scan run in a temp CWD). Destructive behaviours are never executed, only text-tested. Both exit 0/1. Any GUI test run must chdir to a scratch folder, because the GUI appends findings to memguard_history.jsonl in the CWD.
+- Full report adds a "Rule Glossary" section (about.rule_glossary_markdown) for rules that fired.
 - Port scoring: ephemeral range (>=49152, +5) and localhost reduction (-10) both correctly applied. Loopback detection is IPv6-aware (127.0.0.0/8, ::1, ::ffff:127.0.0.1) via port_inspector.is_loopback_address(), shared with scorer.py and the GUI.
 - MITRE ATT&CK technique mapping: triggered_rules → ATT&CK IDs at display + full report time (T1036, T1059, T1078, T1571, T1553.002, T1027, T1055).
 - Persistent scan history: HIGH/SUSPICIOUS findings appended to memguard_history.jsonl on each scan; "Show Persistent Threats" button surfaces processes flagged in 3+ separate scans (counted by distinct scan timestamp, not log rows, so multi-instance apps cannot self-report as persistent).
@@ -216,6 +234,9 @@ During coding:
 After coding:
 
 - Run quick import/syntax checks for touched modules.
+- Run `py -3.13 -m pytest`. New rules need both malicious AND benign test cases.
+- For scoring changes, compare old vs new scorer on a live process list (git show HEAD:memguard/scorer.py) and explain every difference before shipping.
+- When adding or changing a rule, update RULE_POINTS and about.RULE_DOCS (a test fails if a rule is undocumented).
 - Update README.md and CLAUDE.md when behavior changes.
 - Summarize risks/regressions, not only happy path.
 

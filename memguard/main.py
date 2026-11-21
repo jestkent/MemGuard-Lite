@@ -85,6 +85,12 @@ def _build_parser() -> argparse.ArgumentParser:
         ),
     )
     parser.add_argument(
+        "--about",
+        action="store_true",
+        default=False,
+        help="Print the built-in guide (purpose, how scoring works, every rule, limits) and exit.",
+    )
+    parser.add_argument(
         "--vt-suspicious-only",
         action="store_true",
         default=False,
@@ -96,6 +102,14 @@ def _build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> None:
     """Entry point for MemGuard CLI."""
     args = _build_parser().parse_args(argv)
+
+    if args.about:
+        from rich.markdown import Markdown
+
+        from .about import render_markdown
+
+        console.print(Markdown(render_markdown()))
+        return
 
     if args.elevate:
         # Drop --elevate from the relaunched command so the elevated instance
